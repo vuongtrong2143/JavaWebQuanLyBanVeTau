@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sơ đồ ERD cải tiến - Hệ thống bán vé tàu hỏa</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      securityLevel: 'loose',
+      er: {
+        diagramPadding: 20,
+        layoutDirection: 'LR'
+      },
+      themeVariables: {
+        primaryColor: '#eef6ff',
+        primaryTextColor: '#1f2937',
+        primaryBorderColor: '#2563eb',
+        lineColor: '#64748b',
+        secondaryColor: '#f8fafc',
+        tertiaryColor: '#ffffff',
+        fontFamily: 'Segoe UI, Arial, sans-serif'
+      }
+    });
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 30px;
+    }
+    .header p {
+      margin: 0;
+      line-height: 1.55;
+      opacity: 0.95;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e5e7eb;
+    }
+    .panel h2 {
+      margin: 0 0 12px 0;
+      color: #0f172a;
+      font-size: 22px;
+    }
+    .panel h3 {
+      margin: 0 0 10px 0;
+      color: #1d4ed8;
+      font-size: 18px;
+    }
+    .note-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .note {
+      border: 1px solid #dbeafe;
+      background: #f8fbff;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .note strong {
+      color: #1d4ed8;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .diagram-wrap {
+      overflow: auto;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      padding: 12px;
+    }
+    .mermaid {
+      min-width: 1650px;
+    }
+    ul {
+      margin: 8px 0 0 18px;
+      line-height: 1.6;
+    }
+    code {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .footer {
+      font-size: 14px;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Sơ đồ ERD cải tiến - Hệ thống bán vé tàu hỏa</h1>
+      <p>
+        Phiên bản này đã cập nhật các phân tích cải tiến: bổ sung <b>Giữ chỗ tạm thời</b>, <b>Bảng giá</b>,
+        <b>Chính sách đổi/trả động</b>, <b>Đối tượng ưu đãi</b>, <b>Hoàn tiền</b>, trạng thái <b>Pending</b>
+        cho thanh toán, và mở rộng cấu trúc dữ liệu để hỗ trợ khứ hồi, vé tập thể, phụ thu cao điểm,
+        cũng như kiểm soát ghế theo chặng tốt hơn.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>ERD tổng thể</h2>
+      <div class="diagram-wrap">
+        <pre class="mermaid">
+erDiagram
+    KHACH_HANG {
+        int id PK
+        string ho_ten
+        string email UK
+        string so_dien_thoai UK
+        string mat_khau_hash
+        date ngay_sinh
+        string gioi_tinh
+        string dia_chi
+        datetime ngay_tao
+        string trang_thai
+    }
+
+    NHAN_VIEN {
+        int id PK
+        string ho_ten
+        string email UK
+        string mat_khau_hash
+        string chuc_vu
+        string trang_thai
+    }
+
+    HANH_KHACH {
+        int id PK
+        string ho_ten
+        string loai_giay_to
+        string so_giay_to
+        date ngay_sinh
+        string quoc_tich
+    }
+
+    TAU {
+        int id PK
+        string ma_tau UK
+        string ten_tau
+        string chieu_di
+        boolean thuoc_tuyen_thong_nhat
+        string mo_ta
+    }
+
+    TOA_TAU {
+        int id PK
+        int tau_id FK
+        int so_toa
+        string loai_toa
+        int suc_chua
+    }
+
+    GHE {
+        int id PK
+        int toa_tau_id FK
+        string so_ghe
+        int tang
+        string loai_cho
+        string trang_thai
+    }
+
+    GA {
+        int id PK
+        string ma_ga UK
+        string ten_ga
+        string tinh_thanh
+        int ly_trinh_km
+        string dia_chi
+    }
+
+    CHUYEN_TAU {
+        int id PK
+        int tau_id FK
+        string ma_chuyen UK
+        date ngay_chay
+        datetime gio_khoi_hanh
+        datetime gio_den_du_kien
+        string trang_thai
+    }
+
+    LICH_DUNG {
+        int id PK
+        int chuyen_tau_id FK
+        int ga_id FK
+        int thu_tu_dung
+        datetime thoi_gian_den
+        datetime thoi_gian_di
+    }
+
+    DOI_TUONG_UU_DAI {
+        int id PK
+        string ma_doi_tuong UK
+        string ten_doi_tuong
+        decimal phan_tram_giam
+        int tuoi_min
+        int tuoi_max
+        boolean can_giay_to_chung_minh
+        datetime hieu_luc_tu
+        datetime hieu_luc_den
+        string trang_thai
+    }
+
+    KHUYEN_MAI {
+        int id PK
+        string ma_khuyen_mai UK
+        string ten_chuong_trinh
+        decimal phan_tram_giam
+        decimal giam_toi_da
+        decimal gia_tri_don_toi_thieu
+        string phuong_thuc_tt_ap_dung
+        datetime ngay_bat_dau
+        datetime ngay_ket_thuc
+        int so_luong_toi_da
+        string trang_thai
+    }
+
+    BANG_GIA {
+        int id PK
+        int ga_di_id FK
+        int ga_den_id FK
+        string loai_toa_ap_dung
+        int tang_ap_dung
+        decimal gia_co_so
+        decimal phu_thu_cao_diem_mac_dinh
+        datetime hieu_luc_tu
+        datetime hieu_luc_den
+        string trang_thai
+    }
+
+    DAT_CHO {
+        int id PK
+        int khach_hang_id FK
+        int khuyen_mai_id FK
+        string ma_dat_cho UK
+        string loai_don_hang
+        string loai_hanh_trinh
+        datetime ngay_dat
+        decimal tong_tien_ve_goc
+        decimal thue_vat
+        decimal phi_thanh_toan
+        decimal tong_giam_khuyen_mai
+        decimal giam_gia_khu_hoi
+        decimal tong_thanh_toan
+        datetime thoi_gian_het_han
+        string trang_thai
+    }
+
+    GIU_CHO {
+        int id PK
+        int dat_cho_id FK
+        int chuyen_tau_id FK
+        int ghe_id FK
+        int ga_di_id FK
+        int ga_den_id FK
+        datetime thoi_gian_giu
+        datetime thoi_gian_het_han
+        string trang_thai
+    }
+
+    VE {
+        int id PK
+        int dat_cho_id FK
+        int chuyen_tau_id FK
+        int ghe_id FK
+        int hanh_khach_id FK
+        int doi_tuong_uu_dai_id FK
+        int ga_di_id FK
+        int ga_den_id FK
+        string ma_ve UK
+        decimal gia_co_so
+        decimal giam_doi_tuong
+        decimal phu_thu_cao_diem
+        decimal gia_ve_chi_tiet
+        string trang_thai
+    }
+
+    THANH_TOAN {
+        int id PK
+        int dat_cho_id FK
+        string ma_giao_dich UK
+        string request_id UK
+        string phuong_thuc
+        decimal so_tien
+        datetime ngay_tao
+        datetime ngay_thanh_toan
+        string trang_thai
+    }
+
+    HOAN_TIEN {
+        int id PK
+        int thanh_toan_id FK
+        int ve_id FK
+        decimal so_tien_hoan
+        string ma_giao_dich_hoan UK
+        datetime thoi_gian_yeu_cau
+        datetime thoi_gian_hoan_tat
+        string trang_thai
+    }
+
+    CHINH_SACH_DOI_TRA {
+        int id PK
+        string ten_chinh_sach
+        string loai_don_hang_ap_dung
+        string chieu_tau_ap_dung
+        int truoc_khoi_hanh_tu_gio
+        int truoc_khoi_hanh_den_gio
+        decimal ty_le_khau_tru
+        decimal phi_doi_co_dinh
+        boolean cho_phep_doi
+        boolean cho_phep_tra
+        datetime hieu_luc_tu
+        datetime hieu_luc_den
+        string trang_thai
+    }
+
+    LICH_SU_DOI_TRA {
+        int id PK
+        int ve_id FK
+        int nhan_vien_id FK
+        int chinh_sach_id FK
+        string loai_giao_dich
+        string ly_do
+        decimal phi_doi
+        decimal ty_le_khau_tru
+        decimal so_tien_hoan
+        datetime thoi_gian_xu_ly
+        string ghi_chu
+    }
+
+    KHACH_HANG ||--o{ DAT_CHO : "tao"
+    KHUYEN_MAI ||--o{ DAT_CHO : "ap_dung"
+
+    DAT_CHO ||--o{ GIU_CHO : "giu_tam"
+    DAT_CHO ||--o{ VE : "chua"
+    DAT_CHO ||--o{ THANH_TOAN : "co"
+
+    CHUYEN_TAU ||--o{ GIU_CHO : "giu_ghe_tren"
+    GHE ||--o{ GIU_CHO : "duoc_giu"
+    GA ||--o{ GIU_CHO : "ga_di"
+    GA ||--o{ GIU_CHO : "ga_den"
+
+    TAU ||--o{ TOA_TAU : "gom"
+    TOA_TAU ||--o{ GHE : "co"
+    TAU ||--o{ CHUYEN_TAU : "van_hanh"
+
+    CHUYEN_TAU ||--o{ LICH_DUNG : "co"
+    GA ||--o{ LICH_DUNG : "dung_tai"
+
+    GA ||--o{ BANG_GIA : "ga_di"
+    GA ||--o{ BANG_GIA : "ga_den"
+
+    CHUYEN_TAU ||--o{ VE : "phat_hanh"
+    GHE ||--o{ VE : "gan_cho"
+    HANH_KHACH ||--o{ VE : "di_tau"
+    DOI_TUONG_UU_DAI ||--o{ VE : "duoc_ap_dung"
+    GA ||--o{ VE : "xuat_phat"
+    GA ||--o{ VE : "den"
+
+    THANH_TOAN ||--o{ HOAN_TIEN : "phat_sinh"
+    VE ||--o{ HOAN_TIEN : "duoc_hoan"
+
+    VE ||--o{ LICH_SU_DOI_TRA : "phat_sinh"
+    NHAN_VIEN ||--o{ LICH_SU_DOI_TRA : "xu_ly"
+    CHINH_SACH_DOI_TRA ||--o{ LICH_SU_DOI_TRA : "ap_dung"
+        </pre>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Những cập nhật cải tiến đã phản ánh vào ERD</h2>
+      <div class="note-grid">
+        <div class="note">
+          <strong>1) Thêm bảng <code>GIU_CHO</code></strong>
+          Giải quyết bug lớn nhất của bản cũ: thiếu thực thể giữ chỗ tạm thời. Bảng này cho phép giữ ghế theo chặng,
+          đặt thời gian hết hạn 30 phút hoặc 12 giờ và tránh bán trùng khi khách chưa thanh toán xong.
+        </div>
+        <div class="note">
+          <strong>2) Thêm bảng <code>BANG_GIA</code></strong>
+          Cung cấp nguồn tính giá vé cơ sở theo ga đi, ga đến, loại toa và tầng. Nhờ đó hệ thống không còn hard-code
+          giá vé trong Java và có thể cập nhật linh hoạt theo từng kỳ.
+        </div>
+        <div class="note">
+          <strong>3) Thêm bảng <code>CHINH_SACH_DOI_TRA</code></strong>
+          Cho phép cấu hình động luật đổi/trả vé theo thời điểm, chiều tàu, loại đơn hàng và mức khấu trừ.
+          Điều này phù hợp với các dịp cao điểm như lễ, Tết.
+        </div>
+        <div class="note">
+          <strong>4) Thêm bảng <code>DOI_TUONG_UU_DAI</code></strong>
+          Chuẩn hóa ưu đãi đối tượng như trẻ em, người cao tuổi, học sinh/sinh viên... thay vì hard-code trực tiếp.
+          Bảng <code>VE</code> giữ thông tin giảm giá thực tế đã áp dụng để đối soát về sau.
+        </div>
+        <div class="note">
+          <strong>5) Mở rộng <code>THANH_TOAN</code> và <code>HOAN_TIEN</code></strong>
+          Hỗ trợ trạng thái <i>Pending</i>, mã giao dịch duy nhất, request id chống callback lặp, và quản lý hoàn tiền
+          riêng thay vì nhồi hết vào lịch sử đổi/trả.
+        </div>
+        <div class="note">
+          <strong>6) Nâng cấp <code>DAT_CHO</code> và <code>VE</code></strong>
+          <code>DAT_CHO</code> có thêm loại đơn hàng, loại hành trình, giảm giá khứ hồi, các cấu phần tiền.
+          <code>VE</code> có ga đi/ga đến/chuyến tàu riêng để hỗ trợ bán vé theo chặng và khứ hồi đúng bản chất.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Gợi ý ràng buộc nghiệp vụ nên triển khai thêm khi code</h2>
+      <ul>
+        <li><b>Ràng buộc chặng hợp lệ:</b> <code>ga_di_id</code> và <code>ga_den_id</code> trong <code>GIU_CHO</code> và <code>VE</code> phải nằm trong <code>LICH_DUNG</code> của cùng <code>CHUYEN_TAU</code>, đồng thời <code>thu_tu_dung(ga_di) &lt; thu_tu_dung(ga_den)</code>.</li>
+        <li><b>Chống trùng giữ ghế:</b> một ghế trên cùng chuyến không được có 2 dòng <code>GIU_CHO</code> hoặc <code>VE</code> chồng chéo đoạn đường.</li>
+        <li><b>Unique nên thêm:</b> <code>UNIQUE(tau_id, so_toa)</code>, <code>UNIQUE(toa_tau_id, so_ghe)</code>, <code>UNIQUE(chuyen_tau_id, thu_tu_dung)</code>.</li>
+        <li><b>State machine:</b> cần đồng bộ trạng thái giữa <code>DAT_CHO</code>, <code>THANH_TOAN</code>, <code>GIU_CHO</code> và <code>VE</code> để tránh lệch dữ liệu.</li>
+        <li><b>Idempotency payment callback:</b> luôn kiểm tra <code>ma_giao_dich</code> / <code>request_id</code> trước khi cập nhật đơn và tạo vé.</li>
+      </ul>
+    </div>
+
+    <div class="panel footer">
+      File HTML này được thiết kế để bạn có thể mở trực tiếp trên trình duyệt. Nếu muốn, bước tiếp theo mình có thể giúp bạn:
+      <ul>
+        <li>viết tiếp <b>script SQL tạo bảng</b> tương ứng với ERD này,</li>
+        <li>xuất thêm một bản <b>Use Case HTML</b> đồng bộ với ERD mới,</li>
+        <li>hoặc sinh <b>Class Diagram</b> cho Java MVC/DAO/Service dựa trên schema này.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giai đoạn 5 - Dashboard và Báo cáo doanh thu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --slate-950: #020617;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --green-bg: #dcfce7;
+            --green-text: #166534;
+            --yellow-bg: #fef3c7;
+            --yellow-text: #92400e;
+            --red-bg: #fee2e2;
+            --red-text: #991b1b;
+            --code-bg: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1f2937;
+            background: #f8fafc;
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            color: white;
+            padding: 42px 24px;
+        }
+
+        header .wrap, main {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        main { padding: 28px 20px 60px; }
+
+        .card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--slate-900);
+            font-size: 24px;
+            border-bottom: 1px solid var(--slate-200);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--blue-dark);
+            margin-top: 28px;
+            margin-bottom: 10px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 10px;
+            padding-left: 0;
+            list-style: none;
+            margin-bottom: 0;
+        }
+
+        .toc a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--blue-dark);
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid #bfdbfe;
+        }
+
+        .toc a:hover { background: #dbeafe; }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .summary-item {
+            background: #f8fafc;
+            border: 1px solid var(--slate-200);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .summary-item strong {
+            display: block;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .badge-ok { background: var(--green-bg); color: var(--green-text); }
+        .badge-warn { background: var(--yellow-bg); color: var(--yellow-text); }
+        .badge-danger { background: var(--red-bg); color: var(--red-text); }
+
+        .note {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 14px 0;
+            font-weight: 600;
+        }
+
+        .note.info {
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
+        .note.warn {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            border-radius: 14px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.55;
+            border: 1px solid #1e293b;
+        }
+
+        code { font-family: Consolas, "Courier New", monospace; }
+
+        p code, li code {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .check-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .check-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .check-list li:last-child { border-bottom: none; }
+
+        .flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px;
+            margin: 14px 0;
+        }
+
+        .flow-step {
+            border: 1px solid var(--slate-200);
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .flow-step .num {
+            display: inline-flex;
+            width: 28px;
+            height: 28px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1e3a8a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--slate-500);
+            padding: 24px;
+        }
+
+        @media print {
+            header { background: white; color: black; padding: 20px 0; }
+            header .subtitle { color: #333; }
+            body { background: white; }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+            pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Giai đoạn 5 — Dashboard và Báo cáo doanh thu</h1>
+        <p class="subtitle">Thay dữ liệu giả bằng dữ liệu thật từ database, hoàn thiện thống kê admin, báo cáo doanh thu, vé bán, hoàn tiền, tuyến bán chạy và phương thức thanh toán</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#overview">1. Tổng quan mục tiêu</a></li>
+            <li><a href="#detect-files">2. Cách xác định file cần sửa</a></li>
+            <li><a href="#order">3. Thứ tự triển khai</a></li>
+            <li><a href="#dtos">4. Các DTO cần tạo</a></li>
+            <li><a href="#dao">5. BaoCaoDAO.java</a></li>
+            <li><a href="#service">6. BaoCaoService.java</a></li>
+            <li><a href="#dashboard-servlet">7. AdminDashboardServlet.java</a></li>
+            <li><a href="#report-servlet">8. AdminReportServlet.java</a></li>
+            <li><a href="#dashboard-jsp">9. Cập nhật dashboard.jsp</a></li>
+            <li><a href="#report-jsp">10. Cập nhật report-revenue.jsp</a></li>
+            <li><a href="#sql">11. SQL Giai đoạn 5</a></li>
+            <li><a href="#checklist">12. Checklist hoàn thành</a></li>
+            <li><a href="#test">13. Test Giai đoạn 5</a></li>
+            <li><a href="#conclusion">14. Kết luận</a></li>
+        </ul>
+    </section>
+
+    <section id="overview" class="card">
+        <h2>1. Tổng quan mục tiêu</h2>
+        <p>Giai đoạn 5 tập trung vào việc hoàn thiện phần admin dashboard và báo cáo doanh thu. Mục tiêu chính là thay số liệu giả bằng số liệu thật lấy từ database.</p>
+        <div class="summary-grid">
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Dashboard thật</strong><p>Doanh thu, vé bán, khách mới, hoàn tiền chờ xử lý lấy từ DB.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Báo cáo doanh thu</strong><p>Thống kê 6 tháng gần nhất từ <code>THANH_TOAN</code> và <code>HOAN_TIEN</code>.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Phân tích nghiệp vụ</strong><p>Top tuyến, hạng ghế, phương thức thanh toán, đơn gần đây.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>SQL tối ưu</strong><p>Thêm index để dashboard và báo cáo chạy ổn định hơn.</p></div>
+        </div>
+        <div class="note info">
+            Đây là giai đoạn rất “ăn điểm” khi demo vì giảng viên sẽ nhìn thấy kết quả nghiệp vụ thật sau các luồng đặt vé, thanh toán, trả vé và hoàn tiền.
+        </div>
+    </section>
+
+    <section id="detect-files" class="card">
+        <h2>2. Cách xác định file cần sửa</h2>
+        <h3>2.1. Servlet hiện tại</h3>
+<pre><code class="language-java">@WebServlet(name = &quot;AdminDashboardServlet&quot;, urlPatterns = {&quot;/admin&quot;, &quot;/admin/dashboard&quot;})
+@WebServlet(name = &quot;AdminReportServlet&quot;, urlPatterns = {&quot;/admin/reports&quot;})</code></pre>
+        <p>Kết luận cần sửa:</p>
+<pre><code class="language-text">src/java/vetau/controller/admin/AdminDashboardServlet.java
+src/java/vetau/controller/admin/AdminReportServlet.java</code></pre>
+
+        <h3>2.2. JSP hiện tại</h3>
+<pre><code class="language-text">/views/admin/dashboard.jsp
+/views/admin/report-revenue.jsp</code></pre>
+
+        <h3>2.3. File cần tạo mới</h3>
+<pre><code class="language-text">src/java/vetau/dto/DashboardStatsDTO.java
+src/java/vetau/dto/MonthlyRevenueDTO.java
+src/java/vetau/dto/LabelValueDTO.java
+src/java/vetau/dto/RecentBookingDTO.java
+
+src/java/vetau/dao/BaoCaoDAO.java
+src/java/vetau/service/BaoCaoService.java
+
+UPDATE_DB_GD5_REPORTING.sql</code></pre>
+    </section>
+
+    <section id="order" class="card">
+        <h2>3. Thứ tự triển khai Giai đoạn 5</h2>
+<pre><code class="language-text">1. Tạo DTO thống kê.
+2. Tạo BaoCaoDAO.java.
+3. Tạo BaoCaoService.java.
+4. Sửa AdminDashboardServlet.java.
+5. Sửa AdminReportServlet.java.
+6. Cập nhật dashboard.jsp.
+7. Cập nhật report-revenue.jsp.
+8. Chạy UPDATE_DB_GD5_REPORTING.sql.
+9. Clean and Build.
+10. Test /admin/dashboard và /admin/reports.</code></pre>
+    </section>
+
+    <section id="dtos" class="card">
+        <h2>4. Các DTO cần tạo</h2>
+        <h3>4.1. DashboardStatsDTO.java</h3>
+<pre><code class="language-java">package vetau.dto;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
+
+public class DashboardStatsDTO {
+
+    private BigDecimal revenueToday = BigDecimal.ZERO;
+    private BigDecimal revenueThisMonth = BigDecimal.ZERO;
+    private BigDecimal refundThisMonth = BigDecimal.ZERO;
+    private BigDecimal netRevenueThisMonth = BigDecimal.ZERO;
+
+    private int ticketsThisMonth;
+    private int ordersWaitingPayment;
+    private int paidOrdersThisMonth;
+    private int newCustomersThisMonth;
+    private int pendingRefunds;
+
+    public BigDecimal getRevenueToday() { return revenueToday; }
+    public void setRevenueToday(BigDecimal revenueToday) { this.revenueToday = safe(revenueToday); }
+
+    public BigDecimal getRevenueThisMonth() { return revenueThisMonth; }
+    public void setRevenueThisMonth(BigDecimal revenueThisMonth) { this.revenueThisMonth = safe(revenueThisMonth); }
+
+    public BigDecimal getRefundThisMonth() { return refundThisMonth; }
+    public void setRefundThisMonth(BigDecimal refundThisMonth) { this.refundThisMonth = safe(refundThisMonth); }
+
+    public BigDecimal getNetRevenueThisMonth() { return netRevenueThisMonth; }
+    public void setNetRevenueThisMonth(BigDecimal netRevenueThisMonth) { this.netRevenueThisMonth = safe(netRevenueThisMonth); }
+
+    public int getTicketsThisMonth() { return ticketsThisMonth; }
+    public void setTicketsThisMonth(int ticketsThisMonth) { this.ticketsThisMonth = ticketsThisMonth; }
+
+    public int getOrdersWaitingPayment() { return ordersWaitingPayment; }
+    public void setOrdersWaitingPayment(int ordersWaitingPayment) { this.ordersWaitingPayment = ordersWaitingPayment; }
+
+    public int getPaidOrdersThisMonth() { return paidOrdersThisMonth; }
+    public void setPaidOrdersThisMonth(int paidOrdersThisMonth) { this.paidOrdersThisMonth = paidOrdersThisMonth; }
+
+    public int getNewCustomersThisMonth() { return newCustomersThisMonth; }
+    public void setNewCustomersThisMonth(int newCustomersThisMonth) { this.newCustomersThisMonth = newCustomersThisMonth; }
+
+    public int getPendingRefunds() { return pendingRefunds; }
+    public void setPendingRefunds(int pendingRefunds) { this.pendingRefunds = pendingRefunds; }
+
+    public String getRevenueTodayText() { return formatMoney(revenueToday); }
+    public String getRevenueThisMonthText() { return formatMoney(revenueThisMonth); }
+    public String getRefundThisMonthText() { return formatMoney(refundThisMonth); }
+    public String getNetRevenueThisMonthText() { return formatMoney(netRevenueThisMonth); }
+
+    private BigDecimal safe(BigDecimal value) {
+        return value == null ? BigDecimal.ZERO : value;
+    }
+
+    private String formatMoney(BigDecimal value) {
+        NumberFormat nf = NumberFormat.getInstance(new Locale(&quot;vi&quot;, &quot;VN&quot;));
+        return nf.format(safe(value)) + &quot; đ&quot;;
+    }
+}</code></pre>
+
+        <h3>4.2. MonthlyRevenueDTO.java</h3>
+<pre><code class="language-java">package vetau.dto;
+
+import java.math.BigDecimal;
+
+public class MonthlyRevenueDTO {
+
+    private String label;
+    private BigDecimal revenue;
+    private BigDecimal refund;
+    private BigDecimal netRevenue;
+    private int ticketCount;
+
+    public MonthlyRevenueDTO() {
+    }
+
+    public MonthlyRevenueDTO(String label, BigDecimal revenue, BigDecimal refund, BigDecimal netRevenue, int ticketCount) {
+        this.label = label;
+        this.revenue = revenue;
+        this.refund = refund;
+        this.netRevenue = netRevenue;
+        this.ticketCount = ticketCount;
+    }
+
+    public String getLabel() { return label; }
+    public void setLabel(String label) { this.label = label; }
+
+    public BigDecimal getRevenue() { return revenue; }
+    public void setRevenue(BigDecimal revenue) { this.revenue = revenue; }
+
+    public BigDecimal getRefund() { return refund; }
+    public void setRefund(BigDecimal refund) { this.refund = refund; }
+
+    public BigDecimal getNetRevenue() { return netRevenue; }
+    public void setNetRevenue(BigDecimal netRevenue) { this.netRevenue = netRevenue; }
+
+    public int getTicketCount() { return ticketCount; }
+    public void setTicketCount(int ticketCount) { this.ticketCount = ticketCount; }
+}</code></pre>
+
+        <h3>4.3. LabelValueDTO.java</h3>
+<pre><code class="language-java">package vetau.dto;
+
+import java.math.BigDecimal;
+
+public class LabelValueDTO {
+
+    private String label;
+    private int count;
+    private BigDecimal value;
+
+    public LabelValueDTO() {
+    }
+
+    public LabelValueDTO(String label, int count, BigDecimal value) {
+        this.label = label;
+        this.count = count;
+        this.value = value;
+    }
+
+    public String getLabel() { return label; }
+    public int getCount() { return count; }
+    public BigDecimal getValue() { return value; }
+
+    public void setLabel(String label) { this.label = label; }
+    public void setCount(int count) { this.count = count; }
+    public void setValue(BigDecimal value) { this.value = value; }
+}</code></pre>
+
+        <h3>4.4. RecentBookingDTO.java</h3>
+<pre><code class="language-java">package vetau.dto;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+public class RecentBookingDTO {
+
+    private int id;
+    private String maDatCho;
+    private String tenKhachHang;
+    private LocalDateTime ngayDat;
+    private BigDecimal tongThanhToan;
+    private String trangThai;
+
+    public int getId() { return id; }
+    public String getMaDatCho() { return maDatCho; }
+    public String getTenKhachHang() { return tenKhachHang; }
+    public LocalDateTime getNgayDat() { return ngayDat; }
+    public BigDecimal getTongThanhToan() { return tongThanhToan; }
+    public String getTrangThai() { return trangThai; }
+
+    public void setId(int id) { this.id = id; }
+    public void setMaDatCho(String maDatCho) { this.maDatCho = maDatCho; }
+    public void setTenKhachHang(String tenKhachHang) { this.tenKhachHang = tenKhachHang; }
+    public void setNgayDat(LocalDateTime ngayDat) { this.ngayDat = ngayDat; }
+    public void setTongThanhToan(BigDecimal tongThanhToan) { this.tongThanhToan = tongThanhToan; }
+    public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
+
+    public String getNgayDatText() {
+        if (ngayDat == null) {
+            return &quot;-&quot;;
+        }
+
+        return ngayDat.format(DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy HH:mm&quot;));
+    }
+
+    public String getTongThanhToanText() {
+        if (tongThanhToan == null) {
+            return &quot;0 đ&quot;;
+        }
+
+        NumberFormat nf = NumberFormat.getInstance(new Locale(&quot;vi&quot;, &quot;VN&quot;));
+        return nf.format(tongThanhToan) + &quot; đ&quot;;
+    }
+}</code></pre>
+    </section>
+
+    <section id="dao" class="card">
+        <h2>5. BaoCaoDAO.java</h2>
+        <p>DAO này gom toàn bộ SQL thống kê thật từ database. Đây là các nhóm method quan trọng cần có.</p>
+
+        <h3>5.1. Dashboard tổng quan</h3>
+<pre><code class="language-java">public DashboardStatsDTO getDashboardStats() throws SQLException {
+    DashboardStatsDTO dto = new DashboardStatsDTO();
+
+    dto.setRevenueToday(getRevenueToday());
+    dto.setRevenueThisMonth(getRevenueThisMonth());
+    dto.setRefundThisMonth(getRefundThisMonth());
+
+    dto.setNetRevenueThisMonth(
+            dto.getRevenueThisMonth().subtract(dto.getRefundThisMonth())
+    );
+
+    dto.setTicketsThisMonth(countTicketsThisMonth());
+    dto.setOrdersWaitingPayment(countOrdersWaitingPayment());
+    dto.setPaidOrdersThisMonth(countPaidOrdersThisMonth());
+    dto.setNewCustomersThisMonth(countNewCustomersThisMonth());
+    dto.setPendingRefunds(countPendingRefunds());
+
+    return dto;
+}</code></pre>
+
+        <h3>5.2. Doanh thu hôm nay</h3>
+<pre><code class="language-java">private BigDecimal getRevenueToday() throws SQLException {
+    String sql = &quot;&quot;
+            + &quot;SELECT COALESCE(SUM(so_tien), 0) AS total &quot;
+            + &quot;FROM dbo.THANH_TOAN &quot;
+            + &quot;WHERE trang_thai = N&#x27;Thành công&#x27; &quot;
+            + &quot;  AND CAST(ngay_thanh_toan AS DATE) = CAST(SYSDATETIME() AS DATE)&quot;;
+
+    return queryBigDecimal(sql);
+}</code></pre>
+
+        <h3>5.3. Doanh thu tháng này</h3>
+<pre><code class="language-java">private BigDecimal getRevenueThisMonth() throws SQLException {
+    String sql = &quot;&quot;
+            + &quot;SELECT COALESCE(SUM(so_tien), 0) AS total &quot;
+            + &quot;FROM dbo.THANH_TOAN &quot;
+            + &quot;WHERE trang_thai = N&#x27;Thành công&#x27; &quot;
+            + &quot;  AND ngay_thanh_toan &gt;= DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1) &quot;
+            + &quot;  AND ngay_thanh_toan &lt; DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1))&quot;;
+
+    return queryBigDecimal(sql);
+}</code></pre>
+
+        <h3>5.4. Hoàn tiền tháng này</h3>
+<pre><code class="language-java">private BigDecimal getRefundThisMonth() throws SQLException {
+    String sql = &quot;&quot;
+            + &quot;SELECT COALESCE(SUM(so_tien_hoan), 0) AS total &quot;
+            + &quot;FROM dbo.HOAN_TIEN &quot;
+            + &quot;WHERE trang_thai = N&#x27;Hoàn tất&#x27; &quot;
+            + &quot;  AND thoi_gian_hoan_tat &gt;= DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1) &quot;
+            + &quot;  AND thoi_gian_hoan_tat &lt; DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1))&quot;;
+
+    return queryBigDecimal(sql);
+}</code></pre>
+
+        <h3>5.5. Báo cáo doanh thu 6 tháng</h3>
+<pre><code class="language-java">public List&lt;MonthlyRevenueDTO&gt; getMonthlyRevenue(int numberOfMonths) throws SQLException {
+    String sql = &quot;&quot;
+            + &quot;WITH Months AS ( &quot;
+            + &quot;    SELECT 0 AS n, DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1) AS month_start &quot;
+            + &quot;    UNION ALL &quot;
+            + &quot;    SELECT n + 1, DATEADD(MONTH, -1, month_start) &quot;
+            + &quot;    FROM Months &quot;
+            + &quot;    WHERE n + 1 &lt; ? &quot;
+            + &quot;), Revenue AS ( &quot;
+            + &quot;    SELECT DATEFROMPARTS(YEAR(ngay_thanh_toan), MONTH(ngay_thanh_toan), 1) AS month_start, &quot;
+            + &quot;           SUM(so_tien) AS revenue &quot;
+            + &quot;    FROM dbo.THANH_TOAN &quot;
+            + &quot;    WHERE trang_thai = N&#x27;Thành công&#x27; &quot;
+            + &quot;      AND ngay_thanh_toan IS NOT NULL &quot;
+            + &quot;    GROUP BY DATEFROMPARTS(YEAR(ngay_thanh_toan), MONTH(ngay_thanh_toan), 1) &quot;
+            + &quot;), Refunds AS ( &quot;
+            + &quot;    SELECT DATEFROMPARTS(YEAR(thoi_gian_hoan_tat), MONTH(thoi_gian_hoan_tat), 1) AS month_start, &quot;
+            + &quot;           SUM(so_tien_hoan) AS refund &quot;
+            + &quot;    FROM dbo.HOAN_TIEN &quot;
+            + &quot;    WHERE trang_thai = N&#x27;Hoàn tất&#x27; &quot;
+            + &quot;      AND thoi_gian_hoan_tat IS NOT NULL &quot;
+            + &quot;    GROUP BY DATEFROMPARTS(YEAR(thoi_gian_hoan_tat), MONTH(thoi_gian_hoan_tat), 1) &quot;
+            + &quot;), Tickets AS ( &quot;
+            + &quot;    SELECT DATEFROMPARTS(YEAR(dc.ngay_dat), MONTH(dc.ngay_dat), 1) AS month_start, &quot;
+            + &quot;           COUNT(v.id) AS ticket_count &quot;
+            + &quot;    FROM dbo.VE v &quot;
+            + &quot;    JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id &quot;
+            + &quot;    WHERE v.trang_thai IN (N&#x27;Hợp lệ&#x27;, N&#x27;Đã sử dụng&#x27;, N&#x27;Đã trả&#x27;) &quot;
+            + &quot;    GROUP BY DATEFROMPARTS(YEAR(dc.ngay_dat), MONTH(dc.ngay_dat), 1) &quot;
+            + &quot;) &quot;
+            + &quot;SELECT FORMAT(m.month_start, &#x27;MM/yyyy&#x27;) AS label, &quot;
+            + &quot;       COALESCE(r.revenue, 0) AS revenue, &quot;
+            + &quot;       COALESCE(f.refund, 0) AS refund, &quot;
+            + &quot;       COALESCE(r.revenue, 0) - COALESCE(f.refund, 0) AS net_revenue, &quot;
+            + &quot;       COALESCE(t.ticket_count, 0) AS ticket_count &quot;
+            + &quot;FROM Months m &quot;
+            + &quot;LEFT JOIN Revenue r ON r.month_start = m.month_start &quot;
+            + &quot;LEFT JOIN Refunds f ON f.month_start = m.month_start &quot;
+            + &quot;LEFT JOIN Tickets t ON t.month_start = m.month_start &quot;
+            + &quot;ORDER BY m.month_start ASC &quot;
+            + &quot;OPTION (MAXRECURSION 100)&quot;;
+
+    // map ResultSet sang List&lt;MonthlyRevenueDTO&gt;
+}</code></pre>
+
+        <h3>5.6. Các thống kê khác</h3>
+<pre><code class="language-text">getSeatClassStats()
+getPaymentMethodStats()
+getTopRoutes(int limit)
+getRecentBookings(int limit)</code></pre>
+    </section>
+
+    <section id="service" class="card">
+        <h2>6. BaoCaoService.java</h2>
+<pre><code class="language-java">package vetau.service;
+
+import vetau.dao.BaoCaoDAO;
+import vetau.dto.DashboardStatsDTO;
+import vetau.dto.LabelValueDTO;
+import vetau.dto.MonthlyRevenueDTO;
+import vetau.dto.RecentBookingDTO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public class BaoCaoService {
+
+    private final BaoCaoDAO baoCaoDAO = new BaoCaoDAO();
+
+    public DashboardStatsDTO getDashboardStats() throws SQLException {
+        return baoCaoDAO.getDashboardStats();
+    }
+
+    public List&lt;MonthlyRevenueDTO&gt; getMonthlyRevenue(int months) throws SQLException {
+        return baoCaoDAO.getMonthlyRevenue(months);
+    }
+
+    public List&lt;LabelValueDTO&gt; getSeatClassStats() throws SQLException {
+        return baoCaoDAO.getSeatClassStats();
+    }
+
+    public List&lt;LabelValueDTO&gt; getPaymentMethodStats() throws SQLException {
+        return baoCaoDAO.getPaymentMethodStats();
+    }
+
+    public List&lt;LabelValueDTO&gt; getTopRoutes(int limit) throws SQLException {
+        return baoCaoDAO.getTopRoutes(limit);
+    }
+
+    public List&lt;RecentBookingDTO&gt; getRecentBookings(int limit) throws SQLException {
+        return baoCaoDAO.getRecentBookings(limit);
+    }
+}</code></pre>
+    </section>
+
+    <section id="dashboard-servlet" class="card">
+        <h2>7. AdminDashboardServlet.java</h2>
+        <p>Servlet này không dùng số liệu giả nữa. Thay vào đó gọi <code>BaoCaoService</code>.</p>
+<pre><code class="language-java">package vetau.controller.admin;
+
+import vetau.dto.DashboardStatsDTO;
+import vetau.dto.RecentBookingDTO;
+import vetau.service.BaoCaoService;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.List;
+
+@WebServlet(name = &quot;AdminDashboardServlet&quot;, urlPatterns = {&quot;/admin&quot;, &quot;/admin/dashboard&quot;})
+public class AdminDashboardServlet extends HttpServlet {
+
+    private final BaoCaoService baoCaoService = new BaoCaoService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute(&quot;currentAdmin&quot;) == null) {
+            response.sendRedirect(request.getContextPath() + &quot;/admin/login&quot;);
+            return;
+        }
+
+        try {
+            DashboardStatsDTO stats = baoCaoService.getDashboardStats();
+            List&lt;RecentBookingDTO&gt; recentBookings = baoCaoService.getRecentBookings(8);
+
+            request.setAttribute(&quot;stats&quot;, stats);
+            request.setAttribute(&quot;recentBookings&quot;, recentBookings);
+
+            /*
+             * Giữ lại attribute cũ để dashboard.jsp hiện tại không vỡ.
+             */
+            request.setAttribute(&quot;totalRevenue&quot;, stats.getNetRevenueThisMonthText());
+            request.setAttribute(&quot;totalTickets&quot;, stats.getTicketsThisMonth());
+            request.setAttribute(&quot;newUsers&quot;, stats.getNewCustomersThisMonth());
+            request.setAttribute(&quot;pendingRefunds&quot;, stats.getPendingRefunds());
+
+        } catch (Exception ex) {
+            request.setAttribute(&quot;dashboardWarning&quot;,
+                    &quot;Không tải được dữ liệu dashboard từ database: &quot; + ex.getMessage());
+
+            request.setAttribute(&quot;totalRevenue&quot;, &quot;0 đ&quot;);
+            request.setAttribute(&quot;totalTickets&quot;, 0);
+            request.setAttribute(&quot;newUsers&quot;, 0);
+            request.setAttribute(&quot;pendingRefunds&quot;, 0);
+        }
+
+        request.getRequestDispatcher(&quot;/views/admin/dashboard.jsp&quot;).forward(request, response);
+    }
+}</code></pre>
+    </section>
+
+    <section id="report-servlet" class="card">
+        <h2>8. AdminReportServlet.java</h2>
+        <p>Servlet này tạo dữ liệu cho biểu đồ và bảng báo cáo bằng dữ liệu thật.</p>
+<pre><code class="language-java">package vetau.controller.admin;
+
+import vetau.dto.LabelValueDTO;
+import vetau.dto.MonthlyRevenueDTO;
+import vetau.service.BaoCaoService;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+
+@WebServlet(name = &quot;AdminReportServlet&quot;, urlPatterns = {&quot;/admin/reports&quot;})
+public class AdminReportServlet extends HttpServlet {
+
+    private final BaoCaoService baoCaoService = new BaoCaoService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute(&quot;currentAdmin&quot;) == null) {
+            response.sendRedirect(request.getContextPath() + &quot;/admin/login&quot;);
+            return;
+        }
+
+        try {
+            List&lt;MonthlyRevenueDTO&gt; monthlyRevenue = baoCaoService.getMonthlyRevenue(6);
+            List&lt;LabelValueDTO&gt; seatClassStats = baoCaoService.getSeatClassStats();
+            List&lt;LabelValueDTO&gt; paymentMethodStats = baoCaoService.getPaymentMethodStats();
+            List&lt;LabelValueDTO&gt; topRoutes = baoCaoService.getTopRoutes(5);
+
+            request.setAttribute(&quot;monthlyRevenue&quot;, monthlyRevenue);
+            request.setAttribute(&quot;seatClassStats&quot;, seatClassStats);
+            request.setAttribute(&quot;paymentMethodStats&quot;, paymentMethodStats);
+            request.setAttribute(&quot;topRoutes&quot;, topRoutes);
+
+            request.setAttribute(&quot;chartMonths&quot;, toJsStringArrayFromMonthly(monthlyRevenue));
+            request.setAttribute(&quot;chartRevenues&quot;, toJsNumberArrayFromMonthlyRevenue(monthlyRevenue));
+            request.setAttribute(&quot;chartSeatClasses&quot;, toJsStringArrayFromLabel(seatClassStats));
+            request.setAttribute(&quot;chartTicketCounts&quot;, toJsNumberArrayFromCount(seatClassStats));
+
+            BigDecimal totalRevenue = BigDecimal.ZERO;
+            int totalTickets = 0;
+
+            for (MonthlyRevenueDTO item : monthlyRevenue) {
+                if (item.getNetRevenue() != null) {
+                    totalRevenue = totalRevenue.add(item.getNetRevenue());
+                }
+
+                totalTickets += item.getTicketCount();
+            }
+
+            request.setAttribute(&quot;totalYearRevenue&quot;, totalRevenue);
+            request.setAttribute(&quot;totalYearTickets&quot;, totalTickets);
+
+        } catch (Exception ex) {
+            request.setAttribute(&quot;reportWarning&quot;,
+                    &quot;Không tải được dữ liệu báo cáo từ database: &quot; + ex.getMessage());
+
+            request.setAttribute(&quot;chartMonths&quot;, &quot;[]&quot;);
+            request.setAttribute(&quot;chartRevenues&quot;, &quot;[]&quot;);
+            request.setAttribute(&quot;chartSeatClasses&quot;, &quot;[]&quot;);
+            request.setAttribute(&quot;chartTicketCounts&quot;, &quot;[]&quot;);
+            request.setAttribute(&quot;totalYearRevenue&quot;, BigDecimal.ZERO);
+            request.setAttribute(&quot;totalYearTickets&quot;, 0);
+        }
+
+        request.getRequestDispatcher(&quot;/views/admin/report-revenue.jsp&quot;).forward(request, response);
+    }
+
+    private String escapeJs(String input) {
+        if (input == null) {
+            return &quot;&quot;;
+        }
+
+        return input.replace(&quot;\\&quot;, &quot;\\\\&quot;).replace(&quot;&#x27;&quot;, &quot;\\&#x27;&quot;);
+    }
+}</code></pre>
+        <div class="note warn">
+            Trong file servlet thật cần giữ đầy đủ các method convert sang JS array: <code>toJsStringArrayFromMonthly</code>, <code>toJsNumberArrayFromMonthlyRevenue</code>, <code>toJsStringArrayFromLabel</code>, <code>toJsNumberArrayFromCount</code>.
+        </div>
+    </section>
+
+    <section id="dashboard-jsp" class="card">
+        <h2>9. Cập nhật dashboard.jsp</h2>
+        <p>File dashboard cần dùng <code>stats</code> và <code>recentBookings</code>. Cũng nên giữ fallback bằng attribute cũ để tránh vỡ giao diện.</p>
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty dashboardWarning}&quot;&gt;
+    &lt;div style=&quot;padding:12px 14px;background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:10px;margin-bottom:16px;&quot;&gt;
+        ${dashboardWarning}
+    &lt;/div&gt;
+&lt;/c:if&gt;
+
+&lt;div class=&quot;stat-card&quot;&gt;
+    &lt;div class=&quot;stat-title&quot;&gt;Doanh thu hôm nay&lt;/div&gt;
+    &lt;div class=&quot;stat-value&quot;&gt;${stats.revenueTodayText}&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;stat-card&quot;&gt;
+    &lt;div class=&quot;stat-title&quot;&gt;Doanh thu thuần tháng này&lt;/div&gt;
+    &lt;div class=&quot;stat-value&quot;&gt;${stats.netRevenueThisMonthText}&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;stat-card&quot;&gt;
+    &lt;div class=&quot;stat-title&quot;&gt;Vé bán tháng này&lt;/div&gt;
+    &lt;div class=&quot;stat-value&quot;&gt;${stats.ticketsThisMonth}&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;stat-card&quot;&gt;
+    &lt;div class=&quot;stat-title&quot;&gt;Hoàn tiền chờ xử lý&lt;/div&gt;
+    &lt;div class=&quot;stat-value&quot;&gt;${stats.pendingRefunds}&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>Bảng đơn gần đây</h3>
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty recentBookings}&quot;&gt;
+    &lt;div class=&quot;content-card&quot; style=&quot;margin-top:24px;&quot;&gt;
+        &lt;h2&gt;Đơn đặt chỗ gần đây&lt;/h2&gt;
+
+        &lt;table class=&quot;admin-table&quot;&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Mã đơn&lt;/th&gt;
+                &lt;th&gt;Khách hàng&lt;/th&gt;
+                &lt;th&gt;Ngày đặt&lt;/th&gt;
+                &lt;th&gt;Tổng thanh toán&lt;/th&gt;
+                &lt;th&gt;Trạng thái&lt;/th&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+
+            &lt;tbody&gt;
+            &lt;c:forEach var=&quot;b&quot; items=&quot;${recentBookings}&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;${b.maDatCho}&lt;/td&gt;
+                    &lt;td&gt;${b.tenKhachHang}&lt;/td&gt;
+                    &lt;td&gt;${b.ngayDatText}&lt;/td&gt;
+                    &lt;td&gt;${b.tongThanhToanText}&lt;/td&gt;
+                    &lt;td&gt;${b.trangThai}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/c:if&gt;</code></pre>
+        <div class="note info">
+            Hai file JSP cập nhật đã được tạo riêng: <code>dashboard_UPDATED_GD5.jsp</code> và <code>report-revenue_UPDATED_GD5.jsp</code>.
+        </div>
+    </section>
+
+    <section id="report-jsp" class="card">
+        <h2>10. Cập nhật report-revenue.jsp</h2>
+        <p>File báo cáo cần dùng các attribute mới: <code>monthlyRevenue</code>, <code>topRoutes</code>, <code>paymentMethodStats</code>, <code>chartMonths</code>, <code>chartRevenues</code>, <code>chartSeatClasses</code>, <code>chartTicketCounts</code>.</p>
+
+        <h3>Warning nếu lỗi DB</h3>
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty reportWarning}&quot;&gt;
+    &lt;div style=&quot;padding:12px 14px;background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:10px;margin-bottom:16px;&quot;&gt;
+        ${reportWarning}
+    &lt;/div&gt;
+&lt;/c:if&gt;</code></pre>
+
+        <h3>Top tuyến</h3>
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty topRoutes}&quot;&gt;
+    &lt;div class=&quot;content-card&quot; style=&quot;margin-top:24px;&quot;&gt;
+        &lt;h2&gt;Top tuyến doanh thu cao&lt;/h2&gt;
+
+        &lt;table class=&quot;admin-table&quot;&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Tuyến&lt;/th&gt;
+                &lt;th&gt;Số vé&lt;/th&gt;
+                &lt;th&gt;Doanh thu&lt;/th&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+
+            &lt;tbody&gt;
+            &lt;c:forEach var=&quot;r&quot; items=&quot;${topRoutes}&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;${r.label}&lt;/td&gt;
+                    &lt;td&gt;${r.count}&lt;/td&gt;
+                    &lt;td&gt;${r.value}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/c:if&gt;</code></pre>
+
+        <h3>Phương thức thanh toán</h3>
+<pre><code class="language-jsp">&lt;c:if test=&quot;${not empty paymentMethodStats}&quot;&gt;
+    &lt;div class=&quot;content-card&quot; style=&quot;margin-top:24px;&quot;&gt;
+        &lt;h2&gt;Cơ cấu phương thức thanh toán&lt;/h2&gt;
+
+        &lt;table class=&quot;admin-table&quot;&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Phương thức&lt;/th&gt;
+                &lt;th&gt;Số giao dịch&lt;/th&gt;
+                &lt;th&gt;Doanh thu&lt;/th&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+
+            &lt;tbody&gt;
+            &lt;c:forEach var=&quot;p&quot; items=&quot;${paymentMethodStats}&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;${p.label}&lt;/td&gt;
+                    &lt;td&gt;${p.count}&lt;/td&gt;
+                    &lt;td&gt;${p.value}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+&lt;/c:if&gt;</code></pre>
+    </section>
+
+    <section id="sql" class="card">
+        <h2>11. SQL cho Giai đoạn 5</h2>
+        <p>Tạo file <code>UPDATE_DB_GD5_REPORTING.sql</code>.</p>
+<pre><code class="language-sql">USE VeTauDB;
+GO
+
+/* THANH_TOAN: doanh thu theo trạng thái/thời gian */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N&#x27;IX_THANH_TOAN_TrangThai_NgayThanhToan&#x27;
+      AND object_id = OBJECT_ID(N&#x27;dbo.THANH_TOAN&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_THANH_TOAN_TrangThai_NgayThanhToan
+    ON dbo.THANH_TOAN (trang_thai, ngay_thanh_toan)
+    INCLUDE (so_tien, phuong_thuc, dat_cho_id);
+END
+GO
+
+/* HOAN_TIEN: hoàn tiền theo trạng thái/thời gian */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N&#x27;IX_HOAN_TIEN_TrangThai_ThoiGianHoanTat&#x27;
+      AND object_id = OBJECT_ID(N&#x27;dbo.HOAN_TIEN&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_HOAN_TIEN_TrangThai_ThoiGianHoanTat
+    ON dbo.HOAN_TIEN (trang_thai, thoi_gian_hoan_tat)
+    INCLUDE (so_tien_hoan, ve_id, thanh_toan_id);
+END
+GO
+
+/* DAT_CHO: thống kê đơn theo trạng thái/ngày đặt */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N&#x27;IX_DAT_CHO_TrangThai_NgayDat&#x27;
+      AND object_id = OBJECT_ID(N&#x27;dbo.DAT_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_DAT_CHO_TrangThai_NgayDat
+    ON dbo.DAT_CHO (trang_thai, ngay_dat)
+    INCLUDE (tong_thanh_toan, khach_hang_id, ma_dat_cho);
+END
+GO
+
+/* VE: thống kê vé theo trạng thái/đơn */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N&#x27;IX_VE_TrangThai_DatCho&#x27;
+      AND object_id = OBJECT_ID(N&#x27;dbo.VE&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_VE_TrangThai_DatCho
+    ON dbo.VE (trang_thai, dat_cho_id)
+    INCLUDE (gia_ve_chi_tiet, ga_di_id, ga_den_id, ghe_id, chuyen_tau_id);
+END
+GO
+
+/* KHACH_HANG: thống kê khách mới */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = N&#x27;IX_KHACH_HANG_NgayTao&#x27;
+      AND object_id = OBJECT_ID(N&#x27;dbo.KHACH_HANG&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_KHACH_HANG_NgayTao
+    ON dbo.KHACH_HANG (ngay_tao)
+    INCLUDE (trang_thai);
+END
+GO</code></pre>
+    </section>
+
+    <section id="checklist" class="card">
+        <h2>12. Checklist hoàn thành Giai đoạn 5</h2>
+        <ul class="check-list">
+            <li>[ ] Có <code>DashboardStatsDTO.java</code></li>
+            <li>[ ] Có <code>MonthlyRevenueDTO.java</code></li>
+            <li>[ ] Có <code>LabelValueDTO.java</code></li>
+            <li>[ ] Có <code>RecentBookingDTO.java</code></li>
+            <li>[ ] Có <code>BaoCaoDAO.java</code></li>
+            <li>[ ] Có <code>BaoCaoService.java</code></li>
+            <li>[ ] <code>AdminDashboardServlet</code> không còn dữ liệu giả lập</li>
+            <li>[ ] <code>AdminReportServlet</code> không còn dữ liệu giả lập</li>
+            <li>[ ] <code>dashboard.jsp</code> hiển thị được stats từ database</li>
+            <li>[ ] <code>report-revenue.jsp</code> hiển thị được biểu đồ/tables từ database</li>
+            <li>[ ] Chạy <code>UPDATE_DB_GD5_REPORTING.sql</code></li>
+            <li>[ ] <code>/admin/dashboard</code> chạy không lỗi</li>
+            <li>[ ] <code>/admin/reports</code> chạy không lỗi</li>
+        </ul>
+    </section>
+
+    <section id="test" class="card">
+        <h2>13. Test Giai đoạn 5</h2>
+        <h3>13.1. Test SQL nhanh</h3>
+<pre><code class="language-sql">SELECT SUM(so_tien)
+FROM dbo.THANH_TOAN
+WHERE trang_thai = N&#x27;Thành công&#x27;;
+
+SELECT COUNT(*)
+FROM dbo.VE
+WHERE trang_thai IN (N&#x27;Hợp lệ&#x27;, N&#x27;Đã sử dụng&#x27;, N&#x27;Đã trả&#x27;);
+
+SELECT COUNT(*)
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;;</code></pre>
+
+        <h3>13.2. Test web dashboard</h3>
+<pre><code class="language-text">/admin/dashboard</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">Không còn số giả 24,500,000 / 342 / 128 / 5 nếu dữ liệu DB khác.
+Dashboard lấy số theo database.
+Có đơn đặt chỗ gần đây nếu DB có dữ liệu.</code></pre>
+
+        <h3>13.3. Test web reports</h3>
+<pre><code class="language-text">/admin/reports</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">Biểu đồ doanh thu 6 tháng lấy từ THANH_TOAN.
+Cơ cấu hạng ghế lấy từ VE + GHE + TOA_TAU.
+Top tuyến lấy từ VE + GA.
+Phương thức thanh toán lấy từ THANH_TOAN.</code></pre>
+    </section>
+
+    <section id="conclusion" class="card">
+        <h2>14. Kết luận Giai đoạn 5</h2>
+<pre><code class="language-text">Trước GĐ5:
+Dashboard và report dùng dữ liệu giả.
+
+Sau GĐ5:
+Dashboard dùng dữ liệu thật.
+Báo cáo doanh thu dùng dữ liệu thật.
+Có báo cáo doanh thu tháng, vé bán, hoàn tiền, tuyến bán chạy, phương thức thanh toán.
+Có SQL index để truy vấn ổn định hơn.</code></pre>
+        <div class="note info">
+            Sau Giai đoạn 5, phần admin sẽ thuyết phục hơn khi demo vì toàn bộ số liệu phản ánh dữ liệu nghiệp vụ thật trong hệ thống.
+        </div>
+    </section>
+</main>
+
+<footer>
+    File HTML tổng hợp nội dung phân tích và lộ trình triển khai Giai đoạn 5.
+</footer>
+</body>
+</html>

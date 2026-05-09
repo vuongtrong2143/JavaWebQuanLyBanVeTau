@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Giai đoạn 8 - Kiểm tra toàn vẹn hệ thống và đóng gói demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{--blue:#1d4ed8;--dark:#0f172a;--line:#e2e8f0;--muted:#64748b;--bg:#f8fafc}
+*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#1f2937;line-height:1.65}
+header{background:linear-gradient(135deg,#1d4ed8,#0f172a);color:white;padding:42px 24px}header .wrap,main{max-width:1180px;margin:0 auto}
+h1{margin:0 0 8px;font-size:34px;letter-spacing:-.03em}.subtitle{margin:0;color:#dbeafe;font-size:17px}
+main{padding:28px 20px 64px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:22px;box-shadow:0 10px 28px rgba(15,23,42,.06)}
+h2{margin-top:0;color:#0f172a;font-size:24px;border-bottom:1px solid var(--line);padding-bottom:10px}h3{color:#1e3a8a;margin-top:26px}
+pre{background:#0f172a;color:#e5e7eb;border-radius:14px;padding:16px;overflow:auto;font-size:13px;line-height:1.55}code{font-family:Consolas,'Courier New',monospace}
+p code,li code{background:#e2e8f0;color:#0f172a;padding:2px 6px;border-radius:6px}.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px;list-style:none;padding:0}
+.toc a{display:block;padding:12px 14px;border-radius:12px;background:#eff6ff;color:#1e3a8a;text-decoration:none;font-weight:800;border:1px solid #bfdbfe}
+.note{padding:14px 16px;border-radius:12px;margin:14px 0;font-weight:650}.info{background:#eff6ff;color:#1e3a8a;border:1px solid #bfdbfe}.good{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}.mini{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:14px}.mini strong{display:block;color:#0f172a}
+.check{list-style:none;padding:0}.check li{padding:8px 0;border-bottom:1px solid #f1f5f9}footer{text-align:center;color:#64748b;padding:24px}
+@media print{header{background:white;color:black}.subtitle{color:#333}.card{box-shadow:none;break-inside:avoid}pre{white-space:pre-wrap;word-break:break-word}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Giai đoạn 8 — Kiểm tra toàn vẹn hệ thống và đóng gói demo</h1>
+<p class="subtitle">Hoàn thiện bước cuối: tạo trang kiểm tra hệ thống, SQL verify, README chạy dự án và kịch bản demo cuối kỳ</p>
+</div></header>
+<main>
+<section class="card"><h2>Mục lục</h2><ul class="toc"><li><a href="#sec1">1. Mục tiêu Giai đoạn 8</a></li><li><a href="#sec2">2. File cần tạo mới</a></li><li><a href="#sec3">3. File cần cập nhật</a></li><li><a href="#sec4">4. Tạo SystemCheckItemDTO.java</a></li><li><a href="#sec5">5. Tạo SystemCheckDAO.java</a></li><li><a href="#sec6">6. Tạo AdminSystemCheckServlet.java</a></li><li><a href="#sec7">7. Tạo system-check.jsp</a></li><li><a href="#sec8">8. Cập nhật menu admin</a></li><li><a href="#sec9">9. Tạo FINAL_VERIFY_DATABASE_GD8.sql</a></li><li><a href="#sec10">10. Tạo README_CHAY_DU_AN.md</a></li><li><a href="#sec11">11. Tạo DEMO_SCRIPT_CUOI_KY.md</a></li><li><a href="#sec12">12. SQL có cần cập nhật không?</a></li><li><a href="#sec13">13. Test Giai đoạn 8</a></li><li><a href="#sec14">14. Checklist Giai đoạn 8</a></li><li><a href="#sec15">15. Kết luận Giai đoạn 8</a></li></ul></section>
+<section id="sec1" class="card"><h2>1. Mục tiêu Giai đoạn 8</h2>
+<p>Sau Giai đoạn 1–7, Giai đoạn 8 là bước kiểm tra toàn vẹn hệ thống và đóng gói demo cuối kỳ. Giai đoạn này không sửa sâu nghiệp vụ lõi nữa, mà tạo công cụ kiểm tra nhanh để tránh demo mới phát hiện dữ liệu lệch, vé trùng, trạng thái sai, hoàn tiền trùng hoặc callback lỗi.</p>
+<div class="grid">
+<div class="mini"><strong>Trước GĐ8</strong><p>Chưa có công cụ kiểm tra nhanh toàn hệ thống, phải tự chạy nhiều SQL rời rạc.</p></div>
+<div class="mini"><strong>Sau GĐ8</strong><p>Có trang <code>/admin/system-check</code> để kiểm tra database.</p></div>
+<div class="mini"><strong>Sau GĐ8</strong><p>Có <code>FINAL_VERIFY_DATABASE_GD8.sql</code> để kiểm tra cuối.</p></div>
+<div class="mini"><strong>Sau GĐ8</strong><p>Có README chạy dự án và kịch bản demo cuối kỳ.</p></div>
+</div>
+<pre><code class="language-">Trước GĐ8:
+- Đã sửa nghiệp vụ đặt vé, thanh toán, trạng thái, hoàn tiền, báo cáo, filter, UX.
+- Nhưng chưa có công cụ kiểm tra nhanh toàn hệ thống.
+- Khi demo phải tự chạy nhiều câu SQL rời rạc.
+- Chưa có màn hình admin xác nhận dữ liệu có ổn hay không.
+
+Sau GĐ8:
+- Có trang /admin/system-check để kiểm tra nhanh database.
+- Có SQL verify cuối cùng để kiểm tra trạng thái, vé trùng, hoàn tiền trùng.
+- Có checklist demo.
+- Có README hướng dẫn chạy project.
+- Không đụng vào logic thanh toán/hoàn tiền đã ổn định.</code></pre></section>
+<section id="sec2" class="card"><h2>2. File cần tạo mới</h2><pre><code class="language-">src/java/vetau/dto/SystemCheckItemDTO.java
+src/java/vetau/dao/SystemCheckDAO.java
+src/java/vetau/controller/admin/AdminSystemCheckServlet.java
+
+web/views/admin/system-check.jsp
+
+FINAL_VERIFY_DATABASE_GD8.sql
+README_CHAY_DU_AN.md
+DEMO_SCRIPT_CUOI_KY.md</code></pre></section>
+<section id="sec3" class="card"><h2>3. File cần cập nhật</h2><pre><code class="language-">web/views/admin/dashboard.jsp
+web/views/admin/report-revenue.jsp
+web/views/admin/refund-list.jsp
+web/views/admin/booking-list.jsp</code></pre>
+<p>Mục đích cập nhật là thêm link menu admin:</p>
+<pre><code class="language-">🧪 Kiểm tra hệ thống
+/admin/system-check</code></pre>
+<div class="note info">Không bắt buộc sửa tất cả ngay. Ưu tiên thêm vào <code>dashboard.jsp</code> trước.</div>
+</section>
+<section id="sec4" class="card"><h2>4. Tạo SystemCheckItemDTO.java</h2>
+<p><strong>File:</strong> <code>src/java/vetau/dto/SystemCheckItemDTO.java</code></p>
+<pre><code class="language-java">package vetau.dto;
+
+public class SystemCheckItemDTO {
+
+    private String groupName;
+    private String checkName;
+    private String status;
+    private String message;
+    private int countValue;
+
+    public SystemCheckItemDTO() {
+    }
+
+    public SystemCheckItemDTO(String groupName, String checkName, String status, String message, int countValue) {
+        this.groupName = groupName;
+        this.checkName = checkName;
+        this.status = status;
+        this.message = message;
+        this.countValue = countValue;
+    }
+
+    public String getGroupName() { return groupName; }
+    public String getCheckName() { return checkName; }
+    public String getStatus() { return status; }
+    public String getMessage() { return message; }
+    public int getCountValue() { return countValue; }
+
+    public void setGroupName(String groupName) { this.groupName = groupName; }
+    public void setCheckName(String checkName) { this.checkName = checkName; }
+    public void setStatus(String status) { this.status = status; }
+    public void setMessage(String message) { this.message = message; }
+    public void setCountValue(int countValue) { this.countValue = countValue; }
+
+    public boolean isOk() { return &quot;OK&quot;.equalsIgnoreCase(status); }
+    public boolean isWarning() { return &quot;WARNING&quot;.equalsIgnoreCase(status); }
+    public boolean isError() { return &quot;ERROR&quot;.equalsIgnoreCase(status); }
+}</code></pre></section>
+<section id="sec5" class="card"><h2>5. Tạo SystemCheckDAO.java</h2><p><strong>File:</strong> <code>src/java/vetau/dao/SystemCheckDAO.java</code></p><pre><code class="language-java">package vetau.dao;
+
+import vetau.dto.SystemCheckItemDTO;
+import vetau.util.DBConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@SuppressWarnings(&quot;SqlNoDataSourceInspection&quot;)
+public class SystemCheckDAO {
+
+    public List&lt;SystemCheckItemDTO&gt; runAllChecks() {
+        List&lt;SystemCheckItemDTO&gt; checks = new ArrayList&lt;&gt;();
+
+        checks.add(checkDatabaseConnection());
+
+        checks.add(checkDuplicateTicketCode());
+        checks.add(checkDuplicatePendingRefund());
+        checks.add(checkInvalidDatChoStatus());
+        checks.add(checkInvalidVeStatus());
+        checks.add(checkInvalidThanhToanStatus());
+        checks.add(checkInvalidHoanTienStatus());
+
+        checks.add(checkOrphanTickets());
+        checks.add(checkOrphanPayments());
+        checks.add(checkTicketTotalMatchesBooking());
+
+        checks.add(checkDashboardHasData());
+
+        return checks;
+    }
+
+    public Map&lt;String, Integer&gt; getSummaryCounts() throws SQLException {
+        Map&lt;String, Integer&gt; map = new LinkedHashMap&lt;&gt;();
+
+        map.put(&quot;Tổng đơn đặt chỗ&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.DAT_CHO&quot;));
+        map.put(&quot;Tổng vé&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.VE&quot;));
+        map.put(&quot;Thanh toán thành công&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.THANH_TOAN WHERE trang_thai = N&#x27;Thành công&#x27;&quot;));
+        map.put(&quot;Hoàn tiền chờ xử lý&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.HOAN_TIEN WHERE trang_thai = N&#x27;Chờ xử lý&#x27;&quot;));
+        map.put(&quot;Khách hàng&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.KHACH_HANG&quot;));
+        map.put(&quot;Chuyến tàu&quot;, queryCount(&quot;SELECT COUNT(*) AS total FROM dbo.CHUYEN_TAU&quot;));
+
+        return map;
+    }
+
+    private SystemCheckItemDTO checkDatabaseConnection() {
+        try (Connection conn = DBConnection.getConnection()) {
+            boolean valid = conn != null &amp;&amp; !conn.isClosed();
+
+            if (valid) {
+                return ok(&quot;Database&quot;, &quot;Kết nối database&quot;, &quot;Kết nối VeTauDB thành công.&quot;, 0);
+            }
+
+            return error(&quot;Database&quot;, &quot;Kết nối database&quot;, &quot;Không thể kết nối database.&quot;, 1);
+
+        } catch (Exception ex) {
+            return error(&quot;Database&quot;, &quot;Kết nối database&quot;, &quot;Lỗi kết nối DB: &quot; + ex.getMessage(), 1);
+        }
+    }
+
+    private SystemCheckItemDTO checkDuplicateTicketCode() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM ( &quot;
+                + &quot;    SELECT ma_ve &quot;
+                + &quot;    FROM dbo.VE &quot;
+                + &quot;    GROUP BY ma_ve &quot;
+                + &quot;    HAVING COUNT(*) &gt; 1 &quot;
+                + &quot;) x&quot;;
+
+        return checkZero(
+                &quot;Vé&quot;,
+                &quot;Mã vé bị trùng&quot;,
+                sql,
+                &quot;Không có mã vé trùng.&quot;,
+                &quot;Có mã vé bị trùng. Cần kiểm tra lại logic tạo vé/callback.&quot;
+        );
+    }
+
+    private SystemCheckItemDTO checkDuplicatePendingRefund() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM ( &quot;
+                + &quot;    SELECT ve_id &quot;
+                + &quot;    FROM dbo.HOAN_TIEN &quot;
+                + &quot;    WHERE trang_thai = N&#x27;Chờ xử lý&#x27; &quot;
+                + &quot;    GROUP BY ve_id &quot;
+                + &quot;    HAVING COUNT(*) &gt; 1 &quot;
+                + &quot;) x&quot;;
+
+        return checkZero(
+                &quot;Hoàn tiền&quot;,
+                &quot;Nhiều yêu cầu Chờ xử lý cho cùng vé&quot;,
+                sql,
+                &quot;Không có hoàn tiền chờ xử lý bị trùng.&quot;,
+                &quot;Có vé đang có nhiều yêu cầu hoàn tiền Chờ xử lý.&quot;
+        );
+    }
+
+    private SystemCheckItemDTO checkInvalidDatChoStatus() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.DAT_CHO &quot;
+                + &quot;WHERE trang_thai NOT IN (&quot;
+                + &quot;N&#x27;Chờ thanh toán&#x27;, &quot;
+                + &quot;N&#x27;Đã thanh toán&#x27;, &quot;
+                + &quot;N&#x27;Đã hủy&#x27;, &quot;
+                + &quot;N&#x27;Hết hạn&#x27;, &quot;
+                + &quot;N&#x27;Hoàn tiền một phần&#x27;, &quot;
+                + &quot;N&#x27;Hoàn tiền toàn bộ&#x27;&quot;
+                + &quot;)&quot;;
+
+        return checkZero(&quot;Trạng thái&quot;, &quot;DAT_CHO có trạng thái lạ&quot;, sql,
+                &quot;DAT_CHO không có trạng thái lạ.&quot;,
+                &quot;DAT_CHO có trạng thái không nằm trong danh sách chuẩn.&quot;);
+    }
+
+    private SystemCheckItemDTO checkInvalidVeStatus() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.VE &quot;
+                + &quot;WHERE trang_thai NOT IN (&quot;
+                + &quot;N&#x27;Chờ thanh toán&#x27;, &quot;
+                + &quot;N&#x27;Hợp lệ&#x27;, &quot;
+                + &quot;N&#x27;Đã sử dụng&#x27;, &quot;
+                + &quot;N&#x27;Đã trả&#x27;, &quot;
+                + &quot;N&#x27;Đã hủy&#x27;, &quot;
+                + &quot;N&#x27;Hết hạn&#x27;&quot;
+                + &quot;)&quot;;
+
+        return checkZero(&quot;Trạng thái&quot;, &quot;VE có trạng thái lạ&quot;, sql,
+                &quot;VE không có trạng thái lạ.&quot;,
+                &quot;VE có trạng thái không nằm trong danh sách chuẩn.&quot;);
+    }
+
+    private SystemCheckItemDTO checkInvalidThanhToanStatus() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.THANH_TOAN &quot;
+                + &quot;WHERE trang_thai NOT IN (&quot;
+                + &quot;N&#x27;Chờ xử lý&#x27;, &quot;
+                + &quot;N&#x27;Thành công&#x27;, &quot;
+                + &quot;N&#x27;Thất bại&#x27;, &quot;
+                + &quot;N&#x27;Đã hủy&#x27;&quot;
+                + &quot;)&quot;;
+
+        return checkZero(&quot;Trạng thái&quot;, &quot;THANH_TOAN có trạng thái lạ&quot;, sql,
+                &quot;THANH_TOAN không có trạng thái lạ.&quot;,
+                &quot;THANH_TOAN có trạng thái không nằm trong danh sách chuẩn.&quot;);
+    }
+
+    private SystemCheckItemDTO checkInvalidHoanTienStatus() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.HOAN_TIEN &quot;
+                + &quot;WHERE trang_thai NOT IN (&quot;
+                + &quot;N&#x27;Chờ xử lý&#x27;, &quot;
+                + &quot;N&#x27;Hoàn tất&#x27;, &quot;
+                + &quot;N&#x27;Từ chối&#x27;&quot;
+                + &quot;)&quot;;
+
+        return checkZero(&quot;Trạng thái&quot;, &quot;HOAN_TIEN có trạng thái lạ&quot;, sql,
+                &quot;HOAN_TIEN không có trạng thái lạ.&quot;,
+                &quot;HOAN_TIEN có trạng thái không nằm trong danh sách chuẩn.&quot;);
+    }
+
+    private SystemCheckItemDTO checkOrphanTickets() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.VE v &quot;
+                + &quot;LEFT JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id &quot;
+                + &quot;WHERE dc.id IS NULL&quot;;
+
+        return checkZero(&quot;Liên kết dữ liệu&quot;, &quot;Vé không có đơn đặt chỗ&quot;, sql,
+                &quot;Không có vé mồ côi.&quot;,
+                &quot;Có vé không liên kết được với DAT_CHO.&quot;);
+    }
+
+    private SystemCheckItemDTO checkOrphanPayments() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.THANH_TOAN tt &quot;
+                + &quot;LEFT JOIN dbo.DAT_CHO dc ON dc.id = tt.dat_cho_id &quot;
+                + &quot;WHERE dc.id IS NULL&quot;;
+
+        return checkZero(&quot;Liên kết dữ liệu&quot;, &quot;Thanh toán không có đơn đặt chỗ&quot;, sql,
+                &quot;Không có thanh toán mồ côi.&quot;,
+                &quot;Có thanh toán không liên kết được với DAT_CHO.&quot;);
+    }
+
+    private SystemCheckItemDTO checkTicketTotalMatchesBooking() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.DAT_CHO dc &quot;
+                + &quot;WHERE dc.trang_thai IN (N&#x27;Đã thanh toán&#x27;, N&#x27;Hoàn tiền một phần&#x27;, N&#x27;Hoàn tiền toàn bộ&#x27;) &quot;
+                + &quot;  AND ABS( &quot;
+                + &quot;      COALESCE(dc.tong_thanh_toan, 0) - &quot;
+                + &quot;      COALESCE(( &quot;
+                + &quot;          SELECT SUM(v.gia_ve_chi_tiet) &quot;
+                + &quot;          FROM dbo.VE v &quot;
+                + &quot;          WHERE v.dat_cho_id = dc.id &quot;
+                + &quot;      ), 0) &quot;
+                + &quot;  ) &gt; 1000&quot;;
+
+        return checkZero(&quot;Đối soát tiền&quot;, &quot;Tổng tiền đơn lệch tổng vé&quot;, sql,
+                &quot;Tổng tiền đơn khớp tổng tiền vé.&quot;,
+                &quot;Có đơn đã thanh toán nhưng tổng tiền lệch tổng giá vé.&quot;);
+    }
+
+    private SystemCheckItemDTO checkDashboardHasData() {
+        String sql = &quot;&quot;
+                + &quot;SELECT COUNT(*) AS total &quot;
+                + &quot;FROM dbo.THANH_TOAN &quot;
+                + &quot;WHERE trang_thai = N&#x27;Thành công&#x27;&quot;;
+
+        try {
+            int count = queryCount(sql);
+
+            if (count &gt; 0) {
+                return ok(&quot;Báo cáo&quot;, &quot;Dữ liệu dashboard&quot;, &quot;Có dữ liệu thanh toán thành công để hiển thị báo cáo.&quot;, count);
+            }
+
+            return warning(&quot;Báo cáo&quot;, &quot;Dữ liệu dashboard&quot;, &quot;Chưa có thanh toán thành công. Dashboard/report có thể ít dữ liệu.&quot;, count);
+
+        } catch (Exception ex) {
+            return error(&quot;Báo cáo&quot;, &quot;Dữ liệu dashboard&quot;, &quot;Lỗi kiểm tra dữ liệu dashboard: &quot; + ex.getMessage(), 1);
+        }
+    }
+
+    private SystemCheckItemDTO checkZero(String groupName, String checkName, String sql, String okMessage, String errorMessage) {
+        try {
+            int count = queryCount(sql);
+
+            if (count == 0) {
+                return ok(groupName, checkName, okMessage, count);
+            }
+
+            return error(groupName, checkName, errorMessage, count);
+
+        } catch (Exception ex) {
+            return error(groupName, checkName, &quot;Lỗi kiểm tra: &quot; + ex.getMessage(), 1);
+        }
+    }
+
+    private int queryCount(String sql) throws SQLException {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            return rs.next() ? rs.getInt(&quot;total&quot;) : 0;
+        }
+    }
+
+    private SystemCheckItemDTO ok(String group, String name, String message, int count) {
+        return new SystemCheckItemDTO(group, name, &quot;OK&quot;, message, count);
+    }
+
+    private SystemCheckItemDTO warning(String group, String name, String message, int count) {
+        return new SystemCheckItemDTO(group, name, &quot;WARNING&quot;, message, count);
+    }
+
+    private SystemCheckItemDTO error(String group, String name, String message, int count) {
+        return new SystemCheckItemDTO(group, name, &quot;ERROR&quot;, message, count);
+    }
+}</code></pre></section>
+<section id="sec6" class="card"><h2>6. Tạo AdminSystemCheckServlet.java</h2>
+<p><strong>File:</strong> <code>src/java/vetau/controller/admin/AdminSystemCheckServlet.java</code></p>
+<pre><code class="language-java">package vetau.controller.admin;
+
+import vetau.dao.SystemCheckDAO;
+import vetau.dto.SystemCheckItemDTO;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@WebServlet(name = &quot;AdminSystemCheckServlet&quot;, urlPatterns = {&quot;/admin/system-check&quot;})
+public class AdminSystemCheckServlet extends HttpServlet {
+
+    private final SystemCheckDAO systemCheckDAO = new SystemCheckDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute(&quot;currentAdmin&quot;) == null) {
+            response.sendRedirect(request.getContextPath() + &quot;/admin/login&quot;);
+            return;
+        }
+
+        try {
+            List&lt;SystemCheckItemDTO&gt; checks = systemCheckDAO.runAllChecks();
+            Map&lt;String, Integer&gt; summaryCounts = systemCheckDAO.getSummaryCounts();
+
+            int okCount = 0;
+            int warningCount = 0;
+            int errorCount = 0;
+
+            for (SystemCheckItemDTO item : checks) {
+                if (item.isOk()) {
+                    okCount++;
+                } else if (item.isWarning()) {
+                    warningCount++;
+                } else if (item.isError()) {
+                    errorCount++;
+                }
+            }
+
+            request.setAttribute(&quot;checks&quot;, checks);
+            request.setAttribute(&quot;summaryCounts&quot;, summaryCounts);
+            request.setAttribute(&quot;okCount&quot;, okCount);
+            request.setAttribute(&quot;warningCount&quot;, warningCount);
+            request.setAttribute(&quot;errorCount&quot;, errorCount);
+
+        } catch (Exception ex) {
+            request.setAttribute(&quot;error&quot;, &quot;Không thể kiểm tra hệ thống: &quot; + ex.getMessage());
+        }
+
+        request.getRequestDispatcher(&quot;/views/admin/system-check.jsp&quot;).forward(request, response);
+    }
+}</code></pre></section>
+<section id="sec7" class="card"><h2>7. Tạo system-check.jsp</h2><p><strong>File:</strong> <code>web/views/admin/system-check.jsp</code></p><pre><code class="language-jsp">&lt;%@ page contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot; %&gt;
+&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;vi&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Kiểm tra hệ thống - VETAU ADMIN&lt;/title&gt;
+    &lt;style&gt;
+        :root { --sidebar-width: 260px; --primary-dark: #0f172a; --accent-blue: #3b82f6; }
+        body { background: #f8fafc; font-family: &#x27;Segoe UI&#x27;, Tahoma, sans-serif; margin: 0; display: flex; color: #1e293b; }
+        .sidebar { width: var(--sidebar-width); background: var(--primary-dark); height: 100vh; position: fixed; color: white; padding: 20px 0; z-index: 100; }
+        .sidebar-brand { padding: 0 24px 30px; font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+        .sidebar-brand span { color: var(--accent-blue); }
+        .nav-menu { list-style: none; padding: 0; margin: 0; }
+        .nav-item a { display: flex; align-items: center; padding: 14px 24px; color: #94a3b8; text-decoration: none; transition: 0.2s; font-size: 15px; font-weight: 500; }
+        .nav-item a:hover, .nav-item.active a { background: rgba(255,255,255,0.05); color: white; border-left: 4px solid var(--accent-blue); }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 30px; min-width: 0; }
+        .page-header, .summary-card, .content-card { background: white; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 4px 10px rgba(15,23,42,0.04); }
+        .page-header { padding: 22px 24px; margin-bottom: 24px; }
+        .page-header h1 { margin: 0 0 6px; font-size: 24px; color: #0f172a; }
+        .page-header p { margin: 0; color: #64748b; }
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+        .summary-card { padding: 20px; }
+        .summary-label { font-size: 13px; text-transform: uppercase; color: #64748b; font-weight: 800; margin-bottom: 6px; }
+        .summary-value { font-size: 30px; font-weight: 900; }
+        .value-ok { color: #16a34a; } .value-warning { color: #d97706; } .value-error { color: #dc2626; }
+        .content-card { padding: 24px; margin-bottom: 24px; }
+        .section-title { margin: 0 0 18px; font-size: 18px; font-weight: 900; color: #0f172a; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
+        .count-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+        .count-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; }
+        .count-name { color: #64748b; font-size: 13px; font-weight: 800; }
+        .count-value { font-size: 24px; font-weight: 900; color: #1d4ed8; margin-top: 4px; }
+        .check-table { width: 100%; border-collapse: collapse; }
+        .check-table th { text-align: left; background: #f8fafc; color: #64748b; padding: 12px; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+        .check-table td { padding: 13px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; font-size: 14px; }
+        .badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 900; white-space: nowrap; }
+        .badge-ok { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .badge-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; padding: 14px; border-radius: 12px; font-weight: 700; margin-bottom: 18px; }
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+        .btn { border: none; padding: 11px 18px; border-radius: 10px; font-weight: 800; text-decoration: none; cursor: pointer; display: inline-block; }
+        .btn-primary { background: #1d4ed8; color: white; } .btn-light { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;aside class=&quot;sidebar&quot;&gt;
+    &lt;div class=&quot;sidebar-brand&quot;&gt;🚂 VETAU&lt;span&gt;ADMIN&lt;/span&gt;&lt;/div&gt;
+    &lt;ul class=&quot;nav-menu&quot;&gt;
+        &lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/dashboard&quot;&gt;📊 Bảng điều khiển&lt;/a&gt;&lt;/li&gt;
+        &lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/bookings&quot;&gt;📦 Quản lý Đơn hàng&lt;/a&gt;&lt;/li&gt;
+        &lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/refunds&quot;&gt;💸 Duyệt Hoàn tiền&lt;/a&gt;&lt;/li&gt;
+        &lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/reports&quot;&gt;📈 Báo cáo Doanh thu&lt;/a&gt;&lt;/li&gt;
+        &lt;li class=&quot;nav-item active&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/system-check&quot;&gt;🧪 Kiểm tra hệ thống&lt;/a&gt;&lt;/li&gt;
+        &lt;li class=&quot;nav-item&quot; style=&quot;margin-top: 40px;&quot;&gt;
+            &lt;a href=&quot;${pageContext.request.contextPath}/admin/logout&quot; style=&quot;color: #fca5a5;&quot;&gt;🚪 Đăng xuất&lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/aside&gt;
+
+&lt;main class=&quot;main-content&quot;&gt;
+
+    &lt;div class=&quot;page-header&quot;&gt;
+        &lt;h1&gt;🧪 Kiểm tra toàn vẹn hệ thống&lt;/h1&gt;
+        &lt;p&gt;Trang này giúp kiểm tra nhanh dữ liệu sau 8 giai đoạn trước khi demo hoặc nộp bài.&lt;/p&gt;
+
+        &lt;div class=&quot;actions&quot;&gt;
+            &lt;a class=&quot;btn btn-primary&quot; href=&quot;${pageContext.request.contextPath}/admin/system-check&quot;&gt;Chạy lại kiểm tra&lt;/a&gt;
+            &lt;a class=&quot;btn btn-light&quot; href=&quot;${pageContext.request.contextPath}/admin/dashboard&quot;&gt;Về dashboard&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;c:if test=&quot;${not empty error}&quot;&gt;
+        &lt;div class=&quot;alert-error&quot;&gt;❌ ${error}&lt;/div&gt;
+    &lt;/c:if&gt;
+
+    &lt;div class=&quot;summary-grid&quot;&gt;
+        &lt;div class=&quot;summary-card&quot;&gt;
+            &lt;div class=&quot;summary-label&quot;&gt;Kiểm tra đạt&lt;/div&gt;
+            &lt;div class=&quot;summary-value value-ok&quot;&gt;${okCount}&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;summary-card&quot;&gt;
+            &lt;div class=&quot;summary-label&quot;&gt;Cảnh báo&lt;/div&gt;
+            &lt;div class=&quot;summary-value value-warning&quot;&gt;${warningCount}&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;summary-card&quot;&gt;
+            &lt;div class=&quot;summary-label&quot;&gt;Lỗi cần xử lý&lt;/div&gt;
+            &lt;div class=&quot;summary-value value-error&quot;&gt;${errorCount}&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;content-card&quot;&gt;
+        &lt;h2 class=&quot;section-title&quot;&gt;📌 Số liệu tổng quan&lt;/h2&gt;
+        &lt;div class=&quot;count-grid&quot;&gt;
+            &lt;c:forEach var=&quot;entry&quot; items=&quot;${summaryCounts}&quot;&gt;
+                &lt;div class=&quot;count-item&quot;&gt;
+                    &lt;div class=&quot;count-name&quot;&gt;${entry.key}&lt;/div&gt;
+                    &lt;div class=&quot;count-value&quot;&gt;${entry.value}&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/c:forEach&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;content-card&quot;&gt;
+        &lt;h2 class=&quot;section-title&quot;&gt;✅ Danh sách kiểm tra&lt;/h2&gt;
+        &lt;table class=&quot;check-table&quot;&gt;
+            &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;Nhóm&lt;/th&gt;
+                &lt;th&gt;Hạng mục&lt;/th&gt;
+                &lt;th&gt;Trạng thái&lt;/th&gt;
+                &lt;th&gt;Số lượng&lt;/th&gt;
+                &lt;th&gt;Ghi chú&lt;/th&gt;
+            &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+            &lt;c:forEach var=&quot;item&quot; items=&quot;${checks}&quot;&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;${item.groupName}&lt;/td&gt;
+                    &lt;td&gt;&lt;strong&gt;${item.checkName}&lt;/strong&gt;&lt;/td&gt;
+                    &lt;td&gt;
+                        &lt;c:choose&gt;
+                            &lt;c:when test=&quot;${item.status eq &#x27;OK&#x27;}&quot;&gt;
+                                &lt;span class=&quot;badge badge-ok&quot;&gt;✅ OK&lt;/span&gt;
+                            &lt;/c:when&gt;
+                            &lt;c:when test=&quot;${item.status eq &#x27;WARNING&#x27;}&quot;&gt;
+                                &lt;span class=&quot;badge badge-warning&quot;&gt;⚠️ Cảnh báo&lt;/span&gt;
+                            &lt;/c:when&gt;
+                            &lt;c:otherwise&gt;
+                                &lt;span class=&quot;badge badge-error&quot;&gt;❌ Lỗi&lt;/span&gt;
+                            &lt;/c:otherwise&gt;
+                        &lt;/c:choose&gt;
+                    &lt;/td&gt;
+                    &lt;td&gt;${item.countValue}&lt;/td&gt;
+                    &lt;td&gt;${item.message}&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/c:forEach&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+
+&lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></section>
+<section id="sec8" class="card"><h2>8. Cập nhật menu admin</h2>
+<p><strong>File ưu tiên sửa trước:</strong> <code>web/views/admin/dashboard.jsp</code></p>
+<p>Tìm sidebar menu, ví dụ:</p>
+<pre><code class="language-jsp">&lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/reports&quot;&gt;📈 Báo cáo Doanh thu&lt;/a&gt;&lt;/li&gt;</code></pre>
+<p>Ngay dưới dòng đó, thêm:</p>
+<pre><code class="language-jsp">&lt;li class=&quot;nav-item&quot;&gt;&lt;a href=&quot;${pageContext.request.contextPath}/admin/system-check&quot;&gt;🧪 Kiểm tra hệ thống&lt;/a&gt;&lt;/li&gt;</code></pre>
+<div class="note info">Sau khi chạy ổn, có thể thêm dòng này vào <code>refund-list.jsp</code>, <code>refund-detail.jsp</code>, <code>booking-list.jsp</code>, <code>report-revenue.jsp</code>.</div>
+</section>
+<section id="sec9" class="card"><h2>9. Tạo FINAL_VERIFY_DATABASE_GD8.sql</h2><p><strong>File:</strong> <code>FINAL_VERIFY_DATABASE_GD8.sql</code></p><pre><code class="language-sql">USE VeTauDB;
+GO
+
+/* =========================================================
+   FINAL_VERIFY_DATABASE_GD8.sql
+   Kiểm tra toàn vẹn dữ liệu cuối cùng trước khi demo/nộp bài
+   ========================================================= */
+
+PRINT N&#x27;1. Tổng hợp trạng thái DAT_CHO&#x27;;
+SELECT trang_thai, COUNT(*) AS so_luong
+FROM dbo.DAT_CHO
+GROUP BY trang_thai
+ORDER BY trang_thai;
+GO
+
+PRINT N&#x27;2. Tổng hợp trạng thái VE&#x27;;
+SELECT trang_thai, COUNT(*) AS so_luong
+FROM dbo.VE
+GROUP BY trang_thai
+ORDER BY trang_thai;
+GO
+
+PRINT N&#x27;3. Tổng hợp trạng thái THANH_TOAN&#x27;;
+SELECT trang_thai, COUNT(*) AS so_luong, COALESCE(SUM(so_tien), 0) AS tong_tien
+FROM dbo.THANH_TOAN
+GROUP BY trang_thai
+ORDER BY trang_thai;
+GO
+
+PRINT N&#x27;4. Tổng hợp trạng thái HOAN_TIEN&#x27;;
+SELECT trang_thai, COUNT(*) AS so_luong, COALESCE(SUM(so_tien_hoan), 0) AS tong_tien_hoan
+FROM dbo.HOAN_TIEN
+GROUP BY trang_thai
+ORDER BY trang_thai;
+GO
+
+PRINT N&#x27;5. Kiểm tra mã vé trùng&#x27;;
+SELECT ma_ve, COUNT(*) AS so_lan
+FROM dbo.VE
+GROUP BY ma_ve
+HAVING COUNT(*) &gt; 1;
+GO
+
+PRINT N&#x27;6. Kiểm tra hoàn tiền Chờ xử lý bị trùng theo vé&#x27;;
+SELECT ve_id, COUNT(*) AS so_yeu_cau_cho_xu_ly
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;
+GROUP BY ve_id
+HAVING COUNT(*) &gt; 1;
+GO
+
+PRINT N&#x27;7. Kiểm tra DAT_CHO có trạng thái lạ&#x27;;
+SELECT id, ma_dat_cho, trang_thai
+FROM dbo.DAT_CHO
+WHERE trang_thai NOT IN (
+    N&#x27;Chờ thanh toán&#x27;,
+    N&#x27;Đã thanh toán&#x27;,
+    N&#x27;Đã hủy&#x27;,
+    N&#x27;Hết hạn&#x27;,
+    N&#x27;Hoàn tiền một phần&#x27;,
+    N&#x27;Hoàn tiền toàn bộ&#x27;
+);
+GO
+
+PRINT N&#x27;8. Kiểm tra VE có trạng thái lạ&#x27;;
+SELECT id, ma_ve, trang_thai
+FROM dbo.VE
+WHERE trang_thai NOT IN (
+    N&#x27;Chờ thanh toán&#x27;,
+    N&#x27;Hợp lệ&#x27;,
+    N&#x27;Đã sử dụng&#x27;,
+    N&#x27;Đã trả&#x27;,
+    N&#x27;Đã hủy&#x27;,
+    N&#x27;Hết hạn&#x27;
+);
+GO
+
+PRINT N&#x27;9. Kiểm tra THANH_TOAN có trạng thái lạ&#x27;;
+SELECT id, dat_cho_id, trang_thai
+FROM dbo.THANH_TOAN
+WHERE trang_thai NOT IN (
+    N&#x27;Chờ xử lý&#x27;,
+    N&#x27;Thành công&#x27;,
+    N&#x27;Thất bại&#x27;,
+    N&#x27;Đã hủy&#x27;
+);
+GO
+
+PRINT N&#x27;10. Kiểm tra HOAN_TIEN có trạng thái lạ&#x27;;
+SELECT id, ve_id, trang_thai
+FROM dbo.HOAN_TIEN
+WHERE trang_thai NOT IN (
+    N&#x27;Chờ xử lý&#x27;,
+    N&#x27;Hoàn tất&#x27;,
+    N&#x27;Từ chối&#x27;
+);
+GO
+
+PRINT N&#x27;11. Kiểm tra VE không có DAT_CHO&#x27;;
+SELECT v.id, v.ma_ve, v.dat_cho_id
+FROM dbo.VE v
+LEFT JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id
+WHERE dc.id IS NULL;
+GO
+
+PRINT N&#x27;12. Kiểm tra THANH_TOAN không có DAT_CHO&#x27;;
+SELECT tt.id, tt.dat_cho_id, tt.so_tien, tt.trang_thai
+FROM dbo.THANH_TOAN tt
+LEFT JOIN dbo.DAT_CHO dc ON dc.id = tt.dat_cho_id
+WHERE dc.id IS NULL;
+GO
+
+PRINT N&#x27;13. Kiểm tra dữ liệu dashboard&#x27;;
+SELECT N&#x27;Thanh toán thành công&#x27; AS chi_so, COUNT(*) AS so_luong, COALESCE(SUM(so_tien), 0) AS tong_tien
+FROM dbo.THANH_TOAN
+WHERE trang_thai = N&#x27;Thành công&#x27;;
+GO
+
+PRINT N&#x27;14. Kiểm tra dữ liệu refund admin&#x27;;
+SELECT TOP 20
+    ht.id AS hoan_tien_id,
+    ht.ve_id,
+    v.ma_ve,
+    dc.ma_dat_cho,
+    ht.so_tien_hoan,
+    ht.trang_thai,
+    ht.thoi_gian_yeu_cau,
+    ht.thoi_gian_hoan_tat
+FROM dbo.HOAN_TIEN ht
+JOIN dbo.VE v ON v.id = ht.ve_id
+JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id
+ORDER BY ht.id DESC;
+GO</code></pre></section>
+<section id="sec10" class="card"><h2>10. Tạo README_CHAY_DU_AN.md</h2><p><strong>File:</strong> <code>README_CHAY_DU_AN.md</code></p><pre><code class="language-markdown"># Hướng dẫn chạy dự án Web Quản lý Vé Tàu
+
+## 1. Môi trường
+
+- Java JDK 8 trở lên
+- Apache Tomcat 9
+- NetBeans
+- SQL Server
+- JDBC Driver SQL Server
+
+## 2. Thứ tự chạy SQL
+
+Chạy theo thứ tự:
+
+1. VeTauDB_trang_thai_UPDATED_GD1_GD2.sql
+2. UPDATE_DB_GD3_CLEANUP.sql
+3. SEED_15_KICH_BAN_MAU_GD1_GD2_GD3.sql
+4. UPDATE_DB_GD4_REFUND_ADMIN_DTO_CLEAN.sql
+5. UPDATE_DB_GD5_REPORTING_CLEAN.sql
+6. FINAL_VERIFY_DATABASE_GD8.sql
+
+## 3. Cấu hình database
+
+Kiểm tra file:
+
+src/java/vetau/util/DBConnection.java
+
+Đảm bảo đúng:
+
+- Tên database: VeTauDB
+- Username/password SQL Server
+- Port SQL Server
+
+## 4. Chạy project
+
+1. Mở project bằng NetBeans.
+2. Clean and Build.
+3. Run project trên Tomcat.
+4. Truy cập:
+
+http://localhost:8080/WEB_QUANLYVETAU/home
+
+## 5. Tài khoản admin demo
+
+- URL: /admin/login
+- Email: admin@vetau.vn
+- Password: admin123
+
+## 6. Các chức năng chính
+
+- Tìm chuyến tàu
+- Đặt vé
+- Thanh toán
+- Tra cứu vé
+- Xem lịch sử đặt vé
+- Trả vé
+- Admin duyệt hoàn tiền
+- Admin dashboard
+- Báo cáo doanh thu
+- Kiểm tra toàn vẹn hệ thống
+
+## 7. Trang kiểm tra hệ thống
+
+Sau khi đăng nhập admin, mở:
+
+/admin/system-check
+
+Trang này kiểm tra:
+
+- Vé trùng mã
+- Hoàn tiền chờ xử lý bị trùng
+- Trạng thái lạ
+- Dữ liệu mồ côi
+- Dữ liệu báo cáo</code></pre></section>
+<section id="sec11" class="card"><h2>11. Tạo DEMO_SCRIPT_CUOI_KY.md</h2><p><strong>File:</strong> <code>DEMO_SCRIPT_CUOI_KY.md</code></p><pre><code class="language-markdown"># Kịch bản demo cuối kỳ
+
+## 1. Giới thiệu hệ thống
+
+Hệ thống Web Quản lý Vé Tàu hỗ trợ:
+
+- Khách hàng tìm chuyến
+- Đặt vé
+- Thanh toán
+- Tra cứu vé
+- Trả vé
+- Admin quản lý đơn, duyệt hoàn tiền
+- Admin xem dashboard và báo cáo doanh thu
+
+## 2. Demo phía khách hàng
+
+### Bước 1: Trang chủ và tìm chuyến
+
+- Vào /home
+- Chọn ga đi, ga đến, ngày đi
+- Bấm tìm chuyến
+
+### Bước 2: Chọn chuyến và đặt vé
+
+- Chọn chuyến tàu
+- Chọn ghế
+- Nhập thông tin hành khách
+- Xem lại booking-review
+- Tạo đặt chỗ
+
+Kết quả:
+- Đơn ở trạng thái Chờ thanh toán
+- Vé ở trạng thái Chờ thanh toán
+
+### Bước 3: Thanh toán
+
+- Vào checkout
+- Thanh toán thành công
+
+Kết quả:
+- Đơn chuyển Đã thanh toán
+- Vé chuyển Hợp lệ
+- Thanh toán ghi Thành công
+
+### Bước 4: Tra cứu vé
+
+- Vào /ticket-check
+- Nhập mã vé
+- Kiểm tra thông tin vé
+
+### Bước 5: Trả vé
+
+- Vào danh sách vé
+- Chọn yêu cầu trả vé
+- Xác nhận trả vé
+
+Kết quả:
+- Vé chuyển Đã trả
+- Tạo yêu cầu hoàn tiền Chờ xử lý
+
+## 3. Demo phía admin
+
+### Bước 1: Đăng nhập admin
+
+- URL: /admin/login
+- Email: admin@vetau.vn
+- Password: admin123
+
+### Bước 2: Dashboard
+
+- Mở /admin/dashboard
+- Giải thích số liệu lấy từ database thật
+
+### Bước 3: Báo cáo doanh thu
+
+- Mở /admin/reports
+- Giải thích biểu đồ doanh thu 6 tháng
+- Top tuyến
+- Phương thức thanh toán
+
+### Bước 4: Duyệt hoàn tiền
+
+- Mở /admin/refunds
+- Chọn yêu cầu Chờ xử lý
+- Duyệt hoặc từ chối
+
+Kết quả:
+- HOAN_TIEN chuyển Hoàn tất hoặc Từ chối
+
+### Bước 5: Kiểm tra hệ thống
+
+- Mở /admin/system-check
+- Chỉ ra các mục OK
+- Nếu có cảnh báo thì giải thích
+
+## 4. Điểm nhấn kỹ thuật
+
+- Transaction khi thanh toán và hoàn tiền
+- Callback idempotency
+- Trạng thái được chuẩn hóa bằng SQL constraint
+- RefundAdminDTO thống nhất màn hình hoàn tiền
+- Dashboard/report dùng dữ liệu thật
+- Filter bảo vệ URL customer/admin
+- Chặn returnUrl độc hại
+- Có trang lỗi 404/500/403
+- Có màn hình kiểm tra toàn vẹn hệ thống
+
+## 5. Hướng phát triển thêm
+
+- Mã hóa mật khẩu bằng BCrypt
+- Phân quyền admin theo vai trò
+- Tích hợp cổng thanh toán thật
+- Gửi email vé điện tử
+- QR code nội bộ thay vì API ngoài
+- Xuất báo cáo Excel/PDF</code></pre></section>
+<section id="sec12" class="card"><h2>12. SQL có cần cập nhật không?</h2>
+<p>Giai đoạn 8 <strong>không bắt buộc cập nhật schema database</strong>. Chỉ cần thêm file kiểm tra:</p>
+<pre><code class="language-">FINAL_VERIFY_DATABASE_GD8.sql</code></pre>
+<p>Không thêm bảng mới, không thêm cột mới, không đổi constraint.</p>
+<pre><code class="language-">- GĐ8 là kiểm tra và đóng gói.
+- Không thay đổi nghiệp vụ.
+- Không nên đụng DB chính khi đã ổn định.</code></pre></section>
+<section id="sec13" class="card"><h2>13. Test Giai đoạn 8</h2>
+<h3>13.1. Test 1: Admin mở system check</h3>
+<pre><code class="language-">/admin/system-check</code></pre>
+<p>Kết quả đúng:</p>
+<pre><code class="language-">Hiển thị số lượng OK / Cảnh báo / Lỗi.
+Hiển thị tổng đơn, vé, thanh toán, hoàn tiền, khách hàng.
+Không lỗi JSP.</code></pre>
+<h3>13.2. Test 2: Chưa login admin</h3>
+<pre><code class="language-">/admin/system-check</code></pre>
+<p>Kết quả đúng:</p>
+<pre><code class="language-">Redirect về /admin/login.</code></pre>
+<h3>13.3. Test 3: Kiểm tra lỗi vé trùng</h3>
+<pre><code class="language-sql">SELECT ma_ve, COUNT(*) AS so_lan
+FROM dbo.VE
+GROUP BY ma_ve
+HAVING COUNT(*) &gt; 1;</code></pre>
+<p>Kết quả đúng: không có dòng nào.</p>
+<h3>13.4. Test 4: Kiểm tra hoàn tiền chờ xử lý bị trùng</h3>
+<pre><code class="language-sql">SELECT ve_id, COUNT(*) AS so_yeu_cau_cho_xu_ly
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;
+GROUP BY ve_id
+HAVING COUNT(*) &gt; 1;</code></pre>
+<p>Kết quả đúng: không có dòng nào.</p>
+<h3>13.5. Test 5: Kiểm tra trạng thái lạ</h3>
+<pre><code class="language-sql">SELECT trang_thai, COUNT(*) FROM dbo.DAT_CHO GROUP BY trang_thai;
+SELECT trang_thai, COUNT(*) FROM dbo.VE GROUP BY trang_thai;
+SELECT trang_thai, COUNT(*) FROM dbo.THANH_TOAN GROUP BY trang_thai;
+SELECT trang_thai, COUNT(*) FROM dbo.HOAN_TIEN GROUP BY trang_thai;</code></pre>
+<p>Kết quả đúng: chỉ có trạng thái nằm trong danh sách chuẩn đã thống nhất.</p>
+</section>
+<section id="sec14" class="card"><h2>14. Checklist Giai đoạn 8</h2>
+<ul class="check">
+<li>[ ] Có <code>SystemCheckItemDTO.java</code>.</li>
+<li>[ ] Có <code>SystemCheckDAO.java</code>.</li>
+<li>[ ] Có <code>AdminSystemCheckServlet.java</code>.</li>
+<li>[ ] Có <code>system-check.jsp</code>.</li>
+<li>[ ] <code>/admin/system-check</code> chạy được.</li>
+<li>[ ] <code>/admin/system-check</code> bị chặn nếu chưa login admin.</li>
+<li>[ ] Có link Kiểm tra hệ thống trong dashboard admin.</li>
+<li>[ ] Có <code>FINAL_VERIFY_DATABASE_GD8.sql</code>.</li>
+<li>[ ] Có <code>README_CHAY_DU_AN.md</code>.</li>
+<li>[ ] Có <code>DEMO_SCRIPT_CUOI_KY.md</code>.</li>
+<li>[ ] Chạy lại <code>FINAL_VERIFY_DATABASE_GD8.sql</code> không có lỗi nghiêm trọng.</li>
+<li>[ ] Chạy lại test hồi quy 6 giai đoạn.</li>
+</ul>
+</section>
+<section id="sec15" class="card"><h2>15. Kết luận Giai đoạn 8</h2>
+<p>Giai đoạn 8 là bước đóng gói cuối:</p>
+<pre><code class="language-">GĐ1–GĐ4: sửa nghiệp vụ lõi.
+GĐ5: dashboard/report thật.
+GĐ6: bảo mật session/filter.
+GĐ7: UX/error page/flash message.
+GĐ8: kiểm tra toàn vẹn, tài liệu chạy, kịch bản demo.</code></pre>
+<p>Sau Giai đoạn 8, bạn sẽ có:</p>
+<pre><code class="language-">- Hệ thống chạy ổn định hơn.
+- Có màn hình kiểm tra dữ liệu trước demo.
+- Có SQL verify cuối.
+- Có README hướng dẫn chạy.
+- Có kịch bản demo rõ ràng.
+- Có bằng chứng kiểm thử để đưa vào báo cáo.</code></pre>
+<div class="note good">Đây là giai đoạn rất quan trọng để biến project từ “đã sửa code” thành “sẵn sàng nộp và demo”.</div>
+</section>
+</main>
+<footer>Giai đoạn 8 — Kiểm tra toàn vẹn hệ thống, đóng gói demo và chuẩn bị nộp bài.</footer>
+</body>
+</html>

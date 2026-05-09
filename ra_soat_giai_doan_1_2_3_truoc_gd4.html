@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Rà soát Giai đoạn 1–3 trước khi qua Giai đoạn 4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --slate-950: #020617;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --green-bg: #dcfce7;
+            --green-text: #166534;
+            --yellow-bg: #fef3c7;
+            --yellow-text: #92400e;
+            --red-bg: #fee2e2;
+            --red-text: #991b1b;
+            --code-bg: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1f2937;
+            background: #f8fafc;
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            color: white;
+            padding: 42px 24px;
+        }
+
+        header .wrap,
+        main {
+            max-width: 1160px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        main {
+            padding: 28px 20px 60px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--slate-900);
+            font-size: 24px;
+            border-bottom: 1px solid var(--slate-200);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--blue-dark);
+            margin-top: 28px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: var(--slate-700);
+            margin-bottom: 8px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 10px;
+            padding-left: 0;
+            list-style: none;
+            margin-bottom: 0;
+        }
+
+        .toc a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--blue-dark);
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid #bfdbfe;
+        }
+
+        .toc a:hover {
+            background: #dbeafe;
+        }
+
+        .summary-grid,
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .summary-item {
+            background: #f8fafc;
+            border: 1px solid var(--slate-200);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .summary-item strong {
+            display: block;
+            color: var(--slate-900);
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .badge-ok {
+            background: var(--green-bg);
+            color: var(--green-text);
+        }
+
+        .badge-warn {
+            background: var(--yellow-bg);
+            color: var(--yellow-text);
+        }
+
+        .badge-danger {
+            background: var(--red-bg);
+            color: var(--red-text);
+        }
+
+        .note {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 14px 0;
+            font-weight: 600;
+        }
+
+        .note.info {
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
+        .note.warn {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .note.danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            background: white;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--slate-200);
+            padding: 10px 12px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background: #eff6ff;
+            color: var(--slate-900);
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            border-radius: 14px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.55;
+            border: 1px solid #1e293b;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        p code,
+        li code,
+        td code {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .check-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .check-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .check-list li:last-child {
+            border-bottom: none;
+        }
+
+        .todo {
+            background: #f8fafc;
+            border: 1px solid var(--slate-200);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin: 12px 0;
+        }
+
+        .todo h4 {
+            margin-top: 0;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--slate-500);
+            padding: 24px;
+        }
+
+        @media print {
+            header {
+                background: white;
+                color: black;
+                padding: 20px 0;
+            }
+
+            header .subtitle {
+                color: #333;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Rà soát Giai đoạn 1–3 trước khi qua Giai đoạn 4</h1>
+        <p class="subtitle">Tự kiểm tra lại giải pháp đã đề xuất, các điểm còn thiếu, rủi ro compile/runtime và thay đổi SQL tương ứng</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#ket-luan-nhanh">1. Kết luận nhanh</a></li>
+            <li><a href="#gd1">2. Rà soát Giai đoạn 1</a></li>
+            <li><a href="#gd2">3. Rà soát Giai đoạn 2</a></li>
+            <li><a href="#gd3">4. Rà soát Giai đoạn 3</a></li>
+            <li><a href="#sql">5. Rà soát SQL sau 3 giai đoạn</a></li>
+            <li><a href="#bo-sung">6. Chỉnh sửa bổ sung trước Giai đoạn 4</a></li>
+            <li><a href="#checklist">7. Checklist trước khi qua Giai đoạn 4</a></li>
+            <li><a href="#ket-luan">8. Kết luận cuối cùng</a></li>
+        </ul>
+    </section>
+
+    <section id="ket-luan-nhanh" class="card">
+        <h2>1. Kết luận nhanh</h2>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <strong>Giai đoạn 1</strong>
+                <span class="badge badge-ok">Ổn khoảng 90–95%</span>
+                <p>Cần nhớ chuẩn hóa option trạng thái trong JSP admin.</p>
+            </div>
+            <div class="summary-item">
+                <strong>Giai đoạn 2</strong>
+                <span class="badge badge-ok">Ổn khoảng 90–95%</span>
+                <p>Cần kiểm tra JDK/text block và hidden input trong các JSP.</p>
+            </div>
+            <div class="summary-item">
+                <strong>Giai đoạn 3</strong>
+                <span class="badge badge-warn">Ổn khoảng 80–85%</span>
+                <p>Cần bổ sung thêm các điểm gọi cleanup và điều kiện an toàn.</p>
+            </div>
+            <div class="summary-item">
+                <strong>SQL GĐ1–GĐ2</strong>
+                <span class="badge badge-ok">Đã xử lý constraint chính</span>
+                <p>Đã giải quyết lỗi <code>CK_VE_trang_thai</code>.</p>
+            </div>
+            <div class="summary-item">
+                <strong>SQL GĐ3</strong>
+                <span class="badge badge-warn">Cần bổ sung</span>
+                <p>Cần thêm migration index và rà lại vài constraint/default.</p>
+            </div>
+        </div>
+
+        <div class="note info">
+            Điểm quan trọng nhất: lỗi <code>CK_VE_trang_thai</code> đã được nhận diện đúng. Giải pháp thêm trạng thái <code>Chờ thanh toán</code> vào bảng <code>VE</code> là đúng. Tuy nhiên, sau Giai đoạn 3 nên có thêm migration riêng cho cleanup/index.
+        </div>
+    </section>
+
+    <section id="gd1" class="card">
+        <h2>2. Rà soát Giai đoạn 1</h2>
+
+        <h3>2.1. <code>TrangThai.java</code></h3>
+        <p>Giải pháp tạo <code>TrangThai.java</code> là đúng. Nó giải quyết vấn đề dùng chuỗi trạng thái rải rác.</p>
+        <p>Các trạng thái nên có tối thiểu:</p>
+<pre><code class="language-java">DAT_CHO_CHO_THANH_TOAN = &quot;Chờ thanh toán&quot;
+DAT_CHO_DA_THANH_TOAN = &quot;Đã thanh toán&quot;
+DAT_CHO_HET_HAN = &quot;Hết hạn&quot;
+DAT_CHO_DA_HUY = &quot;Đã hủy&quot;
+
+GIU_CHO_DANG_GIU = &quot;Đang giữ&quot;
+GIU_CHO_DA_CHUYEN_VE = &quot;Đã chuyển vé&quot;
+GIU_CHO_HET_HAN = &quot;Hết hạn&quot;
+GIU_CHO_DA_HUY = &quot;Đã hủy&quot;
+
+VE_CHO_THANH_TOAN = &quot;Chờ thanh toán&quot;
+VE_HOP_LE = &quot;Hợp lệ&quot;
+VE_DA_TRA = &quot;Đã trả&quot;
+VE_DA_HUY = &quot;Đã hủy&quot;
+VE_DA_SU_DUNG = &quot;Đã sử dụng&quot;
+
+THANH_TOAN_PENDING = &quot;Pending&quot;
+THANH_TOAN_THANH_CONG = &quot;Thành công&quot;
+THANH_TOAN_THAT_BAI = &quot;Thất bại&quot;
+
+HOAN_TIEN_CHO_XU_LY = &quot;Chờ xử lý&quot;
+HOAN_TIEN_HOAN_TAT = &quot;Hoàn tất&quot;
+HOAN_TIEN_TU_CHOI = &quot;Từ chối&quot; </code></pre>
+
+        <h4>Điểm cần chú ý thêm</h4>
+        <p>Nếu đã đổi trạng thái xóa mềm về <code>Tạm dừng</code>, các JSP/form admin cũng phải có option <code>Tạm dừng</code>, không dùng lại:</p>
+<pre><code class="language-text">Tạm ngưng
+Ngưng hoạt động</code></pre>
+        <p>Cần rà lại các file:</p>
+<pre><code class="language-text">ga-form.jsp
+ga-list.jsp
+tau-form.jsp
+tau-list.jsp
+bang-gia-form.jsp
+khuyen-mai-form.jsp
+chinh-sach-doi-tra-form.jsp</code></pre>
+
+        <h3>2.2. <code>web.xml</code></h3>
+        <p>Phần bổ sung mapping là đúng. Cần có đủ:</p>
+<pre><code class="language-xml">&lt;url-pattern&gt;/checkout&lt;/url-pattern&gt;
+&lt;url-pattern&gt;/my-tickets&lt;/url-pattern&gt;
+&lt;url-pattern&gt;/return-ticket&lt;/url-pattern&gt;
+&lt;url-pattern&gt;/payment&lt;/url-pattern&gt;</code></pre>
+        <p>Và nên giữ thêm <code>tracking-mode</code>:</p>
+<pre><code class="language-xml">&lt;session-config&gt;
+    &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+    &lt;tracking-mode&gt;COOKIE&lt;/tracking-mode&gt;
+&lt;/session-config&gt;</code></pre>
+
+        <h3>2.3. <code>VeDAO.updateTrangThai(...)</code></h3>
+        <p>Giải pháp đưa update trạng thái vé từ <code>ReturnTicketServlet</code> xuống <code>VeDAO</code>/<code>VeService</code> là đúng. Không còn SQL trực tiếp trong servlet là điểm cộng.</p>
+
+        <h3>2.4. Admin Refund</h3>
+        <p>Phần sửa Giai đoạn 1 giúp admin approve/reject có lưu DB thật hơn trước, nhưng vẫn chỉ là giải pháp trung gian.</p>
+        <div class="note warn">
+            AdminRefundServlet vẫn đang dựa khá nhiều vào <code>LICH_SU_DOI_TRA.ghi_chu</code> để biểu diễn trạng thái xử lý. Giai đoạn 4 nên chuyển trọng tâm sang <code>HOAN_TIEN.trang_thai</code>.
+        </div>
+    </section>
+
+    <section id="gd2" class="card">
+        <h2>3. Rà soát Giai đoạn 2</h2>
+        <p>Hướng thiết kế là đúng:</p>
+<pre><code class="language-text">Chốt đơn:
+DAT_CHO = Chờ thanh toán
+GIU_CHO = Đang giữ
+VE = Chờ thanh toán
+
+Thanh toán thành công:
+THANH_TOAN = Thành công
+DAT_CHO = Đã thanh toán
+GIU_CHO = Đã chuyển vé
+VE = Hợp lệ</code></pre>
+
+        <h3>3.1. Điểm đã đúng</h3>
+        <ul>
+            <li>Không tin <code>soTien</code> từ client.</li>
+            <li>Không lưu <code>pendingPassenger</code> trong session.</li>
+            <li>Callback không tạo <code>HanhKhach</code>/<code>Ve</code> nữa.</li>
+            <li>Callback không phụ thuộc session.</li>
+            <li>Callback lần 2 không tạo vé trùng.</li>
+            <li>Thanh toán thành công update nhiều bảng trong transaction.</li>
+        </ul>
+
+        <h3>3.2. SQL phải đổi theo code</h3>
+        <p>Bảng <code>VE</code> phải cho phép:</p>
+<pre><code class="language-sql">CHECK (
+    trang_thai IN (
+        N&#x27;Chờ thanh toán&#x27;,
+        N&#x27;Hợp lệ&#x27;,
+        N&#x27;Đã sử dụng&#x27;,
+        N&#x27;Đã trả&#x27;,
+        N&#x27;Đã hủy&#x27;
+    )
+)</code></pre>
+        <p>Và default nên là:</p>
+<pre><code class="language-sql">DEFAULT N&#x27;Chờ thanh toán&#x27;</code></pre>
+
+        <h3>3.3. Cần chú ý Java text block <code>&quot;&quot;&quot;</code></h3>
+        <p>Trong code đề xuất cho <code>DatVeService</code> và <code>ThanhToanService</code>, có dùng Java text block:</p>
+<pre><code class="language-java">String sql = &quot;&quot;&quot;
+    SELECT ...
+&quot;&quot;&quot;;</code></pre>
+        <div class="note warn">
+            Text block ổn định từ Java 15. Nếu project đang dùng JDK 11, NetBeans có thể báo lỗi compile. Khi đó cần đổi sang nối chuỗi truyền thống.
+        </div>
+        <p>Ví dụ an toàn với JDK 11:</p>
+<pre><code class="language-java">String sql = &quot;&quot;
+        + &quot;SELECT id, dat_cho_id, trang_thai &quot;
+        + &quot;FROM dbo.THANH_TOAN WITH (UPDLOCK, HOLDLOCK) &quot;
+        + &quot;WHERE request_id = ?&quot;;</code></pre>
+
+        <h3>3.4. Cần kiểm tra <code>booking-review.jsp</code> gửi đủ hidden input</h3>
+        <p><code>CreateBookingServlet</code> mới cần các parameter:</p>
+<pre><code class="language-text">chuyenTauId
+gaDiId
+gaDenId
+gheId
+loaiToa
+tang
+doiTuongUuDaiId
+maKhuyenMai
+hoTen
+loaiGiayTo
+soGiayTo
+ngaySinh</code></pre>
+        <p>Form nên có:</p>
+<pre><code class="language-jsp">&lt;input type=&quot;hidden&quot; name=&quot;chuyenTauId&quot; value=&quot;${chuyenTauId}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;gaDiId&quot; value=&quot;${gaDiId}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;gaDenId&quot; value=&quot;${gaDenId}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;gheId&quot; value=&quot;${gheId}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;loaiToa&quot; value=&quot;${loaiToa}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;tang&quot; value=&quot;${tang}&quot;&gt;
+&lt;input type=&quot;hidden&quot; name=&quot;doiTuongUuDaiId&quot; value=&quot;${doiTuongUuDaiId}&quot;&gt;</code></pre>
+        <p>Nếu JSP đang dùng <code>${param.loaiToa}</code> thì có thể vẫn chạy, nhưng chắc hơn là <code>BookingReviewServlet</code> nên set attribute rõ ràng:</p>
+<pre><code class="language-java">request.setAttribute(&quot;loaiToa&quot;, loaiToa);
+request.setAttribute(&quot;tang&quot;, tang);</code></pre>
+
+        <h3>3.5. Kiểm tra <code>checkout.jsp</code> không gửi <code>soTien</code></h3>
+        <p>Nên xóa hẳn:</p>
+<pre><code class="language-jsp">&lt;input type=&quot;hidden&quot; name=&quot;soTien&quot; value=&quot;${datCho.tongThanhToan}&quot;&gt;</code></pre>
+        <p>Form thanh toán chỉ cần:</p>
+<pre><code class="language-jsp">&lt;input type=&quot;hidden&quot; name=&quot;datChoId&quot; value=&quot;${datCho.id}&quot;&gt;</code></pre>
+    </section>
+
+    <section id="gd3" class="card">
+        <h2>4. Rà soát Giai đoạn 3</h2>
+        <p>Hướng tạo <code>GiuChoCleanupService</code> là đúng. Cleanup nên làm:</p>
+<pre><code class="language-text">DAT_CHO Chờ thanh toán + hết hạn  → Hết hạn
+GIU_CHO Đang giữ                 → Hết hạn
+VE Chờ thanh toán                → Đã hủy
+THANH_TOAN Pending               → Thất bại</code></pre>
+        <p>Gọi cleanup ở các điểm:</p>
+<pre><code class="language-text">Tìm chuyến
+Chọn ghế
+Checkout
+Payment
+Lịch sử đặt vé
+Callback tới muộn</code></pre>
+
+        <h3>4.1. Bổ sung điều kiện không cleanup nhầm đơn đã thanh toán thành công</h3>
+        <p>Trong <code>GiuChoCleanupService</code>, SQL tìm đơn quá hạn nên tránh hủy đơn đã có thanh toán thành công nhưng trạng thái <code>DAT_CHO</code> bị lệch.</p>
+        <p>Bản SQL an toàn hơn trong <code>findExpiredDatChoIds(...)</code>:</p>
+<pre><code class="language-java">StringBuilder sql = new StringBuilder();
+sql.append(
+        &quot;SELECT dc.id &quot;
+      + &quot;FROM dbo.DAT_CHO dc WITH (UPDLOCK, HOLDLOCK) &quot;
+      + &quot;WHERE dc.trang_thai = ? &quot;
+      + &quot;  AND dc.thoi_gian_het_han IS NOT NULL &quot;
+      + &quot;  AND dc.thoi_gian_het_han &lt; SYSDATETIME() &quot;
+      + &quot;  AND NOT EXISTS ( &quot;
+      + &quot;      SELECT 1 &quot;
+      + &quot;      FROM dbo.THANH_TOAN tt &quot;
+      + &quot;      WHERE tt.dat_cho_id = dc.id &quot;
+      + &quot;        AND tt.trang_thai = N&#x27;Thành công&#x27; &quot;
+      + &quot;  ) &quot;
+);
+
+if (datChoId != null) {
+    sql.append(&quot; AND dc.id = ?&quot;);
+}</code></pre>
+
+        <h3>4.2. Thiếu điểm gọi cleanup trong <code>MyTicketServlet</code></h3>
+        <p>Nếu người dùng truy cập thẳng <code>/my-tickets?datChoId=...</code>, có thể xem đơn/vé đã quá hạn mà chưa cleanup.</p>
+        <p>Cần thêm:</p>
+<pre><code class="language-java">import vetau.service.GiuChoCleanupService;
+
+private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+int datChoId = Integer.parseInt(request.getParameter(&quot;datChoId&quot;));
+
+cleanupService.huyDonQuaHan(datChoId);
+
+DatCho datCho = datChoDAO.findById(datChoId);</code></pre>
+
+        <h3>4.3. Thiếu điểm gọi cleanup trong <code>TicketCheckService</code></h3>
+        <p>Trang public tra cứu vé có thể tra ra vé <code>Chờ thanh toán</code> đã quá hạn nếu chưa có request nào khác kích hoạt cleanup.</p>
+<pre><code class="language-java">package vetau.service;
+
+import vetau.dao.TicketCheckDAO;
+import vetau.dto.TicketCheckResultDTO;
+
+import java.sql.SQLException;
+
+public class TicketCheckService {
+    private final TicketCheckDAO ticketCheckDAO = new TicketCheckDAO();
+    private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+    public TicketCheckResultDTO traCuuVe(String maVe, String soGiayTo) throws SQLException {
+        if (maVe == null || maVe.trim().isEmpty()) {
+            throw new IllegalArgumentException(&quot;Vui lòng nhập mã vé.&quot;);
+        }
+
+        cleanupService.huyCacDonQuaHan();
+
+        TicketCheckResultDTO result = ticketCheckDAO.findByMaVeAndSoGiayTo(maVe.trim(), soGiayTo);
+
+        if (result == null) {
+            return TicketCheckResultDTO.notFound(&quot;Không tìm thấy vé phù hợp. Hãy kiểm tra lại mã vé hoặc số giấy tờ.&quot;);
+        }
+
+        return result;
+    }
+}</code></pre>
+
+        <h3>4.4. Thiếu điểm gọi cleanup cho admin booking/dashboard</h3>
+        <p>Nên thêm tối thiểu ở <code>AdminBookingServlet</code> trước khi load danh sách.</p>
+<pre><code class="language-java">private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+cleanupService.huyCacDonQuaHan();</code></pre>
+
+        <h3>4.5. Không nên forward trực tiếp sang <code>my-bookings.jsp</code> khi lỗi checkout</h3>
+        <p>Vì JSP <code>my-bookings.jsp</code> cần attribute <code>bookings</code>. Nên redirect:</p>
+<pre><code class="language-java">response.sendRedirect(request.getContextPath() + &quot;/my-bookings?error=checkout-expired&quot;);
+return;</code></pre>
+
+        <h3>4.6. <code>PaymentServlet</code> cần null-check sau cleanup</h3>
+<pre><code class="language-java">if (datCho == null || datCho.getKhachHangId() != currentCustomer.getId()) {
+    throw new IllegalArgumentException(&quot;Đơn đặt chỗ không tồn tại hoặc không thuộc quyền sở hữu của bạn.&quot;);
+}</code></pre>
+    </section>
+
+    <section id="sql" class="card">
+        <h2>5. Rà soát SQL sau 3 giai đoạn</h2>
+
+        <h3>5.1. SQL Giai đoạn 1–2 đã đúng ở các điểm chính</h3>
+        <h4><code>VE.trang_thai</code></h4>
+<pre><code class="language-sql">N&#x27;Chờ thanh toán&#x27;,
+N&#x27;Hợp lệ&#x27;,
+N&#x27;Đã sử dụng&#x27;,
+N&#x27;Đã trả&#x27;,
+N&#x27;Đã hủy&#x27;</code></pre>
+        <h4><code>GIU_CHO.trang_thai</code></h4>
+<pre><code class="language-sql">N&#x27;Đang giữ&#x27;,
+N&#x27;Đã chuyển vé&#x27;,
+N&#x27;Hết hạn&#x27;,
+N&#x27;Đã hủy&#x27;</code></pre>
+        <h4><code>HOAN_TIEN.trang_thai</code></h4>
+<pre><code class="language-sql">N&#x27;Chờ xử lý&#x27;,
+N&#x27;Hoàn tất&#x27;,
+N&#x27;Từ chối&#x27;</code></pre>
+        <h4><code>DAT_CHO.trang_thai</code></h4>
+        <p>Database cũ đã có sẵn các trạng thái:</p>
+<pre><code class="language-sql">N&#x27;Chờ thanh toán&#x27;,
+N&#x27;Đang thanh toán&#x27;,
+N&#x27;Đã thanh toán&#x27;,
+N&#x27;Hết hạn&#x27;,
+N&#x27;Đã hủy&#x27;,
+N&#x27;Hoàn tiền một phần&#x27;,
+N&#x27;Hoàn tiền toàn bộ&#x27;</code></pre>
+
+        <h3>5.2. SQL còn thiếu cho Giai đoạn 3</h3>
+        <p>Nên tạo thêm file:</p>
+<pre><code class="language-text">UPDATE_DB_GD3_CLEANUP.sql</code></pre>
+        <p>Nội dung đề xuất:</p>
+<pre><code class="language-sql">USE VeTauDB;
+GO
+
+/* Index phục vụ tìm đơn quá hạn */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_DAT_CHO_Cleanup&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.DAT_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_DAT_CHO_Cleanup
+    ON dbo.DAT_CHO (trang_thai, thoi_gian_het_han);
+END
+GO
+
+/* Index phục vụ update giữ chỗ theo đơn */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_GIU_CHO_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.GIU_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_GIU_CHO_DatCho_TrangThai
+    ON dbo.GIU_CHO (dat_cho_id, trang_thai);
+END
+GO
+
+/* Index phục vụ update vé theo đơn */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_VE_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.VE&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_VE_DatCho_TrangThai
+    ON dbo.VE (dat_cho_id, trang_thai);
+END
+GO
+
+/* Index phục vụ update thanh toán theo đơn */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_THANH_TOAN_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.THANH_TOAN&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_THANH_TOAN_DatCho_TrangThai
+    ON dbo.THANH_TOAN (dat_cho_id, trang_thai);
+END
+GO
+
+/* Index chống race khi kiểm tra ghế theo chuyến/ghế */
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_VE_Chuyen_Ghe_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.VE&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_VE_Chuyen_Ghe_TrangThai
+    ON dbo.VE (chuyen_tau_id, ghe_id, trang_thai);
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_GIU_CHO_Chuyen_Ghe_TrangThai_HetHan&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.GIU_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_GIU_CHO_Chuyen_Ghe_TrangThai_HetHan
+    ON dbo.GIU_CHO (chuyen_tau_id, ghe_id, trang_thai, thoi_gian_het_han);
+END
+GO</code></pre>
+
+        <h3>5.3. Cần cập nhật cả file tạo DB mới</h3>
+        <p>Nếu tạo database từ đầu, nên đưa các index Giai đoạn 3 vào cuối file SQL tổng, đổi tên ví dụ:</p>
+<pre><code class="language-text">VeTauDB_UPDATED_GD1_GD2_GD3.sql</code></pre>
+
+        <h3>5.4. Kiểm tra <code>TOA_TAU.trang_thai</code></h3>
+        <p>Nếu database đã có <code>TOA_TAU.trang_thai</code>, các query lấy toa/chỗ nên bổ sung điều kiện:</p>
+<pre><code class="language-sql">AND toa.trang_thai = N&#x27;Hoạt động&#x27;</code></pre>
+        <p>Ví dụ:</p>
+<pre><code class="language-sql">JOIN dbo.TOA_TAU toa ON toa.tau_id = c.tau_id
+                    AND toa.trang_thai = N&#x27;Hoạt động&#x27;</code></pre>
+    </section>
+
+    <section id="bo-sung" class="card">
+        <h2>6. Các chỉnh sửa bổ sung nên làm trước Giai đoạn 4</h2>
+
+        <div class="todo">
+            <h4>6.1. Cập nhật <code>GiuChoCleanupService.findExpiredDatChoIds(...)</code></h4>
+<pre><code class="language-java">private List&lt;Integer&gt; findExpiredDatChoIds(Connection conn, Integer datChoId) throws SQLException {
+    StringBuilder sql = new StringBuilder();
+
+    sql.append(
+            &quot;SELECT dc.id &quot;
+          + &quot;FROM dbo.DAT_CHO dc WITH (UPDLOCK, HOLDLOCK) &quot;
+          + &quot;WHERE dc.trang_thai = ? &quot;
+          + &quot;  AND dc.thoi_gian_het_han IS NOT NULL &quot;
+          + &quot;  AND dc.thoi_gian_het_han &lt; SYSDATETIME() &quot;
+          + &quot;  AND NOT EXISTS ( &quot;
+          + &quot;      SELECT 1 &quot;
+          + &quot;      FROM dbo.THANH_TOAN tt &quot;
+          + &quot;      WHERE tt.dat_cho_id = dc.id &quot;
+          + &quot;        AND tt.trang_thai = N&#x27;Thành công&#x27; &quot;
+          + &quot;  ) &quot;
+    );
+
+    if (datChoId != null) {
+        sql.append(&quot; AND dc.id = ?&quot;);
+    }
+
+    List&lt;Integer&gt; ids = new ArrayList&lt;&gt;();
+
+    try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        ps.setString(1, TrangThai.DAT_CHO_CHO_THANH_TOAN);
+
+        if (datChoId != null) {
+            ps.setInt(2, datChoId);
+        }
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ids.add(rs.getInt(&quot;id&quot;));
+            }
+        }
+    }
+
+    return ids;
+}</code></pre>
+        </div>
+
+        <div class="todo">
+            <h4>6.2. Bổ sung cleanup trong <code>MyTicketServlet</code></h4>
+<pre><code class="language-java">import vetau.service.GiuChoCleanupService;
+
+private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+cleanupService.huyDonQuaHan(datChoId);</code></pre>
+        </div>
+
+        <div class="todo">
+            <h4>6.3. Bổ sung cleanup trong <code>TicketCheckService</code></h4>
+<pre><code class="language-java">private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+cleanupService.huyCacDonQuaHan();</code></pre>
+        </div>
+
+        <div class="todo">
+            <h4>6.4. Bổ sung cleanup trong <code>AdminBookingServlet</code></h4>
+<pre><code class="language-java">private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+cleanupService.huyCacDonQuaHan();</code></pre>
+        </div>
+
+        <div class="todo">
+            <h4>6.5. Sửa lỗi forward trong <code>CheckoutServlet</code></h4>
+<pre><code class="language-java">response.sendRedirect(request.getContextPath() + &quot;/my-bookings?error=checkout&quot;);
+return;</code></pre>
+        </div>
+
+        <div class="todo">
+            <h4>6.6. Nếu dùng JDK 11, đổi text block sang nối chuỗi</h4>
+            <p>Nếu NetBeans báo lỗi với <code>&quot;&quot;&quot;</code>, đây là lỗi phiên bản JDK, không phải lỗi logic.</p>
+        </div>
+    </section>
+
+    <section id="checklist" class="card">
+        <h2>7. Checklist trước khi qua Giai đoạn 4</h2>
+        <ul class="check-list">
+            <li>[ ] <code>TrangThai.java</code> có đủ trạng thái GĐ1–GĐ3</li>
+            <li>[ ] <code>web.xml</code> có mapping <code>/checkout</code>, <code>/my-tickets</code>, <code>/return-ticket</code>, <code>/payment</code></li>
+            <li>[ ] <code>web.xml</code> có <code>tracking-mode COOKIE</code></li>
+            <li>[ ] <code>VE</code> constraint cho phép <code>Chờ thanh toán</code></li>
+            <li>[ ] <code>GIU_CHO</code> constraint cho phép <code>Đã hủy</code>, <code>Hết hạn</code></li>
+            <li>[ ] <code>HOAN_TIEN</code> constraint dùng <code>Chờ xử lý / Hoàn tất / Từ chối</code></li>
+            <li>[ ] <code>DAT_CHO</code> constraint đã có <code>Hết hạn</code></li>
+            <li>[ ] Có <code>GiuChoCleanupService</code></li>
+            <li>[ ] Cleanup không hủy đơn đã có <code>THANH_TOAN Thành công</code></li>
+            <li>[ ] Cleanup được gọi ở tìm chuyến</li>
+            <li>[ ] Cleanup được gọi ở chọn ghế</li>
+            <li>[ ] Cleanup được gọi ở checkout</li>
+            <li>[ ] Cleanup được gọi ở payment</li>
+            <li>[ ] Cleanup được gọi ở lịch sử đặt vé</li>
+            <li>[ ] Cleanup được gọi ở my-tickets</li>
+            <li>[ ] Cleanup được gọi ở ticket-check</li>
+            <li>[ ] Cleanup được gọi ở admin booking list</li>
+            <li>[ ] SQL có index phục vụ cleanup</li>
+            <li>[ ] Nếu dùng <code>TOA_TAU.trang_thai</code> thì <code>ToaTauDAO</code> có lọc toa hoạt động</li>
+            <li>[ ] <code>checkout.jsp</code> không còn hidden <code>soTien</code></li>
+            <li>[ ] <code>PaymentServlet</code> không đọc <code>request.getParameter("soTien")</code></li>
+            <li>[ ] <code>PaymentCallbackServlet</code> không còn tạo <code>HanhKhach/Ve</code></li>
+            <li>[ ] Callback gọi lại lần 2 không sinh vé trùng</li>
+            <li>[ ] Callback tới muộn sau hết hạn không kích hoạt vé</li>
+        </ul>
+    </section>
+
+    <section id="ket-luan" class="card">
+        <h2>8. Kết luận cuối cùng</h2>
+        <p>Sau khi tự rà lại:</p>
+<pre><code class="language-text">Giai đoạn 1: Có thể coi là ổn, chỉ cần nhớ chuẩn hóa option trạng thái trong JSP admin.
+Giai đoạn 2: Thiết kế đúng, nhưng cần kiểm tra JDK/text block và hidden input ở booking-review/checkout.
+Giai đoạn 3: Cần bổ sung cleanup ở MyTicketServlet, TicketCheckService, AdminBookingServlet, và thêm điều kiện không cleanup đơn đã có thanh toán Thành công.
+SQL: GĐ1–GĐ2 đã xử lý lỗi constraint chính; GĐ3 cần thêm migration index và nên cập nhật lại file SQL tổng.</code></pre>
+        <div class="note danger">
+            Chưa nên qua Giai đoạn 4 nếu chưa bổ sung các điểm còn thiếu của Giai đoạn 3.
+        </div>
+        <p>Quan trọng nhất là 4 việc:</p>
+<pre><code class="language-text">1. Sửa GiuChoCleanupService để không hủy đơn đã có THANH_TOAN Thành công.
+2. Gọi cleanup thêm ở MyTicketServlet, TicketCheckService, AdminBookingServlet.
+3. Chạy thêm SQL index Giai đoạn 3.
+4. Rà lại text block nếu project dùng JDK 11.</code></pre>
+        <div class="note info">
+            Sau khi xong 4 điểm này, Giai đoạn 1–3 mới đủ chắc để chuyển sang Giai đoạn 4.
+        </div>
+    </section>
+</main>
+
+<footer>
+    File HTML tổng hợp nội dung rà soát Giai đoạn 1–3 trước khi qua Giai đoạn 4.
+</footer>
+</body>
+</html>

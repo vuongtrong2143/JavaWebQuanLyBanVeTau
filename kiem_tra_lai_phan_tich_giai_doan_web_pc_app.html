@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rà soát và chốt phạm vi Web App - PC App hệ thống bán vé tàu</title>
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-dark: #0f172a;
+      --accent: #f97316;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --soft-blue: #eff6ff;
+      --soft-green: #ecfdf5;
+      --soft-orange: #fff7ed;
+      --soft-red: #fef2f2;
+      --green: #16a34a;
+      --red: #dc2626;
+      --orange: #ea580c;
+      --purple: #7c3aed;
+      --soft-purple: #f5f3ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .container {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 1080px;
+      opacity: 0.95;
+      font-size: 17px;
+    }
+
+    .section, .nav {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .section h2, .nav h2 {
+      margin: 0 0 14px;
+      color: var(--primary-dark);
+      font-size: 26px;
+      border-left: 6px solid var(--primary);
+      padding-left: 12px;
+    }
+
+    .section h3 {
+      margin: 18px 0 8px;
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .nav-grid a {
+      display: block;
+      text-decoration: none;
+      color: var(--primary);
+      background: var(--soft-blue);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-weight: 700;
+    }
+
+    .nav-grid a:hover {
+      background: #dbeafe;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 19px;
+    }
+
+    .callout {
+      background: var(--soft-green);
+      border: 1px solid #bbf7d0;
+      border-left: 6px solid var(--green);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .warning {
+      background: var(--soft-orange);
+      border: 1px solid #fed7aa;
+      border-left: 6px solid var(--orange);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .danger {
+      background: var(--soft-red);
+      border: 1px solid #fecaca;
+      border-left: 6px solid var(--red);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .note {
+      background: var(--soft-purple);
+      border: 1px solid #ddd6fe;
+      border-left: 6px solid var(--purple);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    ul, ol {
+      margin: 8px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft-blue);
+      color: var(--primary-dark);
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.55;
+      border: 1px solid #1e293b;
+      white-space: pre-wrap;
+    }
+
+    code {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 22px 0 8px;
+      font-size: 14px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .section, .nav, .hero {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .nav {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <h1>Rà soát và chốt phạm vi Web App - PC App</h1>
+      <p>
+        Tài liệu này tổng hợp lại quá trình kiểm tra cuối cùng đối với phân tích các giai đoạn phát triển
+        hệ thống bán vé tàu, tập trung vào việc phân định rõ vai trò giữa Web App, Admin Web và PC App
+        để tránh trùng chức năng khi triển khai.
+      </p>
+    </header>
+
+    <nav class="nav">
+      <h2>Mục lục nhanh</h2>
+      <div class="nav-grid">
+        <a href="#summary">1. Kết luận tổng quát</a>
+        <a href="#issue">2. Điểm cần chỉnh</a>
+        <a href="#split">3. Phân chia hợp lý</a>
+        <a href="#pcapp">4. Một PC App cho 2 vai trò?</a>
+        <a href="#webcheck">5. Kiểm tra Web App</a>
+        <a href="#pccheck">6. Kiểm tra PC App</a>
+        <a href="#tech">7. Bổ sung kỹ thuật</a>
+        <a href="#final-scope">8. Bản chốt cuối</a>
+        <a href="#reduced">9. Rút gọn đồ án</a>
+        <a href="#conclusion">10. Kết luận cuối</a>
+      </div>
+    </nav>
+
+    <section id="summary" class="section">
+      <h2>1. Kết luận tổng quát</h2>
+
+      <p>Có thể chốt kiến trúc tổng thể của hệ thống như sau:</p>
+
+      <pre>Hệ thống bán vé tàu
+├── Web App
+│   ├── Website khách hàng công khai
+│   └── Trang quản trị Admin nội bộ
+│
+└── PC App Java Swing
+    ├── Nhân viên quầy vé
+    └── Admin / Quản lý nội bộ</pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Thành phần</th>
+            <th>Vai trò chính</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Website khách hàng</b></td>
+            <td>Khách tìm chuyến, đặt vé, thanh toán, tra cứu và trả vé online.</td>
+          </tr>
+          <tr>
+            <td><b>Admin Web</b></td>
+            <td>Quản lý dữ liệu vận hành website.</td>
+          </tr>
+          <tr>
+            <td><b>PC App Nhân viên</b></td>
+            <td>Bán vé tại quầy, thanh toán tại quầy, in vé, đổi/trả trực tiếp.</td>
+          </tr>
+          <tr>
+            <td><b>PC App Admin</b></td>
+            <td>Quản lý nội bộ tại quầy, giám sát, báo cáo, quản lý nhân viên, có thể có một số chức năng quản trị dữ liệu.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <b>Kết luận:</b> Hướng phân tích hiện tại đúng, nhưng cần làm rõ rằng Admin Web và Admin trong PC App
+        không nên bắt buộc phải làm trùng toàn bộ chức năng.
+      </div>
+    </section>
+
+    <section id="issue" class="section">
+      <h2>2. Điểm cần chỉnh quan trọng nhất</h2>
+
+      <p>Trong các bản phân tích trước, cả Admin Web và PC App Admin đều được mô tả có rất nhiều chức năng quản trị tương tự nhau.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Admin Web đang quản lý</h3>
+          <pre>Ga
+Tàu
+Toa
+Ghế
+Chuyến tàu
+Lịch dừng
+Bảng giá
+Khuyến mãi
+Đối tượng ưu đãi
+Chính sách đổi/trả
+Đơn đặt chỗ
+Vé
+Thanh toán
+Hoàn tiền
+Báo cáo</pre>
+        </div>
+
+        <div class="card">
+          <h3>PC App Admin cũng đang được phân tích quản lý</h3>
+          <pre>Ga
+Tàu
+Toa
+Ghế
+Chuyến tàu
+Lịch dừng
+Bảng giá
+Khuyến mãi
+Đối tượng ưu đãi
+Chính sách đổi/trả
+Khách hàng
+Nhân viên
+Thanh toán
+Hoàn tiền
+Báo cáo</pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        Về mặt kỹ thuật có thể làm được, nhưng trong phạm vi đồ án sẽ dễ bị trùng chức năng, tốn thời gian code,
+        khó kiểm thử và dễ lệch dữ liệu nếu xử lý logic khác nhau.
+      </div>
+    </section>
+
+    <section id="split" class="section">
+      <h2>3. Cách phân chia hợp lý nhất</h2>
+
+      <h3>3.1. Web App khách hàng</h3>
+      <p>Đây là website công khai dành cho khách hàng.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Chức năng nên có</h3>
+          <pre>Trang chủ
+Đăng ký / đăng nhập khách hàng
+Tra cứu giờ tàu - giá vé
+Tìm kiếm chuyến tàu
+Chọn ghế
+Nhập hành khách
+Giữ chỗ
+Thanh toán online / giả lập
+Xuất vé điện tử
+Tra cứu vé
+Lịch sử đặt vé
+Trả vé online
+Theo dõi hoàn tiền
+Tin tức / quy định / hướng dẫn / khuyến mãi</pre>
+        </div>
+
+        <div class="card">
+          <h3>Không có</h3>
+          <pre>Nhân viên quầy vé
+Bán vé tại quầy
+In vé giấy
+Quản lý nhân viên</pre>
+        </div>
+      </div>
+
+      <h3>3.2. Admin Web nội bộ</h3>
+      <p>Đây là trang <code>/admin</code>, nằm trong hệ thống Web, quản lý dữ liệu vận hành chính của website.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Chức năng nên có</h3>
+          <pre>Đăng nhập Admin
+Dashboard
+Quản lý ga
+Quản lý tàu
+Quản lý toa
+Quản lý ghế
+Quản lý chuyến tàu
+Quản lý lịch dừng
+Quản lý bảng giá
+Quản lý khuyến mãi
+Quản lý đối tượng ưu đãi
+Quản lý chính sách đổi/trả
+Quản lý khách hàng
+Xem đơn đặt chỗ
+Xem vé
+Xem thanh toán
+Xem hoàn tiền
+Báo cáo doanh thu</pre>
+        </div>
+
+        <div class="card">
+          <h3>Không bắt buộc có</h3>
+          <pre>Quản lý nhân viên
+Bán vé tại quầy
+In vé giấy
+Xử lý đổi/trả trực tiếp tại ga</pre>
+        </div>
+      </div>
+
+      <div class="callout">
+        Nếu không có Admin Web, mỗi lần sai giờ tàu, sai bảng giá, sai lịch dừng, sai khuyến mãi… đều phải sửa trực tiếp bằng SQL,
+        không phù hợp với một hệ thống quản lý thực tế.
+      </div>
+
+      <h3>3.3. PC App Java Swing cho Nhân viên quầy</h3>
+      <p>Đây là ứng dụng nội bộ tại ga.</p>
+
+      <pre>Đăng nhập nhân viên
+Tìm chuyến
+Chọn ghế
+Nhập hành khách
+Bán vé tại quầy
+Thanh toán tiền mặt / chuyển khoản / POS mô phỏng
+Tạo vé
+In vé giấy / preview vé
+Tra cứu đơn đặt chỗ
+Tra cứu vé
+Xử lý đổi/trả vé trực tiếp tại ga
+Lập hoàn tiền tại quầy</pre>
+
+      <h3>3.4. PC App Admin</h3>
+      <p>PC App có thể dùng chung cho Admin, nhưng nên chia thành hai mức.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Mức tối thiểu nên làm</h3>
+          <pre>Toàn bộ quyền của nhân viên
+Dashboard nội bộ
+Báo cáo doanh thu
+Quản lý nhân viên
+Tra cứu khách hàng
+Tra cứu giao dịch
+Theo dõi hoàn tiền</pre>
+        </div>
+
+        <div class="card">
+          <h3>Mức mở rộng nếu còn thời gian</h3>
+          <pre>Quản lý ga
+Quản lý tàu
+Quản lý chuyến tàu
+Quản lý lịch dừng
+Quản lý bảng giá
+Quản lý khuyến mãi
+Quản lý chính sách đổi/trả</pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        Nếu Admin Web đã làm đầy đủ các chức năng quản trị dữ liệu, thì PC App Admin không cần làm lại hết.
+      </div>
+    </section>
+
+    <section id="pcapp" class="section">
+      <h2>4. Có dùng một PC App cho Nhân viên và Admin được không?</h2>
+
+      <div class="callout">
+        <b>Có.</b> Đây vẫn là kết luận đúng.
+      </div>
+
+      <pre>Một PC App Java Swing
+        ↓
+Đăng nhập
+        ↓
+Đọc chuc_vu từ bảng NHAN_VIEN
+        ↓
+Nếu chuc_vu = 'Nhân viên'
+    Hiện menu nhân viên
+
+Nếu chuc_vu = 'Admin'
+    Hiện menu nhân viên + menu admin</pre>
+
+      <p>Bảng <code>NHAN_VIEN</code> nên có:</p>
+
+      <pre>id
+ho_ten
+email
+mat_khau_hash
+chuc_vu       -- Admin / Nhân viên
+trang_thai    -- Hoạt động / Khóa</pre>
+    </section>
+
+    <section id="webcheck" class="section">
+      <h2>5. Kiểm tra lại lộ trình Web App</h2>
+
+      <p>Bản Web App gồm 14 giai đoạn hiện tại là hợp lý:</p>
+
+      <pre>1. Khởi tạo Java Web MVC
+2. Tạo database và dữ liệu mẫu
+3. Xây dựng Model, DAO, Service
+4. Website công khai cho khách vãng lai
+5. Đăng ký, đăng nhập, quản lý tài khoản khách hàng
+6. Tìm kiếm chuyến tàu
+7. Chọn toa, chọn ghế
+8. Nhập hành khách, tính giá, giữ chỗ
+9. Thanh toán giả lập, xuất vé điện tử
+10. Lịch sử đặt vé, tra cứu vé, trả vé online
+11. Trang quản trị Admin nội bộ
+12. Hoàn thiện giao diện
+13. Kiểm thử và bảo mật
+14. Báo cáo, tài liệu, demo</pre>
+
+      <div class="callout">
+        Phần này đúng và có thể giữ.
+      </div>
+
+      <div class="warning">
+        Chỉ cần sửa nhẹ ở Giai đoạn 11: Trang Admin Web quản lý dữ liệu vận hành website,
+        nhưng không bắt buộc quản lý nhân viên, không bán vé tại quầy, không in vé giấy.
+      </div>
+    </section>
+
+    <section id="pccheck" class="section">
+      <h2>6. Kiểm tra lại lộ trình PC App</h2>
+
+      <p>Bản PC App gồm 25 giai đoạn là đúng về mặt đầy đủ, nhưng nếu triển khai thật thì hơi rộng. Nên chia lại thành 3 nhóm rõ hơn.</p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Nhóm A — Nền tảng PC App</h3>
+          <pre>1. Khởi tạo project Java Swing
+2. Đăng nhập và phân quyền
+3. Khung giao diện MainFrame + CardLayout</pre>
+          <p><b>Đánh giá:</b> bắt buộc.</p>
+        </div>
+
+        <div class="card">
+          <h3>Nhóm B — Chức năng Nhân viên quầy</h3>
+          <pre>4. Tra cứu chuyến tàu tại quầy
+5. Chọn toa, chọn ghế tại quầy
+6. Nhập thông tin hành khách
+7. Tạo đơn bán vé tại quầy
+8. Thanh toán tại quầy
+9. In vé giấy / preview vé
+10. Tra cứu đơn đặt chỗ và vé
+11. Đổi/trả vé tại ga</pre>
+          <p><b>Đánh giá:</b> trọng tâm của PC App.</p>
+        </div>
+
+        <div class="card">
+          <h3>Nhóm C — Chức năng Admin trong PC App</h3>
+          <pre>12. Dashboard nhân viên/admin
+13. Quản lý ga
+14. Quản lý tàu, toa, ghế
+15. Quản lý chuyến tàu và lịch dừng
+16. Quản lý bảng giá
+17. Quản lý khuyến mãi và đối tượng ưu đãi
+18. Quản lý chính sách đổi/trả
+19. Quản lý khách hàng
+20. Quản lý nhân viên
+21. Quản lý thanh toán và hoàn tiền
+22. Báo cáo thống kê
+23. Tác vụ nền
+24. Kiểm thử PC App
+25. Đóng gói, demo, tài liệu</pre>
+          <p><b>Đánh giá:</b> nên chia mức ưu tiên.</p>
+        </div>
+      </div>
+
+      <h3>Chức năng nên làm trong PC App Admin</h3>
+      <pre>Dashboard
+Quản lý nhân viên
+Tra cứu khách hàng
+Quản lý thanh toán / hoàn tiền
+Báo cáo thống kê</pre>
+
+      <h3>Chức năng có thể làm nếu không muốn phụ thuộc Admin Web</h3>
+      <pre>Quản lý ga
+Quản lý tàu
+Quản lý toa
+Quản lý ghế
+Quản lý chuyến tàu
+Quản lý lịch dừng
+Quản lý bảng giá
+Quản lý khuyến mãi
+Quản lý chính sách đổi/trả</pre>
+
+      <div class="warning">
+        Nếu Admin Web đã làm các phần này rồi, PC App có thể chỉ cần xem/tra cứu, không cần CRUD đầy đủ.
+      </div>
+    </section>
+
+    <section id="tech" class="section">
+      <h2>7. Điểm kỹ thuật cần bổ sung vào phân tích</h2>
+
+      <h3>7.1. Nên có tầng dùng chung giữa Web App và PC App</h3>
+
+      <p>Nếu Web App và PC App đều viết riêng DAO/Service, rất dễ bị trùng logic.</p>
+
+      <pre>Web App có GiaVeService
+PC App cũng có GiaVeService khác</pre>
+
+      <p>Điều này dễ dẫn tới:</p>
+
+      <pre>Web tính giá một kiểu
+PC App tính giá một kiểu
+Web kiểm tra ghế một kiểu
+PC App kiểm tra ghế một kiểu</pre>
+
+      <p>Nên thiết kế:</p>
+
+      <pre>VeTauCore
+├── model
+├── dao
+├── service
+└── util
+
+VeTauWeb
+└── dùng lại VeTauCore
+
+VeTauDesktop
+└── dùng lại VeTauCore</pre>
+
+      <div class="callout">
+        Nếu làm đơn giản hơn trong đồ án, có thể copy chung package, nhưng trong báo cáo nên nói:
+        <b>Các tầng Model, DAO, Service được thiết kế dùng chung để đảm bảo thống nhất nghiệp vụ giữa Web App và PC App.</b>
+      </div>
+
+      <h3>7.2. Nên thống nhất quy tắc giữ chỗ</h3>
+
+      <pre>Web App:
+- Giữ chỗ 30 phút nếu thanh toán online
+- Giữ chỗ 12 giờ nếu trả sau, nếu có
+
+PC App:
+- Giữ chỗ ngắn 5–10 phút trong lúc nhân viên thao tác tại quầy
+- Sau khi thanh toán tại quầy thì chuyển thành vé ngay</pre>
+
+      <div class="warning">
+        Cần quy định rõ vì thao tác tại quầy diễn ra trực tiếp, thời gian giữ chỗ nên ngắn hơn để tránh nhân viên chiếm ghế quá lâu.
+      </div>
+
+      <h3>7.3. Cần thống nhất luồng hoàn tiền</h3>
+
+      <pre>Web App:
+- Khách tự gửi yêu cầu trả vé online
+- Hệ thống xử lý tự động hoặc chờ xác nhận
+
+PC App:
+- Nhân viên xử lý trực tiếp tại ga
+- Bắt buộc lưu nhan_vien_id trong LICH_SU_DOI_TRA</pre>
+    </section>
+
+    <section id="final-scope" class="section">
+      <h2>8. Bản chốt điều chỉnh cuối cùng</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Web App</h3>
+          <pre>Website khách hàng công khai
+Admin Web nội bộ</pre>
+
+          <h3>Không gồm</h3>
+          <pre>Nhân viên quầy
+Bán vé tại quầy
+In vé giấy
+Quản lý nhân viên</pre>
+        </div>
+
+        <div class="card">
+          <h3>PC App</h3>
+          <pre>Nhân viên quầy
+Admin nội bộ</pre>
+
+          <h3>Nhân viên</h3>
+          <pre>Bán vé tại quầy
+Thanh toán tại quầy
+In vé
+Tra cứu vé
+Xử lý đổi/trả</pre>
+
+          <h3>Admin</h3>
+          <pre>Có quyền nhân viên
+Quản lý nhân viên
+Xem báo cáo
+Theo dõi giao dịch
+Có thể quản lý dữ liệu vận hành nếu không làm hết trên Admin Web</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="reduced" class="section">
+      <h2>9. Nếu phải rút gọn để làm đồ án</h2>
+
+      <h3>Web App nên làm chính</h3>
+      <pre>Khách hàng:
+- Đăng ký/đăng nhập
+- Tìm chuyến
+- Chọn ghế
+- Giữ chỗ
+- Thanh toán giả lập
+- Xuất vé
+- Tra cứu vé
+- Trả vé cơ bản
+
+Admin Web:
+- Quản lý ga
+- Quản lý chuyến tàu
+- Quản lý lịch dừng
+- Quản lý bảng giá
+- Quản lý khuyến mãi
+- Quản lý chính sách đổi/trả
+- Xem đơn/vé/thanh toán
+- Báo cáo đơn giản</pre>
+
+      <h3>PC App nên làm mức vừa đủ</h3>
+      <pre>Nhân viên:
+- Đăng nhập
+- Tìm chuyến
+- Chọn ghế
+- Nhập hành khách
+- Thanh toán tại quầy
+- Tạo vé
+- Preview/in vé
+- Tra cứu vé
+- Trả vé tại ga
+
+Admin:
+- Đăng nhập
+- Quản lý nhân viên
+- Xem báo cáo đơn giản</pre>
+
+      <div class="callout">
+        Các chức năng quản lý ga/tàu/bảng giá có thể để Admin Web đảm nhiệm để tránh trùng.
+      </div>
+    </section>
+
+    <section id="conclusion" class="section">
+      <h2>10. Kết luận cuối cùng sau khi kiểm tra</h2>
+
+      <div class="callout">
+        Bản phân tích các giai đoạn đúng hướng, nhưng nên chỉnh câu chữ để chốt như sau:
+      </div>
+
+      <pre>Hệ thống gồm Web App và PC App dùng chung cơ sở dữ liệu.
+Web App có hai khu vực:
+- Website khách hàng công khai
+- Trang quản trị Admin nội bộ
+
+PC App là ứng dụng nội bộ dùng cho:
+- Nhân viên quầy vé
+- Admin
+
+Để tránh trùng lặp:
+- Admin Web nên đảm nhiệm quản lý dữ liệu vận hành chính của website như ga, tàu, chuyến tàu, lịch dừng, bảng giá, khuyến mãi, chính sách đổi/trả.
+- PC App tập trung vào nghiệp vụ tại quầy như bán vé, thanh toán, in vé, tra cứu và xử lý đổi/trả trực tiếp.
+- Admin trong PC App có thể quản lý nhân viên, xem báo cáo và theo dõi giao dịch.
+- Các chức năng quản trị dữ liệu trên PC App chỉ bổ sung nếu phạm vi dự án cho phép.</pre>
+
+      <div class="note">
+        <b>Đây là bản chốt sạch nhất, ít trùng lặp nhất và dễ bảo vệ nhất.</b>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Tài liệu HTML — Rà soát và chốt phạm vi Web App - PC App trong hệ thống bán vé tàu.
+    </footer>
+  </div>
+</body>
+</html>

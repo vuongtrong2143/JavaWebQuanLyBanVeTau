@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use Case cải tiến - Hệ thống bán vé tàu hỏa</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#e0f2fe',
+        primaryTextColor: '#0f172a',
+        primaryBorderColor: '#0284c7',
+        lineColor: '#475569',
+        secondaryColor: '#dcfce7',
+        tertiaryColor: '#fff7ed',
+        fontFamily: 'Segoe UI, Arial, sans-serif'
+      },
+      flowchart: {
+        curve: 'basis',
+        htmlLabels: true,
+        nodeSpacing: 30,
+        rankSpacing: 50
+      }
+    });
+  </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #0f172a;
+      background: #f4f7fb;
+    }
+    .container {
+      max-width: 1900px;
+      margin: 0 auto;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a, #2563eb);
+      color: #fff;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 30px;
+    }
+    .subtitle {
+      margin: 0;
+      line-height: 1.55;
+      opacity: 0.95;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+    .diagram-wrap {
+      overflow: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 14px;
+    }
+    .mermaid {
+      min-width: 1850px;
+    }
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 22px;
+      color: #0f172a;
+    }
+    h3 {
+      margin: 0 0 8px 0;
+      color: #1d4ed8;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      background: #f8fbff;
+      padding: 14px;
+      line-height: 1.55;
+    }
+    .card strong {
+      color: #1d4ed8;
+    }
+    code {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    ul {
+      margin: 8px 0 0 18px;
+      line-height: 1.6;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Sơ đồ Use Case cải tiến - Hệ thống bán vé tàu hỏa</h1>
+    <p class="subtitle">
+      Bản này đồng bộ với ERD cải tiến: có giữ chỗ tạm thời, bảng giá, chính sách đổi/trả động,
+      đối tượng ưu đãi, hoàn tiền, payment callback idempotency, và các tác vụ tự động giải phóng ghế.
+    </p>
+  </div>
+
+  <div class="panel">
+    <h2>Use Case Diagram tổng thể</h2>
+    <div class="legend">
+      <span class="pill">🌐 Web App: khách vãng lai / khách hàng</span>
+      <span class="pill">💻 PC App Swing: nhân viên / admin</span>
+      <span class="pill">⚙️ Backend: tác vụ tự động</span>
+      <span class="pill">🏦 Cổng thanh toán: VNPay / MoMo / OnePay</span>
+    </div>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+flowchart LR
+    classDef actor fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff,font-weight:bold
+    classDef sysactor fill:#7c3aed,stroke:#5b21b6,stroke-width:2px,color:#fff,font-weight:bold
+    classDef ucWeb fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#0f172a
+    classDef ucPC fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#0f172a
+    classDef ucSys fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#0f172a
+    classDef ucAdmin fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#0f172a
+
+    Guest((Khách vãng lai)):::actor
+    Customer((Khách hàng)):::actor
+    Staff((Nhân viên quầy)):::actor
+    Admin((Quản trị viên)):::actor
+    PG((Cổng thanh toán)):::sysactor
+    System((Hệ thống tự động)):::sysactor
+
+    subgraph WEB[🌐 WEB APP - KHÁCH VÃNG LAI / KHÁCH HÀNG]
+      direction TB
+      UC01([UC01. Đăng ký / Đăng nhập / Quản lý hồ sơ]):::ucWeb
+      UC02([UC02. Xem tin tức, quy định, khuyến mãi]):::ucWeb
+      UC03([UC03. Tra cứu giờ tàu & giá vé]):::ucWeb
+      UC04([UC04. Kiểm tra vé hợp lệ]):::ucWeb
+      UC05([UC05. Tìm kiếm chuyến tàu]):::ucWeb
+      UC06([UC06. Chọn chuyến, toa, ghế theo chặng]):::ucWeb
+      UC07([UC07. Giữ chỗ tạm thời]):::ucWeb
+      UC08([UC08. Nhập hành khách & đối tượng ưu đãi]):::ucWeb
+      UC09([UC09. Áp dụng khuyến mãi]):::ucWeb
+      UC10([UC10. Đặt vé cá nhân]):::ucWeb
+      UC11([UC11. Đặt vé tập thể / vé đoàn]):::ucWeb
+      UC12([UC12. Thanh toán online / trả sau]):::ucWeb
+      UC13([UC13. Tra cứu đơn đặt chỗ & hóa đơn]):::ucWeb
+      UC14([UC14. Yêu cầu đổi / trả vé trực tuyến]):::ucWeb
+      UC15([UC15. Theo dõi hoàn tiền]):::ucWeb
+      UC16([UC16. Gửi yêu cầu liên hệ / hỗ trợ]):::ucWeb
+    end
+
+    subgraph PC[💻 PC APP JAVA SWING - NHÂN VIÊN / ADMIN]
+      direction TB
+      UC17([UC17. Đăng nhập hệ thống PC]):::ucPC
+      UC18([UC18. Bán vé tại quầy]):::ucPC
+      UC19([UC19. Giữ chỗ / chọn ghế tại quầy]):::ucPC
+      UC20([UC20. Thanh toán tại quầy]):::ucPC
+      UC21([UC21. In vé giấy]):::ucPC
+      UC22([UC22. Tra cứu đặt chỗ / khách hàng / vé]):::ucPC
+      UC23([UC23. Xử lý đổi / trả vé tại ga]):::ucPC
+      UC24([UC24. Lập yêu cầu hoàn tiền tại quầy]):::ucPC
+
+      UC25([UC25. Quản lý tàu, toa, ghế]):::ucAdmin
+      UC26([UC26. Quản lý ga, chuyến tàu, lịch dừng]):::ucAdmin
+      UC27([UC27. Quản lý bảng giá & phụ thu]):::ucAdmin
+      UC28([UC28. Quản lý đối tượng ưu đãi]):::ucAdmin
+      UC29([UC29. Quản lý khuyến mãi & điều kiện thanh toán]):::ucAdmin
+      UC30([UC30. Quản lý chính sách đổi / trả]):::ucAdmin
+      UC31([UC31. Quản lý nhân viên]):::ucAdmin
+      UC32([UC32. Quản lý khách hàng]):::ucAdmin
+      UC33([UC33. Báo cáo doanh thu & đối soát]):::ucAdmin
+    end
+
+    subgraph BACKEND[⚙️ BACKEND / TÁC VỤ NGẦM / ĐỐI TÁC]
+      direction TB
+      UC34([UC34. Kiểm tra chống trùng ghế theo chặng]):::ucSys
+      UC35([UC35. Tự động hủy giữ chỗ quá hạn]):::ucSys
+      UC36([UC36. Đồng bộ trạng thái Đặt chỗ - Vé - Thanh toán]):::ucSys
+      UC37([UC37. Gửi Email / SMS mã vé]):::ucSys
+      UC38([UC38. Ghi nhận callback thanh toán]):::ucSys
+      UC39([UC39. Kiểm tra idempotency callback]):::ucSys
+      UC40([UC40. Xử lý hoàn tiền]):::ucSys
+      UC41([UC41. Chặn đặt vé sát giờ khởi hành]):::ucSys
+      UC42([UC42. Xử lý trừ tiền giao dịch]):::ucSys
+      UC43([UC43. Gửi callback kết quả giao dịch]):::ucSys
+    end
+
+    Guest --> UC02
+    Guest --> UC03
+    Guest --> UC04
+    Guest --> UC05
+    Guest --> UC16
+
+    Customer --> UC01
+    Customer --> UC03
+    Customer --> UC04
+    Customer --> UC10
+    Customer --> UC11
+    Customer --> UC13
+    Customer --> UC14
+    Customer --> UC15
+    Customer --> UC16
+
+    UC10 -.->|include| UC05
+    UC10 -.->|include| UC06
+    UC10 -.->|include| UC07
+    UC10 -.->|include| UC08
+    UC10 -.->|include| UC09
+    UC10 -.->|include| UC12
+
+    UC11 -.->|include| UC05
+    UC11 -.->|include| UC06
+    UC11 -.->|include| UC07
+    UC11 -.->|include| UC08
+    UC11 -.->|include| UC12
+
+    UC06 -.->|include| UC34
+    UC07 -.->|include| UC34
+    UC12 -.->|include| UC38
+    UC12 -.->|include| UC39
+    UC14 -.->|include| UC30
+    UC14 -.->|extend| UC15
+
+    Staff --> UC17
+    Staff --> UC18
+    Staff --> UC22
+    Staff --> UC23
+    Staff --> UC24
+
+    UC18 -.->|include| UC19
+    UC18 -.->|include| UC20
+    UC18 -.->|include| UC21
+    UC19 -.->|include| UC34
+    UC23 -.->|include| UC30
+    UC24 -.->|include| UC40
+
+    Admin -.->|kế thừa quyền| Staff
+    Admin --> UC25
+    Admin --> UC26
+    Admin --> UC27
+    Admin --> UC28
+    Admin --> UC29
+    Admin --> UC30
+    Admin --> UC31
+    Admin --> UC32
+    Admin --> UC33
+
+    System --> UC35
+    System --> UC36
+    System --> UC37
+    System --> UC38
+    System --> UC39
+    System --> UC40
+    System --> UC41
+
+    PG --> UC42
+    PG --> UC43
+    UC42 -.->|callback| UC43
+    UC43 -.->|include| UC38
+    UC38 -.->|include| UC39
+    UC38 -.->|include| UC36
+    UC36 -.->|extend| UC37
+    UC35 -.->|include| UC36
+      </pre>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Đặc tả ngắn các Use Case mới/đã thay đổi theo ERD cải tiến</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>UC07. Giữ chỗ tạm thời</h3>
+        <strong>Bảng liên quan:</strong> <code>GIU_CHO</code>, <code>DAT_CHO</code>, <code>CHUYEN_TAU</code>, <code>GHE</code>, <code>GA</code>.<br/>
+        Hệ thống giữ ghế theo chặng trong thời gian có hạn, ví dụ 30 phút online hoặc 12 giờ trả sau.
+        Đây là bước trung gian trước khi tạo vé chính thức.
+      </div>
+      <div class="card">
+        <h3>UC27. Quản lý bảng giá & phụ thu</h3>
+        <strong>Bảng liên quan:</strong> <code>BANG_GIA</code>, <code>GA</code>, <code>VE</code>.<br/>
+        Admin cấu hình giá theo ga đi, ga đến, loại toa, tầng giường, thời gian hiệu lực và phụ thu cao điểm.
+      </div>
+      <div class="card">
+        <h3>UC28. Quản lý đối tượng ưu đãi</h3>
+        <strong>Bảng liên quan:</strong> <code>DOI_TUONG_UU_DAI</code>, <code>VE</code>, <code>HANH_KHACH</code>.<br/>
+        Tách logic ưu đãi ra khỏi code Java, hỗ trợ trẻ em, người cao tuổi, học sinh/sinh viên hoặc chính sách theo mùa.
+      </div>
+      <div class="card">
+        <h3>UC30. Quản lý chính sách đổi/trả</h3>
+        <strong>Bảng liên quan:</strong> <code>CHINH_SACH_DOI_TRA</code>, <code>LICH_SU_DOI_TRA</code>, <code>VE</code>.<br/>
+        Admin cấu hình quy tắc cá nhân/tập thể, ngày hiệu lực, tàu chẵn/lẻ, phí đổi cố định và tỷ lệ khấu trừ.
+      </div>
+      <div class="card">
+        <h3>UC38-UC39. Callback & idempotency</h3>
+        <strong>Bảng liên quan:</strong> <code>THANH_TOAN</code>, <code>DAT_CHO</code>, <code>VE</code>.<br/>
+        Khi cổng thanh toán gửi callback, hệ thống kiểm tra <code>request_id</code> / <code>ma_giao_dich</code> để tránh tạo vé hoặc cộng doanh thu trùng.
+      </div>
+      <div class="card">
+        <h3>UC40. Xử lý hoàn tiền</h3>
+        <strong>Bảng liên quan:</strong> <code>HOAN_TIEN</code>, <code>THANH_TOAN</code>, <code>VE</code>.<br/>
+        Tách riêng trạng thái hoàn tiền khỏi lịch sử đổi/trả, hỗ trợ hoàn tiền online và đối soát giao dịch hoàn.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Gợi ý phân quyền chức năng</h2>
+    <ul>
+      <li><b>Khách vãng lai:</b> xem thông tin, tra cứu giờ tàu/giá vé, kiểm tra vé, tìm kiếm chuyến, gửi yêu cầu hỗ trợ.</li>
+      <li><b>Khách hàng:</b> có toàn bộ quyền của khách vãng lai, cộng thêm đặt vé, thanh toán, tra cứu đơn, đổi/trả online, theo dõi hoàn tiền.</li>
+      <li><b>Nhân viên:</b> bán vé tại quầy, in vé, tra cứu đơn/vé, xử lý đổi trả tại ga, lập yêu cầu hoàn tiền.</li>
+      <li><b>Admin:</b> kế thừa quyền nhân viên, cộng thêm quản lý dữ liệu nền, giá vé, khuyến mãi, ưu đãi, chính sách đổi/trả, nhân viên, khách hàng và báo cáo.</li>
+      <li><b>Hệ thống tự động:</b> hủy giữ chỗ hết hạn, đồng bộ trạng thái, gửi Email/SMS, kiểm tra callback và chặn đặt vé sát giờ chạy.</li>
+      <li><b>Cổng thanh toán:</b> xử lý trừ tiền và gửi callback kết quả giao dịch/hoàn tiền.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

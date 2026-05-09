@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giai đoạn 9 - Xuất báo cáo CSV/Excel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+:root {
+    --blue: #1d4ed8;
+    --blue-dark: #1e3a8a;
+    --slate-950: #020617;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --green-bg: #dcfce7;
+    --green-text: #166534;
+    --yellow-bg: #fef3c7;
+    --yellow-text: #92400e;
+    --red-bg: #fee2e2;
+    --red-text: #991b1b;
+    --code-bg: #0f172a;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1f2937;
+    background: #f8fafc;
+    line-height: 1.7;
+}
+
+header {
+    background: linear-gradient(135deg, #1d4ed8, #0f172a);
+    color: white;
+    padding: 44px 24px;
+}
+
+header .wrap, main {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 17px;
+}
+
+main { padding: 28px 20px 70px; }
+
+.card {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+h2 {
+    margin-top: 0;
+    color: var(--slate-900);
+    font-size: 24px;
+    border-bottom: 1px solid var(--slate-200);
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: var(--blue-dark);
+    margin-top: 28px;
+    margin-bottom: 10px;
+}
+
+.toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 10px;
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.toc a {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-weight: 800;
+    border: 1px solid #bfdbfe;
+}
+
+.toc a:hover { background: #dbeafe; }
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.summary-item {
+    background: #f8fafc;
+    border: 1px solid var(--slate-200);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.summary-item strong {
+    display: block;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.badge-ok { background: var(--green-bg); color: var(--green-text); }
+.badge-warn { background: var(--yellow-bg); color: var(--yellow-text); }
+.badge-info { background: #dbeafe; color: #1e3a8a; }
+
+.note {
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin: 14px 0;
+    font-weight: 650;
+}
+
+.note.info {
+    background: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+}
+
+.note.warn {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.note.good {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+pre {
+    background: var(--code-bg);
+    color: #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+    border: 1px solid #1e293b;
+}
+
+code { font-family: Consolas, "Courier New", monospace; }
+
+p code, li code, td code {
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.check-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.check-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.check-list li:last-child { border-bottom: none; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+th {
+    background: #f1f5f9;
+    color: #334155;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+td { background: white; }
+
+footer {
+    text-align: center;
+    color: var(--slate-500);
+    padding: 24px;
+}
+
+@media print {
+    header { background: white; color: black; padding: 20px 0; }
+    header .subtitle { color: #333; }
+    body { background: white; }
+    .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+    }
+    pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+    .toc a {
+        background: white;
+        border: 1px solid #ccc;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Giai đoạn 9 — Xuất báo cáo CSV/Excel</h1>
+        <p class="subtitle">Xuất dữ liệu admin ra CSV mở bằng Excel: doanh thu, đơn hàng, hoàn tiền và vé</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#overview">1. Tổng quan mục tiêu</a></li>
+            <li><a href="#new-files">2. File cần tạo mới</a></li>
+            <li><a href="#update-files">3. File cần cập nhật</a></li>
+            <li><a href="#sql">4. SQL có cần cập nhật không?</a></li>
+            <li><a href="#csvutil">5. CsvUtil.java</a></li>
+            <li><a href="#dao">6. AdminExportDAO.java</a></li>
+            <li><a href="#servlet">7. AdminExportServlet.java</a></li>
+            <li><a href="#report-jsp">8. Cập nhật report-revenue.jsp</a></li>
+            <li><a href="#dashboard-jsp">9. Cập nhật dashboard.jsp</a></li>
+            <li><a href="#refund-booking-jsp">10. Cập nhật refund-list.jsp và booking-list.jsp</a></li>
+            <li><a href="#test">11. Test Giai đoạn 9</a></li>
+            <li><a href="#checklist">12. Checklist Giai đoạn 9</a></li>
+            <li><a href="#conclusion">13. Kết luận</a></li>
+        </ul>
+    </section>
+
+    <section id="overview" class="card">
+        <h2>1. Tổng quan mục tiêu</h2>
+        <p>Giai đoạn 9 là giai đoạn cộng điểm/demo, không sửa nghiệp vụ lõi. Trọng tâm là cho phép admin xuất dữ liệu ra CSV để mở bằng Excel, không cần thêm thư viện ngoài.</p>
+        <div class="summary-grid">
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Xuất doanh thu</strong><p>Admin tải báo cáo doanh thu tháng dạng CSV.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Xuất đơn hàng</strong><p>Admin tải danh sách đơn đặt chỗ.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Xuất hoàn tiền</strong><p>Admin tải danh sách yêu cầu hoàn tiền.</p></div>
+            <div class="summary-item"><span class="badge badge-ok">✓</span><strong>Xuất vé</strong><p>Admin tải danh sách vé và trạng thái.</p></div>
+        </div>
+        <div class="note info">CSV được chọn thay vì Excel <code>.xlsx</code> để tránh thêm Apache POI và rủi ro dependency trong project JSP/Servlet thuần.</div>
+    </section>
+
+    <section id="new-files" class="card">
+        <h2>2. File cần tạo mới</h2>
+<pre><code class="language-text">src/java/vetau/util/CsvUtil.java
+src/java/vetau/dao/AdminExportDAO.java
+src/java/vetau/controller/admin/AdminExportServlet.java</code></pre>
+    </section>
+
+    <section id="update-files" class="card">
+        <h2>3. File cần cập nhật</h2>
+<pre><code class="language-text">web/views/admin/report-revenue.jsp
+web/views/admin/dashboard.jsp
+web/views/admin/booking-list.jsp
+web/views/admin/refund-list.jsp</code></pre>
+        <p>Không bắt buộc cập nhật tất cả ngay. Ưu tiên:</p>
+<pre><code class="language-text">1. report-revenue.jsp
+2. dashboard.jsp</code></pre>
+    </section>
+
+    <section id="sql" class="card">
+        <h2>4. SQL có cần cập nhật không?</h2>
+        <p><strong>Không cần cập nhật SQL schema.</strong></p>
+        <p>Giai đoạn 9 chỉ đọc dữ liệu từ:</p>
+<pre><code class="language-text">DAT_CHO
+VE
+THANH_TOAN
+HOAN_TIEN
+KHACH_HANG
+HANH_KHACH
+GA</code></pre>
+        <div class="note info">Nếu bạn đã chạy GĐ5 reporting index thì export sẽ ổn.</div>
+    </section>
+
+    <section id="csvutil" class="card">
+        <h2>5. Tạo CsvUtil.java</h2>
+        <p><strong>File:</strong> <code>src/java/vetau/util/CsvUtil.java</code></p>
+<pre><code class="language-java">package vetau.util;
+
+import java.util.List;
+
+public final class CsvUtil {
+
+    private CsvUtil() {
+    }
+
+    public static String toCsv(String[] headers, List&lt;String[]&gt; rows) {
+        StringBuilder sb = new StringBuilder();
+
+        /*
+         * BOM UTF-8 để Excel đọc tiếng Việt không lỗi font.
+         */
+        sb.append(&#x27;\uFEFF&#x27;);
+
+        appendRow(sb, headers);
+
+        if (rows != null) {
+            for (String[] row : rows) {
+                appendRow(sb, row);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private static void appendRow(StringBuilder sb, String[] values) {
+        if (values == null) {
+            sb.append(&quot;\r\n&quot;);
+            return;
+        }
+
+        for (int i = 0; i &lt; values.length; i++) {
+            if (i &gt; 0) {
+                sb.append(&quot;,&quot;);
+            }
+
+            sb.append(escape(values[i]));
+        }
+
+        sb.append(&quot;\r\n&quot;);
+    }
+
+    private static String escape(String value) {
+        if (value == null) {
+            return &quot;&quot;;
+        }
+
+        String safe = value.replace(&quot;\&quot;&quot;, &quot;\&quot;\&quot;&quot;);
+
+        return &quot;\&quot;&quot; + safe + &quot;\&quot;&quot;;
+    }
+
+    public static String safeFileName(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return &quot;export.csv&quot;;
+        }
+
+        return raw.replaceAll(&quot;[^a-zA-Z0-9_\\-.]&quot;, &quot;_&quot;);
+    }
+}</code></pre>
+    </section>
+
+    <section id="dao" class="card">
+        <h2>6. Tạo AdminExportDAO.java</h2>
+        <p><strong>File:</strong> <code>src/java/vetau/dao/AdminExportDAO.java</code></p>
+<pre><code class="language-java">package vetau.dao;
+
+import vetau.util.DBConnection;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings(&quot;SqlNoDataSourceInspection&quot;)
+public class AdminExportDAO {
+
+    public ExportData exportMonthlyRevenue() throws SQLException {
+        String[] headers = {
+                &quot;Thang&quot;,
+                &quot;Doanh thu goc&quot;,
+                &quot;Hoan tien&quot;,
+                &quot;Doanh thu thuan&quot;,
+                &quot;So ve&quot;
+        };
+
+        String sql = &quot;&quot;
+                + &quot;WITH Months AS ( &quot;
+                + &quot;    SELECT 0 AS n, DATEFROMPARTS(YEAR(SYSDATETIME()), MONTH(SYSDATETIME()), 1) AS month_start &quot;
+                + &quot;    UNION ALL &quot;
+                + &quot;    SELECT n + 1, DATEADD(MONTH, -1, month_start) &quot;
+                + &quot;    FROM Months &quot;
+                + &quot;    WHERE n + 1 &lt; 12 &quot;
+                + &quot;), Revenue AS ( &quot;
+                + &quot;    SELECT DATEFROMPARTS(YEAR(ngay_thanh_toan), MONTH(ngay_thanh_toan), 1) AS month_start, &quot;
+                + &quot;           SUM(so_tien) AS revenue &quot;
+                + &quot;    FROM dbo.THANH_TOAN &quot;
+                + &quot;    WHERE trang_thai = N&#x27;Thành công&#x27; &quot;
+                + &quot;      AND ngay_thanh_toan IS NOT NULL &quot;
+                + &quot;    GROUP BY DATEFROMPARTS(YEAR(ngay_thanh_toan), MONTH(ngay_thanh_toan), 1) &quot;
+                + &quot;), Refunds AS ( &quot;
+                + &quot;    SELECT DATEFROMPARTS(YEAR(thoi_gian_hoan_tat), MONTH(thoi_gian_hoan_tat), 1) AS month_start, &quot;
+                + &quot;           SUM(so_tien_hoan) AS refund &quot;
+                + &quot;    FROM dbo.HOAN_TIEN &quot;
+                + &quot;    WHERE trang_thai = N&#x27;Hoàn tất&#x27; &quot;
+                + &quot;      AND thoi_gian_hoan_tat IS NOT NULL &quot;
+                + &quot;    GROUP BY DATEFROMPARTS(YEAR(thoi_gian_hoan_tat), MONTH(thoi_gian_hoan_tat), 1) &quot;
+                + &quot;), Tickets AS ( &quot;
+                + &quot;    SELECT DATEFROMPARTS(YEAR(dc.ngay_dat), MONTH(dc.ngay_dat), 1) AS month_start, &quot;
+                + &quot;           COUNT(v.id) AS ticket_count &quot;
+                + &quot;    FROM dbo.VE v &quot;
+                + &quot;    JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id &quot;
+                + &quot;    WHERE v.trang_thai IN (N&#x27;Hợp lệ&#x27;, N&#x27;Đã sử dụng&#x27;, N&#x27;Đã trả&#x27;) &quot;
+                + &quot;    GROUP BY DATEFROMPARTS(YEAR(dc.ngay_dat), MONTH(dc.ngay_dat), 1) &quot;
+                + &quot;) &quot;
+                + &quot;SELECT &quot;
+                + &quot;    RIGHT(&#x27;0&#x27; + CAST(MONTH(m.month_start) AS VARCHAR(2)), 2) + &#x27;/&#x27; + CAST(YEAR(m.month_start) AS VARCHAR(4)) AS thang, &quot;
+                + &quot;    COALESCE(r.revenue, 0) AS revenue, &quot;
+                + &quot;    COALESCE(f.refund, 0) AS refund, &quot;
+                + &quot;    COALESCE(r.revenue, 0) - COALESCE(f.refund, 0) AS net_revenue, &quot;
+                + &quot;    COALESCE(t.ticket_count, 0) AS ticket_count &quot;
+                + &quot;FROM Months m &quot;
+                + &quot;LEFT JOIN Revenue r ON r.month_start = m.month_start &quot;
+                + &quot;LEFT JOIN Refunds f ON f.month_start = m.month_start &quot;
+                + &quot;LEFT JOIN Tickets t ON t.month_start = m.month_start &quot;
+                + &quot;ORDER BY m.month_start ASC &quot;
+                + &quot;OPTION (MAXRECURSION 100)&quot;;
+
+        List&lt;String[]&gt; rows = new ArrayList&lt;&gt;();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString(&quot;thang&quot;),
+                        rs.getBigDecimal(&quot;revenue&quot;).toPlainString(),
+                        rs.getBigDecimal(&quot;refund&quot;).toPlainString(),
+                        rs.getBigDecimal(&quot;net_revenue&quot;).toPlainString(),
+                        String.valueOf(rs.getInt(&quot;ticket_count&quot;))
+                });
+            }
+        }
+
+        return new ExportData(headers, rows);
+    }
+
+    public ExportData exportBookings() throws SQLException {
+        String[] headers = {
+                &quot;Ma don&quot;,
+                &quot;Khach hang&quot;,
+                &quot;Email&quot;,
+                &quot;So dien thoai&quot;,
+                &quot;Ngay dat&quot;,
+                &quot;Tong thanh toan&quot;,
+                &quot;Trang thai&quot;
+        };
+
+        String sql = &quot;&quot;
+                + &quot;SELECT TOP 500 &quot;
+                + &quot;    dc.ma_dat_cho, &quot;
+                + &quot;    kh.ho_ten, &quot;
+                + &quot;    kh.email, &quot;
+                + &quot;    kh.so_dien_thoai, &quot;
+                + &quot;    CONVERT(VARCHAR(19), dc.ngay_dat, 120) AS ngay_dat_text, &quot;
+                + &quot;    dc.tong_thanh_toan, &quot;
+                + &quot;    dc.trang_thai &quot;
+                + &quot;FROM dbo.DAT_CHO dc &quot;
+                + &quot;LEFT JOIN dbo.KHACH_HANG kh ON kh.id = dc.khach_hang_id &quot;
+                + &quot;ORDER BY dc.ngay_dat DESC, dc.id DESC&quot;;
+
+        List&lt;String[]&gt; rows = new ArrayList&lt;&gt;();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString(&quot;ma_dat_cho&quot;),
+                        rs.getString(&quot;ho_ten&quot;),
+                        rs.getString(&quot;email&quot;),
+                        rs.getString(&quot;so_dien_thoai&quot;),
+                        rs.getString(&quot;ngay_dat_text&quot;),
+                        rs.getBigDecimal(&quot;tong_thanh_toan&quot;) == null ? &quot;0&quot; : rs.getBigDecimal(&quot;tong_thanh_toan&quot;).toPlainString(),
+                        rs.getString(&quot;trang_thai&quot;)
+                });
+            }
+        }
+
+        return new ExportData(headers, rows);
+    }
+
+    public ExportData exportRefunds() throws SQLException {
+        String[] headers = {
+                &quot;ID hoan tien&quot;,
+                &quot;Ma ve&quot;,
+                &quot;Ma don&quot;,
+                &quot;Khach hang&quot;,
+                &quot;Hanh khach&quot;,
+                &quot;So tien hoan&quot;,
+                &quot;Trang thai&quot;,
+                &quot;Thoi gian yeu cau&quot;,
+                &quot;Thoi gian hoan tat&quot;,
+                &quot;Ma giao dich hoan&quot;
+        };
+
+        String sql = &quot;&quot;
+                + &quot;SELECT TOP 500 &quot;
+                + &quot;    ht.id AS hoan_tien_id, &quot;
+                + &quot;    v.ma_ve, &quot;
+                + &quot;    dc.ma_dat_cho, &quot;
+                + &quot;    kh.ho_ten AS ten_khach_hang, &quot;
+                + &quot;    hk.ho_ten AS ten_hanh_khach, &quot;
+                + &quot;    ht.so_tien_hoan, &quot;
+                + &quot;    ht.trang_thai, &quot;
+                + &quot;    CONVERT(VARCHAR(19), ht.thoi_gian_yeu_cau, 120) AS thoi_gian_yeu_cau_text, &quot;
+                + &quot;    CONVERT(VARCHAR(19), ht.thoi_gian_hoan_tat, 120) AS thoi_gian_hoan_tat_text, &quot;
+                + &quot;    ht.ma_giao_dich_hoan &quot;
+                + &quot;FROM dbo.HOAN_TIEN ht &quot;
+                + &quot;JOIN dbo.VE v ON v.id = ht.ve_id &quot;
+                + &quot;JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id &quot;
+                + &quot;LEFT JOIN dbo.KHACH_HANG kh ON kh.id = dc.khach_hang_id &quot;
+                + &quot;LEFT JOIN dbo.HANH_KHACH hk ON hk.id = v.hanh_khach_id &quot;
+                + &quot;ORDER BY ht.id DESC&quot;;
+
+        List&lt;String[]&gt; rows = new ArrayList&lt;&gt;();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                rows.add(new String[]{
+                        String.valueOf(rs.getInt(&quot;hoan_tien_id&quot;)),
+                        rs.getString(&quot;ma_ve&quot;),
+                        rs.getString(&quot;ma_dat_cho&quot;),
+                        rs.getString(&quot;ten_khach_hang&quot;),
+                        rs.getString(&quot;ten_hanh_khach&quot;),
+                        rs.getBigDecimal(&quot;so_tien_hoan&quot;) == null ? &quot;0&quot; : rs.getBigDecimal(&quot;so_tien_hoan&quot;).toPlainString(),
+                        rs.getString(&quot;trang_thai&quot;),
+                        rs.getString(&quot;thoi_gian_yeu_cau_text&quot;),
+                        rs.getString(&quot;thoi_gian_hoan_tat_text&quot;),
+                        rs.getString(&quot;ma_giao_dich_hoan&quot;)
+                });
+            }
+        }
+
+        return new ExportData(headers, rows);
+    }
+
+    public ExportData exportTickets() throws SQLException {
+        String[] headers = {
+                &quot;Ma ve&quot;,
+                &quot;Ma don&quot;,
+                &quot;Hanh khach&quot;,
+                &quot;So giay to&quot;,
+                &quot;Ga di&quot;,
+                &quot;Ga den&quot;,
+                &quot;Gia ve&quot;,
+                &quot;Trang thai&quot;
+        };
+
+        String sql = &quot;&quot;
+                + &quot;SELECT TOP 500 &quot;
+                + &quot;    v.ma_ve, &quot;
+                + &quot;    dc.ma_dat_cho, &quot;
+                + &quot;    hk.ho_ten AS ten_hanh_khach, &quot;
+                + &quot;    hk.so_giay_to, &quot;
+                + &quot;    gd.ten_ga AS ten_ga_di, &quot;
+                + &quot;    ga.ten_ga AS ten_ga_den, &quot;
+                + &quot;    v.gia_ve_chi_tiet, &quot;
+                + &quot;    v.trang_thai &quot;
+                + &quot;FROM dbo.VE v &quot;
+                + &quot;JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id &quot;
+                + &quot;LEFT JOIN dbo.HANH_KHACH hk ON hk.id = v.hanh_khach_id &quot;
+                + &quot;LEFT JOIN dbo.GA gd ON gd.id = v.ga_di_id &quot;
+                + &quot;LEFT JOIN dbo.GA ga ON ga.id = v.ga_den_id &quot;
+                + &quot;ORDER BY v.id DESC&quot;;
+
+        List&lt;String[]&gt; rows = new ArrayList&lt;&gt;();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString(&quot;ma_ve&quot;),
+                        rs.getString(&quot;ma_dat_cho&quot;),
+                        rs.getString(&quot;ten_hanh_khach&quot;),
+                        rs.getString(&quot;so_giay_to&quot;),
+                        rs.getString(&quot;ten_ga_di&quot;),
+                        rs.getString(&quot;ten_ga_den&quot;),
+                        rs.getBigDecimal(&quot;gia_ve_chi_tiet&quot;) == null ? &quot;0&quot; : rs.getBigDecimal(&quot;gia_ve_chi_tiet&quot;).toPlainString(),
+                        rs.getString(&quot;trang_thai&quot;)
+                });
+            }
+        }
+
+        return new ExportData(headers, rows);
+    }
+
+    public static class ExportData {
+        private final String[] headers;
+        private final List&lt;String[]&gt; rows;
+
+        public ExportData(String[] headers, List&lt;String[]&gt; rows) {
+            this.headers = headers;
+            this.rows = rows;
+        }
+
+        public String[] getHeaders() {
+            return headers;
+        }
+
+        public List&lt;String[]&gt; getRows() {
+            return rows;
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section id="servlet" class="card">
+        <h2>7. Tạo AdminExportServlet.java</h2>
+        <p><strong>File:</strong> <code>src/java/vetau/controller/admin/AdminExportServlet.java</code></p>
+<pre><code class="language-java">package vetau.controller.admin;
+
+import vetau.dao.AdminExportDAO;
+import vetau.dao.AdminExportDAO.ExportData;
+import vetau.util.CsvUtil;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@WebServlet(name = &quot;AdminExportServlet&quot;, urlPatterns = {&quot;/admin/export&quot;})
+public class AdminExportServlet extends HttpServlet {
+
+    private final AdminExportDAO adminExportDAO = new AdminExportDAO();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute(&quot;currentAdmin&quot;) == null) {
+            response.sendRedirect(request.getContextPath() + &quot;/admin/login&quot;);
+            return;
+        }
+
+        String type = request.getParameter(&quot;type&quot;);
+
+        if (type == null || type.trim().isEmpty()) {
+            type = &quot;revenue&quot;;
+        }
+
+        try {
+            ExportData data;
+            String filePrefix;
+
+            switch (type) {
+                case &quot;bookings&quot;:
+                    data = adminExportDAO.exportBookings();
+                    filePrefix = &quot;don_dat_cho&quot;;
+                    break;
+
+                case &quot;refunds&quot;:
+                    data = adminExportDAO.exportRefunds();
+                    filePrefix = &quot;hoan_tien&quot;;
+                    break;
+
+                case &quot;tickets&quot;:
+                    data = adminExportDAO.exportTickets();
+                    filePrefix = &quot;ve&quot;;
+                    break;
+
+                case &quot;revenue&quot;:
+                default:
+                    data = adminExportDAO.exportMonthlyRevenue();
+                    filePrefix = &quot;bao_cao_doanh_thu&quot;;
+                    break;
+            }
+
+            String csv = CsvUtil.toCsv(data.getHeaders(), data.getRows());
+            String fileName = CsvUtil.safeFileName(
+                    filePrefix + &quot;_&quot; + LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;yyyyMMdd_HHmmss&quot;)) + &quot;.csv&quot;
+            );
+
+            writeCsv(response, fileName, csv);
+
+        } catch (Exception ex) {
+            response.setContentType(&quot;text/plain; charset=UTF-8&quot;);
+            response.getWriter().write(&quot;Không thể xuất file: &quot; + ex.getMessage());
+        }
+    }
+
+    private void writeCsv(HttpServletResponse response, String fileName, String csv)
+            throws IOException {
+        byte[] bytes = csv.getBytes(StandardCharsets.UTF_8);
+
+        response.setCharacterEncoding(&quot;UTF-8&quot;);
+        response.setContentType(&quot;text/csv; charset=UTF-8&quot;);
+        response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;&quot; + fileName + &quot;\&quot;&quot;);
+        response.setContentLength(bytes.length);
+
+        response.getOutputStream().write(bytes);
+        response.getOutputStream().flush();
+    }
+}</code></pre>
+    </section>
+
+    <section id="report-jsp" class="card">
+        <h2>8. Cập nhật report-revenue.jsp</h2>
+        <p><strong>File:</strong> <code>web/views/admin/report-revenue.jsp</code></p>
+        <p>Tìm nút:</p>
+<pre><code class="language-jsp">&lt;button class=&quot;btn-filter&quot; onclick=&quot;window.print()&quot;&gt;🖨️ Xuất PDF&lt;/button&gt;</code></pre>
+        <p>Thay bằng nhóm nút:</p>
+<pre><code class="language-jsp">&lt;div style=&quot;display: flex; gap: 10px; flex-wrap: wrap;&quot;&gt;
+    &lt;button class=&quot;btn-filter&quot; onclick=&quot;window.print()&quot;&gt;🖨️ Xuất PDF&lt;/button&gt;
+
+    &lt;a class=&quot;btn-filter&quot;
+       href=&quot;${pageContext.request.contextPath}/admin/export?type=revenue&quot;
+       style=&quot;text-decoration: none; background: #16a34a;&quot;&gt;
+        📥 CSV Doanh thu
+    &lt;/a&gt;
+
+    &lt;a class=&quot;btn-filter&quot;
+       href=&quot;${pageContext.request.contextPath}/admin/export?type=bookings&quot;
+       style=&quot;text-decoration: none; background: #0f766e;&quot;&gt;
+        📦 CSV Đơn hàng
+    &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <section id="dashboard-jsp" class="card">
+        <h2>9. Cập nhật dashboard.jsp</h2>
+        <p><strong>File:</strong> <code>web/views/admin/dashboard.jsp</code></p>
+        <p>Chèn ngay giữa <code>&lt;/header&gt;</code> và đoạn warning dashboard:</p>
+<pre><code class="language-jsp">&lt;/header&gt;
+
+&lt;div style=&quot;display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;&quot;&gt;
+    &lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=revenue&quot;
+       style=&quot;background:#16a34a;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+        📥 Xuất doanh thu CSV
+    &lt;/a&gt;
+
+    &lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=bookings&quot;
+       style=&quot;background:#0f766e;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+        📦 Xuất đơn hàng CSV
+    &lt;/a&gt;
+
+    &lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=refunds&quot;
+       style=&quot;background:#ea580c;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+        💸 Xuất hoàn tiền CSV
+    &lt;/a&gt;
+
+    &lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=tickets&quot;
+       style=&quot;background:#1d4ed8;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+        🎫 Xuất vé CSV
+    &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+    </section>
+
+    <section id="refund-booking-jsp" class="card">
+        <h2>10. Cập nhật refund-list.jsp và booking-list.jsp</h2>
+        <h3>10.1. refund-list.jsp</h3>
+<pre><code class="language-jsp">&lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=refunds&quot;
+   style=&quot;background:#ea580c;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+    📥 Xuất hoàn tiền CSV
+&lt;/a&gt;</code></pre>
+        <h3>10.2. booking-list.jsp</h3>
+<pre><code class="language-jsp">&lt;a href=&quot;${pageContext.request.contextPath}/admin/export?type=bookings&quot;
+   style=&quot;background:#0f766e;color:white;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:800;&quot;&gt;
+    📥 Xuất đơn hàng CSV
+&lt;/a&gt;</code></pre>
+    </section>
+
+    <section id="test" class="card">
+        <h2>11. Test Giai đoạn 9</h2>
+        <h3>Test 1: Chưa đăng nhập admin</h3>
+<pre><code class="language-text">/admin/export?type=revenue</code></pre>
+        <p>Kết quả đúng: redirect về <code>/admin/login</code>.</p>
+
+        <h3>Test 2: Xuất doanh thu</h3>
+<pre><code class="language-text">/admin/export?type=revenue</code></pre>
+        <p>Kết quả đúng: tải file <code>bao_cao_doanh_thu_yyyyMMdd_HHmmss.csv</code>, mở bằng Excel không lỗi tiếng Việt.</p>
+
+        <h3>Test 3: Xuất đơn hàng</h3>
+<pre><code class="language-text">/admin/export?type=bookings</code></pre>
+        <p>Kết quả đúng: có mã đơn, khách hàng, email, số điện thoại, ngày đặt, tổng thanh toán, trạng thái.</p>
+
+        <h3>Test 4: Xuất hoàn tiền</h3>
+<pre><code class="language-text">/admin/export?type=refunds</code></pre>
+        <p>Kết quả đúng: có mã vé, mã đơn, khách hàng, hành khách, số tiền hoàn, trạng thái.</p>
+
+        <h3>Test 5: Xuất vé</h3>
+<pre><code class="language-text">/admin/export?type=tickets</code></pre>
+        <p>Kết quả đúng: có mã vé, mã đơn, hành khách, ga đi, ga đến, giá vé, trạng thái.</p>
+    </section>
+
+    <section id="checklist" class="card">
+        <h2>12. Checklist Giai đoạn 9</h2>
+        <ul class="check-list">
+            <li>[ ] Có <code>CsvUtil.java</code>.</li>
+            <li>[ ] Có <code>AdminExportDAO.java</code>.</li>
+            <li>[ ] Có <code>AdminExportServlet.java</code>.</li>
+            <li>[ ] <code>/admin/export</code> bị chặn nếu chưa login admin.</li>
+            <li>[ ] Xuất được revenue CSV.</li>
+            <li>[ ] Xuất được bookings CSV.</li>
+            <li>[ ] Xuất được refunds CSV.</li>
+            <li>[ ] Xuất được tickets CSV.</li>
+            <li>[ ] File CSV mở được bằng Excel không lỗi tiếng Việt.</li>
+            <li>[ ] <code>report-revenue.jsp</code> có nút xuất CSV.</li>
+            <li>[ ] <code>dashboard.jsp</code> có nút xuất nhanh CSV.</li>
+            <li>[ ] Không ảnh hưởng dashboard/report hiện tại.</li>
+            <li>[ ] Không sửa nghiệp vụ thanh toán/hoàn tiền.</li>
+        </ul>
+    </section>
+
+    <section id="conclusion" class="card">
+        <h2>13. Kết luận Giai đoạn 9</h2>
+        <p>Giai đoạn 9 là giai đoạn cộng điểm demo. Sau khi làm xong, bạn có thể trình bày rằng ngoài dashboard và báo cáo trực quan, hệ thống còn hỗ trợ admin xuất dữ liệu ra CSV để mở bằng Excel.</p>
+<pre><code class="language-text">Bao gồm:
+- Báo cáo doanh thu
+- Danh sách đơn hàng
+- Danh sách hoàn tiền
+- Danh sách vé</code></pre>
+        <div class="note good">Ưu điểm: không cần thư viện ngoài, dễ demo, ít rủi ro làm hỏng hệ thống hiện có.</div>
+    </section>
+</main>
+
+<footer>Giai đoạn 9 — Xuất CSV/Excel cho admin.</footer>
+</body>
+</html>

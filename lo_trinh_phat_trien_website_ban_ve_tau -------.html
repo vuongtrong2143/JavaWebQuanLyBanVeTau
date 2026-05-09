@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lộ trình phát triển Website Hệ thống bán vé tàu hỏa</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1f2937;
+      line-height: 1.65;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      color: white;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 1000px;
+      opacity: 0.95;
+      font-size: 17px;
+    }
+    .section, .nav {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+    .nav h2, .section h2 {
+      margin: 0 0 14px;
+      color: #0f172a;
+    }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+    }
+    .nav-grid a {
+      display: block;
+      text-decoration: none;
+      color: #1d4ed8;
+      background: #eff6ff;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-weight: 700;
+    }
+    .phase-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .phase-title h2 {
+      border-left: 6px solid #f97316;
+      padding-left: 12px;
+      margin: 0;
+      font-size: 25px;
+    }
+    .badge {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      border: 1px solid;
+    }
+    .required {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .recommended {
+      background: #fff7ed;
+      color: #ea580c;
+      border-color: #fed7aa;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      color: #1d4ed8;
+      font-size: 19px;
+    }
+    ul {
+      margin: 8px 0 0 22px;
+      padding: 0;
+    }
+    li {
+      margin: 4px 0;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 14px;
+      padding: 16px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.55;
+      border: 1px solid #1e293b;
+    }
+    code {
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eff6ff;
+      color: #0f172a;
+    }
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .callout {
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      border-left: 6px solid #16a34a;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+    .warning {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-left: 6px solid #ea580c;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+    .footer {
+      text-align: center;
+      color: #64748b;
+      padding: 22px 0 8px;
+      font-size: 14px;
+    }
+    @media print {
+      body { background: #fff; }
+      .section, .nav, .hero { box-shadow: none; break-inside: avoid; }
+      .nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <h1>Lộ trình phát triển Website Hệ thống bán vé tàu hỏa</h1>
+      <p>
+        Tài liệu này tổng hợp lộ trình triển khai dự án theo hướng Java Web MVC + Servlet + JSP/JSTL + JDBC + MSSQL Server.
+        Mỗi giai đoạn có mục tiêu, việc cần làm và kết quả đầu ra rõ ràng để tiện theo dõi khi bắt đầu code.
+      </p>
+    </header>
+
+    <section class="nav">
+      <h2>Mục lục nhanh</h2>
+      <div class="nav-grid">
+        <a href="#overview">Tổng quan</a>
+        <a href="#phase1">Giai đoạn 1</a>
+<a href="#phase2">Giai đoạn 2</a>
+<a href="#phase3">Giai đoạn 3</a>
+<a href="#phase4">Giai đoạn 4</a>
+<a href="#phase5">Giai đoạn 5</a>
+<a href="#phase6">Giai đoạn 6</a>
+<a href="#phase7">Giai đoạn 7</a>
+<a href="#phase8">Giai đoạn 8</a>
+<a href="#phase9">Giai đoạn 9</a>
+<a href="#phase10">Giai đoạn 10</a>
+<a href="#phase11">Giai đoạn 11</a>
+<a href="#phase12">Giai đoạn 12</a>
+        <a href="#milestones">3 mốc lớn</a>
+        <a href="#priority">Ưu tiên khi thiếu thời gian</a>
+      </div>
+    </section>
+
+    <section id="overview" class="section">
+      <h2>Tổng quan kiến trúc</h2>
+      <p>
+        Website nên làm theo hướng <b>Java Web MVC + Servlet + JSP/JSTL + JDBC + MSSQL Server</b>.
+        Giai đoạn đầu ưu tiên Web App dành cho khách hàng; PC App Swing dành cho nhân viên có thể để sau hoặc ghi vào hướng phát triển.
+      </p>
+      <pre>Browser
+   ↓
+JSP / HTML / CSS / JS       ← View
+   ↓
+Servlet                     ← Controller
+   ↓
+Service                     ← Business Logic
+   ↓
+DAO                         ← Truy vấn DB
+   ↓
+MSSQL Server</pre>
+      <div class="callout">
+        <b>Nguyên tắc:</b> Từ đây trở đi nên làm từng module chạy được, không mở rộng phân tích thêm quá nhiều.
+        Phân tích đã đủ chốt, trọng tâm là triển khai, kiểm thử và hoàn thiện báo cáo.
+      </div>
+    </section>
+
+    
+<section id="phase1" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 1 — Khởi tạo nền tảng dự án</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Tạo project Java Web chạy được trên Tomcat, kết nối được MSSQL, có cấu trúc MVC rõ ràng.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Tạo cấu trúc thư mục controller, dao, model, service, util, filter, dto.</li>
+<li>Cấu hình JDK 21, Tomcat, MSSQL JDBC Driver, JSTL.</li>
+<li>Tạo DBConnection.java, web.xml, index.jsp, layout header/footer.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Chạy được project trên Tomcat.</li>
+<li>Truy cập được http://localhost:8080/VeTauWeb.</li>
+<li>Kết nối được MSSQL.</li>
+<li>Có trang home cơ bản.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase2" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 2 — Tạo cơ sở dữ liệu và dữ liệu mẫu</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Dùng script SQL cải tiến đã tạo để dựng database chính thức cho dự án.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Chạy file vetau_cai_tien_schema.sql.</li>
+<li>Thêm dữ liệu mẫu cho Ga, Tàu, Toa, Ghế, Chuyến tàu, Lịch dừng.</li>
+<li>Thêm dữ liệu mẫu cho Bảng giá, Đối tượng ưu đãi, Khuyến mãi.</li>
+<li>Thêm tài khoản khách hàng mẫu và admin mẫu.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Có database đủ dữ liệu để website tìm kiếm chuyến tàu và hiển thị ghế.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase3" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 3 — Xây dựng Model, DAO, Service nền tảng</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Ánh xạ các bảng chính thành class Java và tạo các DAO/Service cơ bản.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Tạo model: KhachHang, NhanVien, Ga, Tau, ToaTau, Ghe, ChuyenTau, LichDung, BangGia, KhuyenMai, DoiTuongUuDai, DatCho, GiuCho, Ve, ThanhToan, HoanTien.</li>
+<li>Tạo DAO: GaDAO, ChuyenTauDAO, TauDAO, ToaTauDAO, GheDAO, BangGiaDAO, KhachHangDAO, DatChoDAO, GiuChoDAO, VeDAO, ThanhToanDAO.</li>
+<li>Tạo Service: AuthService, TimKiemChuyenTauService, GiaVeService, GiuChoService, DatVeService, ThanhToanService.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Lấy được danh sách ga.</li>
+<li>Tìm được chuyến tàu.</li>
+<li>Lấy được toa/ghế theo chuyến.</li>
+<li>Tính được giá cơ bản.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase4" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 4 — Xây dựng giao diện công khai</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Tạo các trang mà khách vãng lai có thể dùng trước khi đăng nhập.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Tạo home.jsp, login.jsp, register.jsp, search-train.jsp, search-result.jsp, ticket-check.jsp, news.jsp, guide.jsp, promotion.jsp.</li>
+<li>Tạo HomeServlet, AuthServlet, RegisterServlet, LoginServlet, SearchTrainServlet, TicketCheckServlet, PromotionServlet.</li>
+<li>Cho phép xem trang chủ, hướng dẫn, khuyến mãi, tra cứu giờ tàu/giá vé, tìm kiếm chuyến, kiểm tra vé, đăng ký và đăng nhập.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Người dùng có thể truy cập website, tìm chuyến tàu và xem thông tin cơ bản.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase5" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 5 — Đăng ký, đăng nhập và phân quyền khách hàng</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Hoàn thiện phần tài khoản khách hàng.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Cho phép đăng ký, đăng nhập, đăng xuất.</li>
+<li>Cho phép xem/cập nhật hồ sơ.</li>
+<li>Cho phép xem lịch sử đặt vé.</li>
+<li>Tạo AuthFilter bảo vệ /booking/*, /checkout/*, /profile/*, /my-tickets/*.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Người dùng có tài khoản riêng và đăng nhập mới được đặt vé.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase6" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 6 — Tìm kiếm chuyến tàu và chọn ghế</h2>
+    <span class="badge required">Bắt buộc & trọng tâm</span>
+  </div>
+  <p><b>Mục tiêu:</b> Cho phép khách hàng nhập ga đi, ga đến, ngày đi, loại hành trình, sau đó hệ thống trả về các chuyến phù hợp.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Tìm ChuyenTau có lịch dừng qua cả ga đi và ga đến.</li>
+<li>Kiểm tra ga đi đứng trước ga đến.</li>
+<li>Lọc chuyến còn cách giờ khởi hành trên 60 phút.</li>
+<li>Hiển thị danh sách chuyến, toa và ghế.</li>
+<li>Kiểm tra ghế trống theo chặng dựa trên GIU_CHO và VE.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Người dùng tìm được chuyến và chọn được ghế hợp lệ.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase7" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 7 — Nhập hành khách, tính giá và giữ chỗ tạm thời</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Sau khi chọn ghế, khách nhập thông tin hành khách, hệ thống tính giá và tạo giữ chỗ.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Nhập thông tin hành khách.</li>
+<li>Chọn đối tượng ưu đãi.</li>
+<li>Tính giá cơ sở, giảm đối tượng, phụ thu nếu có.</li>
+<li>Tạo DatCho ở trạng thái Chờ thanh toán.</li>
+<li>Tạo GiuCho ở trạng thái Đang giữ.</li>
+<li>Chuyển sang thanh toán.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Tạo được đơn đặt chỗ và bản ghi giữ chỗ hợp lệ.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase8" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 8 — Thanh toán và xuất vé</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Hoàn thiện luồng thanh toán giả lập hoặc thanh toán thật tùy phạm vi đồ án.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Khách chọn phương thức thanh toán.</li>
+<li>Tạo ThanhToan trạng thái Pending.</li>
+<li>Giả lập callback thành công/thất bại.</li>
+<li>Nếu thành công: cập nhật ThanhToan, DatCho, GiuCho, tạo Ve và gửi email/SMS giả lập.</li>
+<li>Nếu thất bại: cập nhật ThanhToan thất bại, giữ chỗ còn đến khi hết hạn hoặc khách thử lại.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Khách thanh toán thành công và nhận được mã vé.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase9" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 9 — Tra cứu vé, lịch sử đặt chỗ và hủy/đổi/trả vé</h2>
+    <span class="badge recommended">Nên làm</span>
+  </div>
+  <p><b>Mục tiêu:</b> Cho phép khách hàng xem vé đã đặt, kiểm tra vé và gửi yêu cầu đổi/trả.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Xem lịch sử đặt vé.</li>
+<li>Xem chi tiết vé.</li>
+<li>Kiểm tra mã vé.</li>
+<li>Yêu cầu trả vé.</li>
+<li>Theo dõi hoàn tiền.</li>
+<li>Tìm chính sách đổi/trả phù hợp, tính phí khấu trừ, tạo LichSuDoiTra và HoanTien nếu cần.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Người dùng có thể quản lý vé sau khi đặt.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase10" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 10 — Trang quản trị Admin cho website</h2>
+    <span class="badge recommended">Nên làm sau luồng đặt vé</span>
+  </div>
+  <p><b>Mục tiêu:</b> Tạo khu vực quản trị để quản lý dữ liệu nền.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Quản lý ga, tàu, toa, ghế.</li>
+<li>Quản lý chuyến tàu và lịch dừng.</li>
+<li>Quản lý bảng giá, khuyến mãi, đối tượng ưu đãi, chính sách đổi/trả.</li>
+<li>Quản lý khách hàng, nhân viên.</li>
+<li>Xem báo cáo doanh thu.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Admin có thể tự cấu hình dữ liệu mà không cần sửa SQL thủ công.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase11" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 11 — Kiểm thử, bảo mật và hoàn thiện giao diện</h2>
+    <span class="badge required">Bắt buộc trước khi nộp</span>
+  </div>
+  <p><b>Mục tiêu:</b> Đảm bảo hệ thống chạy ổn, không lỗi nghiệp vụ cơ bản, giao diện dễ dùng.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Kiểm thử tìm chuyến: ga đi = ga đến, ga đi sau ga đến, chuyến đã khởi hành, chuyến dưới 60 phút, không có chuyến.</li>
+<li>Kiểm thử giữ chỗ: trùng ghế cùng chặng, khác chặng không giao nhau, hết hạn, thanh toán sau hết hạn.</li>
+<li>Kiểm thử thanh toán: thành công, thất bại, callback lặp, đóng trình duyệt giữa chừng.</li>
+<li>Kiểm thử trả vé: trên 24 giờ, 4–24 giờ, dưới 4 giờ, vé tập thể, vé đã dùng, vé đã trả.</li>
+<li>Bảo mật: hash mật khẩu, session an toàn, chặn /admin, validate input, PreparedStatement, không show lỗi SQL.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Website đủ ổn để demo và nộp đồ án.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="phase12" class="section">
+  <div class="phase-title">
+    <h2>Giai đoạn 12 — Báo cáo, tài liệu và demo</h2>
+    <span class="badge required">Bắt buộc</span>
+  </div>
+  <p><b>Mục tiêu:</b> Chuẩn bị phần nộp đồ án và bảo vệ.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Việc cần làm</h3>
+      <ul><li>Chuẩn bị báo cáo: giới thiệu đề tài, khảo sát, yêu cầu, Use Case, ERD, Class Diagram, CSDL, kiến trúc MVC, giao diện, kết quả, kiểm thử, hướng phát triển.</li>
+<li>Chuẩn bị demo: tìm chuyến, chọn ghế, nhập hành khách, áp dụng khuyến mãi, thanh toán giả lập, xuất vé, tra cứu vé, trả vé, admin xem báo cáo/quản lý bảng giá.</li></ul>
+    </div>
+    <div class="card">
+      <h3>Kết quả đầu ra</h3>
+      <ul><li>Có đủ code, database, file báo cáo, file demo và slide.</li></ul>
+    </div>
+  </div>
+</section>
+
+
+    <section id="milestones" class="section">
+      <h2>Đề xuất gom thành 3 mốc lớn</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mốc</th>
+            <th>Giai đoạn bao gồm</th>
+            <th>Kết quả mong muốn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Mốc 1 — Nền tảng chạy được</b></td>
+            <td>Giai đoạn 1, 2, 3 và một phần giai đoạn 4</td>
+            <td>Website chạy được, kết nối DB, có trang chủ, đăng ký/đăng nhập, tìm chuyến cơ bản.</td>
+          </tr>
+          <tr>
+            <td><b>Mốc 2 — Luồng đặt vé hoàn chỉnh</b></td>
+            <td>Giai đoạn 5, 6, 7, 8</td>
+            <td>Khách hàng có thể tìm chuyến, chọn ghế, giữ chỗ, thanh toán giả lập và nhận vé.</td>
+          </tr>
+          <tr>
+            <td><b>Mốc 3 — Hậu mãi, quản trị và hoàn thiện</b></td>
+            <td>Giai đoạn 9, 10, 11, 12</td>
+            <td>Hệ thống có đổi/trả vé, hoàn tiền, admin quản lý dữ liệu và đủ tài liệu để bảo vệ.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="priority" class="section">
+      <h2>Thứ tự ưu tiên nếu thời gian không nhiều</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Nên làm trước</h3>
+          <ol>
+            <li>Database + dữ liệu mẫu</li>
+            <li>Đăng ký / đăng nhập</li>
+            <li>Tìm chuyến</li>
+            <li>Chọn ghế</li>
+            <li>Giữ chỗ</li>
+            <li>Thanh toán giả lập</li>
+            <li>Tạo vé</li>
+            <li>Tra cứu vé</li>
+            <li>Admin quản lý chuyến / bảng giá</li>
+            <li>Trả vé cơ bản</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Có thể để sau</h3>
+          <ul>
+            <li>Vé tập thể nâng cao.</li>
+            <li>Hoàn tiền online thật.</li>
+            <li>Callback thật từ VNPay/MoMo.</li>
+            <li>Email/SMS thật.</li>
+            <li>Redis.</li>
+            <li>PC App Swing.</li>
+            <li>Báo cáo nâng cao.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="warning">
+        <b>Kết luận đề xuất:</b> Bắt đầu với <b>Giai đoạn 1 — Khởi tạo dự án Java Web MVC</b>,
+        gồm cấu trúc thư mục, dependency, <code>DBConnection.java</code>, <code>web.xml</code>,
+        <code>index.jsp</code>, layout header/footer và điều hướng Servlet.
+      </div>
+    </section>
+
+    <footer class="footer">
+      Tài liệu HTML phục vụ theo dõi lộ trình phát triển Website Hệ thống bán vé tàu hỏa.
+    </footer>
+  </div>
+</body>
+</html>

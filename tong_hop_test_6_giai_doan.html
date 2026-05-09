@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tổng hợp Test 6 Giai đoạn - Dự án Web Quản lý Vé Tàu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --green: #166534;
+            --green-bg: #dcfce7;
+            --yellow: #92400e;
+            --yellow-bg: #fef3c7;
+            --red: #991b1b;
+            --red-bg: #fee2e2;
+            --slate-950: #020617;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --code-bg: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1f2937;
+            background: #f8fafc;
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            color: white;
+            padding: 44px 24px;
+        }
+
+        header .wrap, main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        main {
+            padding: 28px 20px 70px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--slate-900);
+            font-size: 24px;
+            border-bottom: 1px solid var(--slate-200);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--blue-dark);
+            margin-top: 26px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: var(--slate-700);
+            margin-bottom: 8px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+            gap: 10px;
+            padding-left: 0;
+            list-style: none;
+            margin-bottom: 0;
+        }
+
+        .toc a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--blue-dark);
+            text-decoration: none;
+            font-weight: 800;
+            border: 1px solid #bfdbfe;
+        }
+
+        .toc a:hover { background: #dbeafe; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .badge-green { background: var(--green-bg); color: var(--green); }
+        .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+        .badge-red { background: var(--red-bg); color: var(--red); }
+        .badge-blue { background: #dbeafe; color: #1e3a8a; }
+
+        .note {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 14px 0;
+            font-weight: 650;
+        }
+
+        .note.info {
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
+        .note.warn {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .note.good {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 12px;
+        }
+
+        .mini-card {
+            background: #f8fafc;
+            border: 1px solid var(--slate-200);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .mini-card strong {
+            color: var(--slate-900);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            border-radius: 14px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.55;
+            border: 1px solid #1e293b;
+        }
+
+        code { font-family: Consolas, "Courier New", monospace; }
+
+        p code, li code, td code {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 18px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #334155;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.04em;
+        }
+
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        td {
+            background: white;
+        }
+
+        .check-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .check-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .check-list li:last-child { border-bottom: none; }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .phase-title h2 {
+            border-bottom: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .phase-desc {
+            color: #475569;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--slate-500);
+            padding: 24px;
+        }
+
+        @media print {
+            header {
+                background: white;
+                color: black;
+                padding: 20px 0;
+            }
+
+            header .subtitle { color: #333; }
+            body { background: white; }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+
+            .toc a {
+                border: 1px solid #ccc;
+                background: white;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Tổng hợp Test cho 6 Giai đoạn</h1>
+        <p class="subtitle">Dự án Web Quản lý Vé Tàu — kiểm thử theo đúng các phân tích đã làm: đặt vé, thanh toán, trạng thái đơn, hoàn tiền, dashboard/report và bảo mật session/filter</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#scope">0. Phạm vi và thứ tự chạy</a></li>
+            <li><a href="#phase1">1. Test Giai đoạn 1 — lỗi mất điểm nặng</a></li>
+            <li><a href="#phase2">2. Test Giai đoạn 2 — thanh toán/callback/idempotency</a></li>
+            <li><a href="#phase3">3. Test Giai đoạn 3 — trạng thái đơn/vé/hết hạn/JSP</a></li>
+            <li><a href="#phase4">4. Test Giai đoạn 4 — hoàn tiền/RefundAdminDTO</a></li>
+            <li><a href="#phase5">5. Test Giai đoạn 5 — dashboard/báo cáo</a></li>
+            <li><a href="#phase6">6. Test Giai đoạn 6 — bảo mật/filter/session</a></li>
+            <li><a href="#regression">7. Bộ test hồi quy cuối cùng</a></li>
+            <li><a href="#report">8. Kết luận đưa vào báo cáo</a></li>
+        </ul>
+    </section>
+
+    <section id="scope" class="card">
+        <h2>0. Phạm vi và thứ tự chạy trước khi test</h2>
+        <p>Tài liệu này tổng hợp lại toàn bộ các test đúng cho 6 giai đoạn đã phân tích. Mục tiêu là giúp bạn kiểm thử hệ thống theo thứ tự rõ ràng, có dữ liệu SQL để đối chiếu, có tiêu chí đạt/không đạt và có thể dùng trực tiếp khi demo hoặc viết báo cáo.</p>
+
+        <h3>0.1. Thứ tự dựng database khuyến nghị</h3>
+<pre><code class="language-text">1. VeTauDB_trang_thai_UPDATED_GD1_GD2.sql
+2. UPDATE_DB_GD3_CLEANUP.sql
+3. SEED_15_KICH_BAN_MAU_GD1_GD2_GD3.sql
+4. UPDATE_DB_GD4_REFUND_ADMIN_DTO_CLEAN.sql
+5. UPDATE_DB_GD5_REPORTING_CLEAN.sql
+6. UPDATE_DB_GD6_SECURITY_AUDIT.sql    nếu có dùng audit log, không bắt buộc</code></pre>
+
+        <div class="note info">
+            Nếu đã chạy bản SQL cũ và thấy <code>Query executed successfully</code>, database thường vẫn ổn. Các bản <code>_CLEAN</code> dùng để tránh Error List báo trùng index khi chạy lại nhiều lần.
+        </div>
+
+        <h3>0.2. Thứ tự test web tổng quát</h3>
+<pre><code class="language-text">1. Clean and Build project.
+2. Start server NetBeans/Tomcat.
+3. Test customer flow: tìm chuyến → chọn ghế → booking-review → tạo đặt chỗ → checkout.
+4. Test payment callback thành công/thất bại/chạy lại nhiều lần.
+5. Test my-bookings, my-tickets, ticket-check.
+6. Test return-ticket.
+7. Test admin/refunds.
+8. Test admin/dashboard và admin/reports.
+9. Test bảo mật: chưa login, returnUrl độc hại, logout, filter.</code></pre>
+
+        <h3>0.3. Tài khoản demo gợi ý</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Loại</th>
+                <th>Đường dẫn</th>
+                <th>Tài khoản</th>
+                <th>Ghi chú</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Customer</td>
+                <td><code>/login</code></td>
+                <td>Theo dữ liệu seed của bạn</td>
+                <td>Dùng để đặt vé, thanh toán, trả vé.</td>
+            </tr>
+            <tr>
+                <td>Admin</td>
+                <td><code>/admin/login</code></td>
+                <td><code>admin@vetau.vn / admin123</code></td>
+                <td>Giai đoạn 6 vẫn giữ admin demo hard-code.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="phase1" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 1</span>
+            <h2>Test lỗi “mất điểm nặng”</h2>
+        </div>
+        <p class="phase-desc">Mục tiêu Giai đoạn 1 là đảm bảo luồng tạo đặt chỗ và tạo vé không còn lỗi constraint, không phụ thuộc số tiền client gửi lên, và trạng thái ban đầu thống nhất là <code>Chờ thanh toán</code>.</p>
+
+        <h3>1.1. Test Clean and Build</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>NetBeans → Clean and Build project.</td>
+                <td>Không còn lỗi compile liên quan model/DAO/servlet/JSP.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Start server.</td>
+                <td>Trang <code>/home</code> mở được.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>1.2. Test checkout không phụ thuộc <code>soTien</code> từ client</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Vào luồng tìm chuyến, chọn ghế, đến trang checkout/booking-review.</td>
+                <td>Trang hiển thị tổng tiền dự kiến.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Dùng DevTools sửa hidden input <code>soTien</code> thành <code>1</code> hoặc giá trị bất kỳ.</td>
+                <td>Server vẫn tự tính tổng tiền từ dữ liệu chuyến/ghế/hành khách, không lấy theo client.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Nhấn tạo đặt chỗ.</td>
+                <td><code>DAT_CHO.tong_thanh_toan</code> đúng theo server tính, không phải giá trị DevTools sửa.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4>SQL kiểm tra</h4>
+<pre><code class="language-sql">SELECT TOP 10
+    id,
+    ma_dat_cho,
+    tong_thanh_toan,
+    trang_thai,
+    ngay_dat
+FROM dbo.DAT_CHO
+ORDER BY id DESC;
+
+SELECT TOP 20
+    id,
+    ma_ve,
+    dat_cho_id,
+    gia_ve_chi_tiet,
+    trang_thai
+FROM dbo.VE
+ORDER BY id DESC;</code></pre>
+
+        <h3>1.3. Test tạo đơn ban đầu phải là <code>Chờ thanh toán</code></h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Vào <code>/booking-review</code>, nhấn tạo đặt chỗ.</td>
+                <td>Không còn lỗi <code>CK_VE_trang_thai</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Kiểm tra đơn mới trong DB.</td>
+                <td><code>DAT_CHO.trang_thai = N'Chờ thanh toán'</code>.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Kiểm tra vé mới trong DB.</td>
+                <td><code>VE.trang_thai = N'Chờ thanh toán'</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">DECLARE @maDatCho NVARCHAR(50) = N&#x27;MA_DAT_CHO_MOI&#x27;;
+
+SELECT id, ma_dat_cho, trang_thai, tong_thanh_toan
+FROM dbo.DAT_CHO
+WHERE ma_dat_cho = @maDatCho;
+
+SELECT id, ma_ve, trang_thai, gia_ve_chi_tiet
+FROM dbo.VE
+WHERE dat_cho_id = (
+    SELECT id FROM dbo.DAT_CHO WHERE ma_dat_cho = @maDatCho
+);</code></pre>
+
+        <h3>1.4. Tiêu chí hoàn thành Giai đoạn 1</h3>
+        <ul class="check-list">
+            <li>[ ] Clean and Build thành công.</li>
+            <li>[ ] Tạo đặt chỗ không còn lỗi CHECK constraint.</li>
+            <li>[ ] Đơn mới là <code>Chờ thanh toán</code>.</li>
+            <li>[ ] Vé mới là <code>Chờ thanh toán</code>.</li>
+            <li>[ ] Tổng tiền không phụ thuộc input client.</li>
+        </ul>
+    </section>
+
+    <section id="phase2" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 2</span>
+            <h2>Test thanh toán, callback, idempotency, transaction</h2>
+        </div>
+        <p class="phase-desc">Mục tiêu Giai đoạn 2 là đảm bảo callback thanh toán chỉ được xử lý một lần, không tạo vé trùng, không cập nhật sai trạng thái khi callback bị gọi lại, và transaction đồng bộ giữa <code>THANH_TOAN</code>, <code>DAT_CHO</code>, <code>VE</code>.</p>
+
+        <h3>2.1. Test thanh toán thành công lần đầu</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Tạo đơn ở Giai đoạn 1, trạng thái <code>Chờ thanh toán</code>.</td>
+                <td>Có <code>DAT_CHO</code> và <code>VE</code> chờ thanh toán.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Đi tới checkout, giả lập thanh toán thành công.</td>
+                <td>Callback cập nhật giao dịch thành công.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Kiểm tra DB.</td>
+                <td><code>THANH_TOAN = Thành công</code>, <code>DAT_CHO = Đã thanh toán</code>, <code>VE = Hợp lệ</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">DECLARE @maDatCho NVARCHAR(50) = N&#x27;MA_DAT_CHO_TEST&#x27;;
+
+SELECT id, ma_dat_cho, trang_thai, tong_thanh_toan
+FROM dbo.DAT_CHO
+WHERE ma_dat_cho = @maDatCho;
+
+SELECT id, dat_cho_id, so_tien, trang_thai, ma_giao_dich, ngay_thanh_toan
+FROM dbo.THANH_TOAN
+WHERE dat_cho_id = (
+    SELECT id FROM dbo.DAT_CHO WHERE ma_dat_cho = @maDatCho
+)
+ORDER BY id DESC;
+
+SELECT id, ma_ve, trang_thai
+FROM dbo.VE
+WHERE dat_cho_id = (
+    SELECT id FROM dbo.DAT_CHO WHERE ma_dat_cho = @maDatCho
+);</code></pre>
+
+        <h3>2.2. Test callback 2 lần không tạo vé trùng</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Sau khi thanh toán thành công, copy lại URL callback hoặc bấm refresh callback.</td>
+                <td>Callback lần 2 không tạo thêm vé.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Kiểm tra số lượng vé của đơn.</td>
+                <td>Số vé giữ nguyên bằng số hành khách/ghế ban đầu.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Kiểm tra giao dịch.</td>
+                <td>Không tạo nhiều thanh toán thành công cho cùng một thao tác nếu logic đã chống trùng.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">DECLARE @datChoId INT = 1;
+
+SELECT COUNT(*) AS so_ve
+FROM dbo.VE
+WHERE dat_cho_id = @datChoId;
+
+SELECT ma_ve, COUNT(*) AS so_lan
+FROM dbo.VE
+WHERE dat_cho_id = @datChoId
+GROUP BY ma_ve
+HAVING COUNT(*) &gt; 1;
+
+SELECT id, dat_cho_id, trang_thai, ma_giao_dich, ngay_thanh_toan
+FROM dbo.THANH_TOAN
+WHERE dat_cho_id = @datChoId
+ORDER BY id DESC;</code></pre>
+
+        <h3>2.3. Test callback thất bại</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Tạo đơn mới, giả lập thanh toán thất bại.</td>
+                <td>Không chuyển vé thành <code>Hợp lệ</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Kiểm tra DB.</td>
+                <td><code>THANH_TOAN = Thất bại</code> hoặc trạng thái thất bại tương ứng, <code>DAT_CHO</code>/<code>VE</code> không bị xác nhận sai.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>2.4. Tiêu chí hoàn thành Giai đoạn 2</h3>
+        <ul class="check-list">
+            <li>[ ] Callback thành công cập nhật đồng bộ <code>THANH_TOAN</code>, <code>DAT_CHO</code>, <code>VE</code>.</li>
+            <li>[ ] Callback lần 2 không tạo vé trùng.</li>
+            <li>[ ] Callback thất bại không làm vé thành <code>Hợp lệ</code>.</li>
+            <li>[ ] Không có trạng thái lạ ngoài constraint SQL đã cập nhật.</li>
+            <li>[ ] Không có lỗi transaction nửa chừng khiến đơn/vé/thanh toán lệch nhau.</li>
+        </ul>
+    </section>
+
+    <section id="phase3" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 3</span>
+            <h2>Test trạng thái đơn, vé, hết hạn, JSP hiển thị</h2>
+        </div>
+        <p class="phase-desc">Giai đoạn 3 tập trung vào chuẩn hóa trạng thái sau khi đặt vé/thanh toán/hết hạn/trả vé, đồng thời cập nhật các JSP như <code>my-bookings.jsp</code>, <code>booking-list.jsp</code>, <code>my-tickets.jsp</code>, <code>ticket-check.jsp</code>.</p>
+
+        <h3>3.1. Test đơn chờ thanh toán hiển thị đúng</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Tạo đơn nhưng chưa thanh toán.</td>
+                <td>Đơn ở <code>DAT_CHO = Chờ thanh toán</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Vào <code>/my-bookings</code>.</td>
+                <td>Đơn hiển thị badge/trạng thái <code>Chờ thanh toán</code>, có nút tiếp tục thanh toán nếu còn hạn.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Vào admin <code>/admin/bookings</code>.</td>
+                <td>Admin cũng nhìn thấy đúng trạng thái.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>3.2. Test đơn/vé hết hạn</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Tạo đơn chờ thanh toán, chỉnh thời hạn giữ chỗ/ngày đặt theo kịch bản hết hạn hoặc chạy cleanup GĐ3.</td>
+                <td>Đơn được chuyển sang <code>Hết hạn</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Kiểm tra vé thuộc đơn.</td>
+                <td>Vé không còn dùng để lên tàu; trạng thái tương ứng theo logic cleanup.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Vào <code>/my-bookings</code> và admin booking list.</td>
+                <td>JSP hiển thị đúng <code>Hết hạn</code>, không cho thanh toán tiếp.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">SELECT TOP 20
+    dc.id,
+    dc.ma_dat_cho,
+    dc.trang_thai,
+    dc.ngay_dat,
+    dc.thoi_han_giu_cho,
+    dc.tong_thanh_toan
+FROM dbo.DAT_CHO dc
+ORDER BY dc.id DESC;
+
+SELECT
+    v.id,
+    v.ma_ve,
+    v.trang_thai,
+    dc.ma_dat_cho,
+    dc.trang_thai AS trang_thai_don
+FROM dbo.VE v
+JOIN dbo.DAT_CHO dc ON dc.id = v.dat_cho_id
+ORDER BY v.id DESC;</code></pre>
+
+        <h3>3.3. Test <code>ticket-check.jsp</code></h3>
+        <table>
+            <thead>
+            <tr><th>Tình huống</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Vé hợp lệ</td>
+                <td>Tra cứu mã vé đã thanh toán.</td>
+                <td>Hiển thị trạng thái <code>Hợp lệ</code> hoặc trạng thái hợp lệ theo DTO, có thông tin tàu/ghế/giờ đi.</td>
+            </tr>
+            <tr>
+                <td>Vé chờ thanh toán</td>
+                <td>Tra cứu mã vé của đơn chưa thanh toán.</td>
+                <td>Hiển thị <code>Chờ thanh toán</code>, không hiểu sai là vé được đi.</td>
+            </tr>
+            <tr>
+                <td>Vé đã trả/hết hạn</td>
+                <td>Tra cứu mã vé đã trả/hết hạn.</td>
+                <td>Badge cảnh báo/không hợp lệ tương ứng.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>3.4. Test dữ liệu mẫu 10–15 kịch bản</h3>
+        <p>Dùng file seed đã tạo để có đủ kịch bản khi demo:</p>
+        <ul>
+            <li>Đơn chờ thanh toán.</li>
+            <li>Đơn đã thanh toán.</li>
+            <li>Đơn hết hạn.</li>
+            <li>Đơn hoàn tiền một phần/toàn bộ.</li>
+            <li>Vé hợp lệ, vé chờ thanh toán, vé đã trả.</li>
+            <li>Giao dịch thanh toán thành công/thất bại.</li>
+        </ul>
+
+        <h3>3.5. Tiêu chí hoàn thành Giai đoạn 3</h3>
+        <ul class="check-list">
+            <li>[ ] <code>my-bookings.jsp</code> hiển thị đúng trạng thái <code>Chờ thanh toán</code>, <code>Đã thanh toán</code>, <code>Hết hạn</code>, <code>Hoàn tiền...</code>.</li>
+            <li>[ ] <code>booking-list.jsp</code> admin hiển thị đúng trạng thái đơn.</li>
+            <li>[ ] <code>my-tickets.jsp</code> hiển thị đúng vé hợp lệ/chờ thanh toán/đã trả.</li>
+            <li>[ ] <code>ticket-check.jsp</code> tra cứu đúng các trạng thái vé.</li>
+            <li>[ ] Dữ liệu mẫu đủ phong phú để demo báo cáo.</li>
+        </ul>
+    </section>
+
+    <section id="phase4" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 4</span>
+            <h2>Test trả vé, hoàn tiền, RefundAdminDTO</h2>
+        </div>
+        <p class="phase-desc">Giai đoạn 4 đã thống nhất luồng admin hoàn tiền theo <code>RefundAdminDTO</code>, lấy <code>HOAN_TIEN</code> làm bảng trung tâm. Test cần đảm bảo trả vé tạo yêu cầu hoàn tiền, admin duyệt/từ chối đúng, không dùng lại <code>RefundDTO</code> hoặc <code>listRefunds</code> cũ.</p>
+
+        <h3>4.1. Test khách yêu cầu trả vé</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Đăng nhập customer, chọn một vé <code>Hợp lệ</code>.</td>
+                <td>Vé thuộc đúng tài khoản.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Mở <code>/return-ticket?maVe=...</code>.</td>
+                <td>Hiển thị preview trả vé, chính sách, phí/khấu trừ, số tiền hoàn.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Xác nhận trả vé.</td>
+                <td><code>VE = Đã trả</code>, có dòng <code>LICH_SU_DOI_TRA</code>, có dòng <code>HOAN_TIEN = Chờ xử lý</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">DECLARE @maVe NVARCHAR(50) = N&#x27;MA_VE_TEST&#x27;;
+
+SELECT id, ma_ve, trang_thai
+FROM dbo.VE
+WHERE ma_ve = @maVe;
+
+SELECT *
+FROM dbo.LICH_SU_DOI_TRA
+WHERE ve_id = (
+    SELECT id FROM dbo.VE WHERE ma_ve = @maVe
+)
+ORDER BY id DESC;
+
+SELECT *
+FROM dbo.HOAN_TIEN
+WHERE ve_id = (
+    SELECT id FROM dbo.VE WHERE ma_ve = @maVe
+)
+ORDER BY id DESC;</code></pre>
+
+        <h3>4.2. Test không tạo nhiều yêu cầu hoàn tiền chờ xử lý cho cùng vé</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Sau khi đã yêu cầu trả vé, refresh hoặc submit lại form trả vé.</td>
+                <td>Hệ thống không tạo thêm yêu cầu <code>Chờ xử lý</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Kiểm tra DB.</td>
+                <td>Mỗi vé chỉ có tối đa 1 dòng <code>HOAN_TIEN = Chờ xử lý</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+<pre><code class="language-sql">SELECT ve_id, COUNT(*) AS so_yeu_cau_cho_xu_ly
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;
+GROUP BY ve_id
+HAVING COUNT(*) &gt; 1;</code></pre>
+
+        <h3>4.3. Test admin xem danh sách hoàn tiền</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Đăng nhập admin.</td>
+                <td>Vào được dashboard.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Mở <code>/admin/refunds</code>.</td>
+                <td>Danh sách dùng <code>${refunds}</code>, không lỗi <code>listRefunds</code>.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Chọn chi tiết.</td>
+                <td>URL dạng <code>/admin/refunds?action=detail&id=&lt;hoanTienId&gt;</code>, JSP dùng <code>${refund.hoanTienId}</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>4.4. Test admin duyệt hoàn tiền</h3>
+<pre><code class="language-sql">-- Sau khi bấm duyệt trên /admin/refunds?action=detail&amp;id=&lt;hoanTienId&gt;
+SELECT
+    id,
+    ve_id,
+    so_tien_hoan,
+    trang_thai,
+    ma_giao_dich_hoan,
+    thoi_gian_hoan_tat
+FROM dbo.HOAN_TIEN
+WHERE id = &lt;hoanTienId&gt;;</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">trang_thai = N&#x27;Hoàn tất&#x27;
+ma_giao_dich_hoan IS NOT NULL
+thoi_gian_hoan_tat IS NOT NULL</code></pre>
+
+        <h3>4.5. Test admin từ chối hoàn tiền</h3>
+<pre><code class="language-sql">SELECT
+    id,
+    ve_id,
+    so_tien_hoan,
+    trang_thai,
+    thoi_gian_hoan_tat
+FROM dbo.HOAN_TIEN
+WHERE id = &lt;hoanTienId&gt;;</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">trang_thai = N&#x27;Từ chối&#x27;
+thoi_gian_hoan_tat IS NOT NULL</code></pre>
+
+        <h3>4.6. Test SQL trạng thái hoàn tiền</h3>
+<pre><code class="language-sql">SELECT trang_thai, COUNT(*) AS so_luong
+FROM dbo.HOAN_TIEN
+GROUP BY trang_thai
+ORDER BY trang_thai;</code></pre>
+        <p>Kết quả đúng chỉ còn các trạng thái:</p>
+<pre><code class="language-text">Chờ xử lý
+Hoàn tất
+Từ chối</code></pre>
+
+        <h3>4.7. Tiêu chí hoàn thành Giai đoạn 4</h3>
+        <ul class="check-list">
+            <li>[ ] <code>RefundAdminDTO.java</code> dùng đúng field.</li>
+            <li>[ ] <code>HoanTienDAO.findAdminRefunds</code> và <code>findAdminRefundById</code> chạy đúng.</li>
+            <li>[ ] <code>AdminRefundServlet</code> truyền <code>refunds</code>/<code>refund</code>.</li>
+            <li>[ ] <code>refund-list.jsp</code> không dùng <code>listRefunds</code>.</li>
+            <li>[ ] <code>refund-detail.jsp</code> không dùng <code>refund.id</code>.</li>
+            <li>[ ] Duyệt/từ chối không xử lý lại yêu cầu đã xử lý.</li>
+            <li>[ ] SQL <code>UPDATE_DB_GD4_REFUND_ADMIN_DTO_CLEAN.sql</code> chạy thành công.</li>
+        </ul>
+    </section>
+
+    <section id="phase5" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 5</span>
+            <h2>Test dashboard và báo cáo doanh thu thật</h2>
+        </div>
+        <p class="phase-desc">Giai đoạn 5 thay dữ liệu giả trong admin dashboard/report bằng dữ liệu thật từ <code>THANH_TOAN</code>, <code>HOAN_TIEN</code>, <code>VE</code>, <code>DAT_CHO</code>, <code>KHACH_HANG</code>, <code>GA</code>, <code>GHE</code>, <code>TOA_TAU</code>.</p>
+
+        <h3>5.1. Test SQL index/reporting clean</h3>
+        <table>
+            <thead>
+            <tr><th>Bước</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>Chạy <code>UPDATE_DB_GD5_REPORTING_CLEAN.sql</code>.</td>
+                <td><code>Query executed successfully</code>.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Chạy lại lần 2.</td>
+                <td>Không lỗi trùng index; nếu có thì chỉ PRINT bỏ qua.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Kiểm tra danh sách index.</td>
+                <td>Có các index phục vụ thống kê.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2. Test SQL số liệu nguồn</h3>
+<pre><code class="language-sql">SELECT SUM(so_tien) AS tong_doanh_thu
+FROM dbo.THANH_TOAN
+WHERE trang_thai = N&#x27;Thành công&#x27;;
+
+SELECT COUNT(*) AS so_ve_bao_cao
+FROM dbo.VE
+WHERE trang_thai IN (N&#x27;Hợp lệ&#x27;, N&#x27;Đã sử dụng&#x27;, N&#x27;Đã trả&#x27;);
+
+SELECT COUNT(*) AS hoan_tien_cho_xu_ly
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;;
+
+SELECT SUM(so_tien_hoan) AS tong_hoan_tien
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Hoàn tất&#x27;;</code></pre>
+
+        <h3>5.3. Test <code>/admin/dashboard</code></h3>
+        <table>
+            <thead>
+            <tr><th>Nội dung</th><th>Cách kiểm tra</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Doanh thu thuần tháng này</td>
+                <td>Mở <code>/admin/dashboard</code>, đối chiếu với <code>THANH_TOAN - HOAN_TIEN</code>.</td>
+                <td>Không còn số giả kiểu 24,500,000 nếu DB khác.</td>
+            </tr>
+            <tr>
+                <td>Vé bán tháng này</td>
+                <td>Đối chiếu với <code>VE + DAT_CHO</code>.</td>
+                <td>Hiển thị đúng số vé theo DB.</td>
+            </tr>
+            <tr>
+                <td>Khách hàng mới</td>
+                <td>Đối chiếu với <code>KHACH_HANG.ngay_tao</code>.</td>
+                <td>Hiển thị đúng số khách mới.</td>
+            </tr>
+            <tr>
+                <td>Hoàn tiền chờ xử lý</td>
+                <td>Đối chiếu <code>HOAN_TIEN = Chờ xử lý</code>.</td>
+                <td>Hiển thị đúng số yêu cầu chờ xử lý.</td>
+            </tr>
+            <tr>
+                <td>Đơn gần đây</td>
+                <td>Kiểm tra bảng recent bookings.</td>
+                <td>Hiển thị các đơn mới nhất, trạng thái đúng.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.4. Test <code>/admin/reports</code></h3>
+        <table>
+            <thead>
+            <tr><th>Nội dung</th><th>Nguồn dữ liệu</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Biểu đồ doanh thu 6 tháng</td>
+                <td><code>THANH_TOAN</code> thành công trừ <code>HOAN_TIEN</code> hoàn tất.</td>
+                <td>Biểu đồ có dữ liệu thật theo tháng.</td>
+            </tr>
+            <tr>
+                <td>Cơ cấu hạng ghế</td>
+                <td><code>VE + GHE + TOA_TAU</code>.</td>
+                <td>Doughnut chart hoặc bảng hạng ghế đúng.</td>
+            </tr>
+            <tr>
+                <td>Top tuyến doanh thu cao</td>
+                <td><code>VE + GA</code>.</td>
+                <td>Hiển thị tuyến và doanh thu tương ứng.</td>
+            </tr>
+            <tr>
+                <td>Phương thức thanh toán</td>
+                <td><code>THANH_TOAN.phuong_thuc</code>.</td>
+                <td>Hiển thị số giao dịch và doanh thu từng phương thức.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.5. Test cảnh báo fallback</h3>
+        <p>Tạm thời đổi sai tên DB hoặc ngắt kết nối DB để kiểm tra graceful error nếu cần.</p>
+        <table>
+            <thead>
+            <tr><th>Trang</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>/admin/dashboard</code></td>
+                <td>Hiển thị <code>dashboardWarning</code>, không crash JSP.</td>
+            </tr>
+            <tr>
+                <td><code>/admin/reports</code></td>
+                <td>Hiển thị <code>reportWarning</code>, chart nhận mảng rỗng <code>[]</code>.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>5.6. Tiêu chí hoàn thành Giai đoạn 5</h3>
+        <ul class="check-list">
+            <li>[ ] Có đủ DTO: <code>DashboardStatsDTO</code>, <code>MonthlyRevenueDTO</code>, <code>LabelValueDTO</code>, <code>RecentBookingDTO</code>.</li>
+            <li>[ ] Có <code>BaoCaoDAO</code> và <code>BaoCaoService</code>.</li>
+            <li>[ ] <code>AdminDashboardServlet</code> không dùng số giả.</li>
+            <li>[ ] <code>AdminReportServlet</code> không dùng mảng giả.</li>
+            <li>[ ] <code>dashboard.jsp</code> hiển thị <code>stats</code> và <code>recentBookings</code>.</li>
+            <li>[ ] <code>report-revenue.jsp</code> hiển thị biểu đồ/bảng từ DB.</li>
+            <li>[ ] <code>UPDATE_DB_GD5_REPORTING_CLEAN.sql</code> chạy thành công.</li>
+        </ul>
+    </section>
+
+    <section id="phase6" class="card">
+        <div class="phase-title">
+            <span class="badge badge-blue">Giai đoạn 6</span>
+            <h2>Test bảo mật session, filter, returnUrl</h2>
+        </div>
+        <p class="phase-desc">Giai đoạn 6 bản điều chỉnh không chuyển <code>PasswordUtil</code> sang SHA-256. Mã hóa mật khẩu đưa vào hướng phát triển thêm. Giai đoạn này chỉ tập trung vào chống open redirect, session regenerate, logout, filter URL và security headers.</p>
+
+        <h3>6.1. Test customer chưa đăng nhập</h3>
+        <table>
+            <thead>
+            <tr><th>URL</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr><td><code>/checkout</code></td><td>Redirect về <code>/login?message=login-required&amp;returnUrl=...</code>.</td></tr>
+            <tr><td><code>/booking-review</code></td><td>Redirect về login.</td></tr>
+            <tr><td><code>/return-ticket?maVe=...</code></td><td>Redirect về login.</td></tr>
+            <tr><td><code>/my-bookings</code></td><td>Redirect về login.</td></tr>
+            <tr><td><code>/my-tickets</code></td><td>Redirect về login.</td></tr>
+            <tr><td><code>/profile</code></td><td>Redirect về login.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>6.2. Test customer login xong quay lại trang cũ</h3>
+<pre><code class="language-text">1. Logout customer.
+2. Mở /my-bookings.
+3. Hệ thống chuyển về /login?message=login-required&amp;returnUrl=...
+4. Đăng nhập đúng.
+5. Hệ thống quay lại /my-bookings, không về sai trang.</code></pre>
+
+        <h3>6.3. Test chặn returnUrl độc hại</h3>
+        <table>
+            <thead>
+            <tr><th>URL thử</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><code>/login?returnUrl=https://evil.com</code></td>
+                <td>Sau login không đi ra <code>evil.com</code>, chuyển về <code>/profile</code>.</td>
+            </tr>
+            <tr>
+                <td><code>/login?returnUrl=//evil.com</code></td>
+                <td>Không redirect ra ngoài.</td>
+            </tr>
+            <tr>
+                <td><code>/login?returnUrl=/my-bookings</code></td>
+                <td>Cho phép vì là URL nội bộ.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>6.4. Test admin chưa đăng nhập</h3>
+        <table>
+            <thead>
+            <tr><th>URL</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr><td><code>/admin/dashboard</code></td><td>Redirect về <code>/admin/login?returnUrl=...</code>.</td></tr>
+            <tr><td><code>/admin/refunds</code></td><td>Redirect về admin login.</td></tr>
+            <tr><td><code>/admin/reports</code></td><td>Redirect về admin login.</td></tr>
+            <tr><td><code>/admin/bookings</code></td><td>Redirect về admin login.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>6.5. Test admin returnUrl độc hại</h3>
+<pre><code class="language-text">1. Logout admin.
+2. Mở /admin/login?returnUrl=https://evil.com
+3. Đăng nhập admin@vetau.vn / admin123
+4. Kết quả đúng: không redirect ra evil.com, chuyển về /admin/dashboard.</code></pre>
+
+        <h3>6.6. Test logout và cache</h3>
+        <table>
+            <thead>
+            <tr><th>Đối tượng</th><th>Cách test</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Customer</td>
+                <td>Login → mở <code>/profile</code> → logout → bấm Back.</td>
+                <td>Không xem lại được trang riêng, phải login lại.</td>
+            </tr>
+            <tr>
+                <td>Admin</td>
+                <td>Login admin → mở dashboard → <code>/admin/logout</code> → bấm Back.</td>
+                <td>Không xem lại được admin page, redirect login.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>6.7. Test security headers</h3>
+        <p>Mở DevTools → Network → chọn request HTML bất kỳ → Response Headers.</p>
+        <p>Kết quả đúng có các header:</p>
+<pre><code class="language-text">X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin</code></pre>
+
+        <h3>6.8. Test các URL không nên bị filter</h3>
+        <table>
+            <thead>
+            <tr><th>URL</th><th>Kết quả đúng</th></tr>
+            </thead>
+            <tbody>
+            <tr><td><code>/home</code></td><td>Mở public được.</td></tr>
+            <tr><td><code>/search-train</code></td><td>Mở public được.</td></tr>
+            <tr><td><code>/ticket-check</code></td><td>Tra cứu public được.</td></tr>
+            <tr><td><code>/payment-callback</code></td><td>Không bắt buộc session customer.</td></tr>
+            <tr><td><code>/login</code>, <code>/register</code>, <code>/admin/login</code></td><td>Mở được để đăng nhập/đăng ký.</td></tr>
+            </tbody>
+        </table>
+
+        <h3>6.9. Không test SHA-256 ở Giai đoạn 6</h3>
+        <div class="note warn">
+            Theo quyết định điều chỉnh, <code>PasswordUtil</code> không chuyển sang SHA-256 trong Giai đoạn 6. Không test auto-upgrade password, không test hash 64 ký tự. Nội dung này đưa vào phần “Hướng phát triển thêm” trong báo cáo.
+        </div>
+
+        <h3>6.10. Tiêu chí hoàn thành Giai đoạn 6</h3>
+        <ul class="check-list">
+            <li>[ ] Không sửa <code>PasswordUtil.java</code> sang SHA-256.</li>
+            <li>[ ] Có <code>SecurityUtil.java</code>.</li>
+            <li>[ ] <code>LoginServlet</code> dùng <code>safeReturnUrl</code> và regenerate session.</li>
+            <li>[ ] <code>RegisterServlet</code> regenerate session sau đăng ký.</li>
+            <li>[ ] <code>LogoutServlet</code> invalidate session.</li>
+            <li>[ ] <code>AdminLoginServlet</code> dùng <code>safeReturnUrl</code> và regenerate session.</li>
+            <li>[ ] <code>AuthFilter</code> bảo vệ customer URL.</li>
+            <li>[ ] <code>AdminAuthFilter</code> bảo vệ admin URL.</li>
+            <li>[ ] Có <code>SecurityHeadersFilter</code>.</li>
+            <li>[ ] <code>web.xml</code> map đúng các URL cần bảo vệ.</li>
+            <li>[ ] Chặn được returnUrl độc hại.</li>
+            <li>[ ] Logout xong không xem lại trang riêng.</li>
+        </ul>
+    </section>
+
+    <section id="regression" class="card">
+        <h2>7. Bộ test hồi quy cuối cùng trước khi nộp/demo</h2>
+        <p>Sau khi hoàn thành cả 6 giai đoạn, nên chạy bộ test hồi quy ngắn này theo đúng thứ tự để chắc chắn các thay đổi không phá lẫn nhau.</p>
+
+        <h3>7.1. Luồng customer hoàn chỉnh</h3>
+<pre><code class="language-text">1. Mở /home.
+2. Tìm chuyến.
+3. Chọn ghế/hành khách.
+4. Tạo đặt chỗ.
+5. Kiểm tra DAT_CHO/VE = Chờ thanh toán.
+6. Thanh toán thành công.
+7. Kiểm tra THANH_TOAN = Thành công, DAT_CHO = Đã thanh toán, VE = Hợp lệ.
+8. Vào /my-bookings.
+9. Vào /my-tickets.
+10. Tra cứu /ticket-check.
+11. Yêu cầu trả vé.
+12. Kiểm tra VE = Đã trả, HOAN_TIEN = Chờ xử lý.</code></pre>
+
+        <h3>7.2. Luồng admin hoàn chỉnh</h3>
+<pre><code class="language-text">1. Vào /admin/dashboard khi chưa login → bị redirect admin login.
+2. Login admin.
+3. Mở /admin/dashboard → số liệu thật.
+4. Mở /admin/reports → chart/bảng thật.
+5. Mở /admin/refunds.
+6. Xem chi tiết yêu cầu hoàn tiền.
+7. Duyệt hoặc từ chối.
+8. Kiểm tra HOAN_TIEN cập nhật đúng.
+9. Logout admin.
+10. Bấm Back → không xem lại admin page.</code></pre>
+
+        <h3>7.3. SQL kiểm tra toàn hệ thống</h3>
+<pre><code class="language-sql">-- Trạng thái đơn
+SELECT trang_thai, COUNT(*) AS so_luong
+FROM dbo.DAT_CHO
+GROUP BY trang_thai
+ORDER BY trang_thai;
+
+-- Trạng thái vé
+SELECT trang_thai, COUNT(*) AS so_luong
+FROM dbo.VE
+GROUP BY trang_thai
+ORDER BY trang_thai;
+
+-- Trạng thái thanh toán
+SELECT trang_thai, COUNT(*) AS so_luong, COALESCE(SUM(so_tien), 0) AS tong_tien
+FROM dbo.THANH_TOAN
+GROUP BY trang_thai
+ORDER BY trang_thai;
+
+-- Trạng thái hoàn tiền
+SELECT trang_thai, COUNT(*) AS so_luong, COALESCE(SUM(so_tien_hoan), 0) AS tong_tien
+FROM dbo.HOAN_TIEN
+GROUP BY trang_thai
+ORDER BY trang_thai;
+
+-- Vé trùng mã
+SELECT ma_ve, COUNT(*) AS so_lan
+FROM dbo.VE
+GROUP BY ma_ve
+HAVING COUNT(*) &gt; 1;
+
+-- Nhiều hoàn tiền chờ xử lý cho cùng vé
+SELECT ve_id, COUNT(*) AS so_yeu_cau_cho_xu_ly
+FROM dbo.HOAN_TIEN
+WHERE trang_thai = N&#x27;Chờ xử lý&#x27;
+GROUP BY ve_id
+HAVING COUNT(*) &gt; 1;</code></pre>
+
+        <h3>7.4. Tiêu chí pass toàn bộ</h3>
+        <ul class="check-list">
+            <li>[ ] Không lỗi compile.</li>
+            <li>[ ] Không lỗi SQL constraint khi tạo đơn/tạo vé/trả vé.</li>
+            <li>[ ] Callback chạy lại không tạo dữ liệu trùng.</li>
+            <li>[ ] JSP không lỗi property mismatch như <code>refund.id</code>, <code>listRefunds</code>.</li>
+            <li>[ ] Dashboard/report lấy dữ liệu thật.</li>
+            <li>[ ] Filter chặn URL riêng khi chưa đăng nhập.</li>
+            <li>[ ] Open redirect bị chặn.</li>
+            <li>[ ] Logout hoạt động đúng.</li>
+        </ul>
+    </section>
+
+    <section id="report" class="card">
+        <h2>8. Kết luận đưa vào báo cáo</h2>
+        <p>Bạn có thể dùng đoạn tổng kết sau trong báo cáo cuối kỳ:</p>
+<pre><code class="language-text">Sau 6 giai đoạn hoàn thiện, hệ thống đã được kiểm thử theo các nhóm chức năng chính:
+
+1. Tạo đặt chỗ và tạo vé:
+   - Không còn phụ thuộc số tiền client.
+   - Trạng thái ban đầu thống nhất là Chờ thanh toán.
+   - Không còn lỗi CHECK constraint khi insert VE/DAT_CHO.
+
+2. Thanh toán:
+   - Callback thành công cập nhật đồng bộ THANH_TOAN, DAT_CHO, VE.
+   - Callback nhiều lần không tạo vé trùng.
+   - Callback thất bại không xác nhận vé sai.
+
+3. Quản lý trạng thái:
+   - Các trạng thái Chờ thanh toán, Đã thanh toán, Hết hạn, Hợp lệ, Đã trả hiển thị đúng ở customer/admin.
+   - ticket-check và my-tickets phản ánh đúng trạng thái vé.
+
+4. Trả vé và hoàn tiền:
+   - Khách yêu cầu trả vé tạo HOAN_TIEN = Chờ xử lý.
+   - Admin refund thống nhất theo RefundAdminDTO.
+   - Duyệt/từ chối hoàn tiền cập nhật đúng HOAN_TIEN.
+
+5. Báo cáo:
+   - Dashboard và báo cáo doanh thu dùng dữ liệu thật từ database.
+   - Có thống kê doanh thu, vé bán, hoàn tiền, tuyến bán chạy, phương thức thanh toán.
+
+6. Bảo mật cơ bản:
+   - URL riêng được bảo vệ bằng filter.
+   - returnUrl được kiểm tra để tránh redirect ra website ngoài.
+   - Session được tạo lại sau login/register.
+   - Logout invalidate session.
+   - Password nâng cao không triển khai trong phạm vi đề tài, được đưa vào hướng phát triển thêm.</code></pre>
+    </section>
+</main>
+
+<footer>
+    Tổng hợp test 6 giai đoạn — Web Quản lý Vé Tàu.
+</footer>
+</body>
+</html>

@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giai đoạn 3 - Cleanup giữ chỗ quá hạn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --blue: #1d4ed8;
+            --blue-dark: #1e3a8a;
+            --slate-900: #0f172a;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --green-bg: #dcfce7;
+            --green-text: #166534;
+            --yellow-bg: #fef3c7;
+            --yellow-text: #92400e;
+            --red-bg: #fee2e2;
+            --red-text: #991b1b;
+            --code-bg: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.7;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1d4ed8, #0f172a);
+            color: white;
+            padding: 40px 24px;
+        }
+
+        header .wrap,
+        main {
+            max-width: 1120px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        main {
+            padding: 28px 20px 60px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--slate-200);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--slate-900);
+            font-size: 24px;
+            border-bottom: 1px solid var(--slate-200);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--blue-dark);
+            margin-top: 28px;
+        }
+
+        h4 {
+            color: var(--slate-700);
+            margin-bottom: 8px;
+        }
+
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 10px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .toc a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--blue-dark);
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid #bfdbfe;
+        }
+
+        .toc a:hover {
+            background: #dbeafe;
+        }
+
+        .status-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .status-list li {
+            background: #f8fafc;
+            border: 1px solid var(--slate-200);
+            padding: 12px 14px;
+            border-radius: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .badge-ok {
+            background: var(--green-bg);
+            color: var(--green-text);
+        }
+
+        .badge-warn {
+            background: var(--yellow-bg);
+            color: var(--yellow-text);
+        }
+
+        .badge-danger {
+            background: var(--red-bg);
+            color: var(--red-text);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            background: white;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--slate-200);
+            padding: 10px 12px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background: #eff6ff;
+            color: var(--slate-900);
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e5e7eb;
+            border-radius: 14px;
+            padding: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.55;
+            border: 1px solid #1e293b;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        p code,
+        li code {
+            background: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .note {
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin: 14px 0;
+            font-weight: 600;
+        }
+
+        .note.info {
+            background: #eff6ff;
+            color: #1e3a8a;
+            border: 1px solid #bfdbfe;
+        }
+
+        .note.warn {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .note.danger {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .small {
+            color: var(--slate-600);
+            font-size: 14px;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--slate-500);
+            padding: 24px;
+        }
+
+        @media print {
+            header {
+                background: white;
+                color: black;
+                padding: 20px 0;
+            }
+
+            body {
+                background: white;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Giai đoạn 3 — Cleanup giữ chỗ quá hạn</h1>
+        <p class="subtitle">Xử lý đơn quá hạn, giải phóng ghế, chống thanh toán/callback sau khi hết hạn</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#tong-quan">1. Tổng quan vấn đề</a></li>
+            <li><a href="#muc-tieu">2. Mục tiêu Giai đoạn 3</a></li>
+            <li><a href="#cleanup-service">3. Tạo GiuChoCleanupService</a></li>
+            <li><a href="#tim-kiem">4. Gọi cleanup khi tìm chuyến</a></li>
+            <li><a href="#chon-ghe">5. Gọi cleanup khi chọn ghế</a></li>
+            <li><a href="#checkout">6. Gọi cleanup tại checkout</a></li>
+            <li><a href="#payment">7. Gọi cleanup trước payment</a></li>
+            <li><a href="#my-booking">8. Gọi cleanup khi xem lịch sử</a></li>
+            <li><a href="#thanh-toan-service">9. Sửa callback tới muộn</a></li>
+            <li><a href="#callback-servlet">10. Sửa PaymentCallbackServlet</a></li>
+            <li><a href="#jsp">11. Cập nhật JSP</a></li>
+            <li><a href="#sql">12. SQL index tối ưu</a></li>
+            <li><a href="#thu-tu">13. Thứ tự áp dụng</a></li>
+            <li><a href="#test">14. Test Giai đoạn 3</a></li>
+        </ul>
+    </section>
+
+    <section id="tong-quan" class="card">
+        <h2>1. Tổng quan vấn đề</h2>
+        <p>Sau Giai đoạn 2, khi khách bấm “tạo đặt chỗ”, hệ thống đã tạo trước dữ liệu:</p>
+<pre><code class="language-text">DAT_CHO = Chờ thanh toán
+GIU_CHO = Đang giữ
+VE = Chờ thanh toán</code></pre>
+        <p>Tuy nhiên dự án vẫn thiếu cơ chế tự chuyển các đơn quá hạn sang trạng thái kết thúc. Nếu không xử lý, database sẽ tồn tại nhiều đơn <code>Chờ thanh toán</code> quá hạn, vé <code>Chờ thanh toán</code> quá hạn, giữ chỗ <code>Đang giữ</code> quá hạn.</p>
+        <p>Trạng thái đúng khi đơn đã quá hạn:</p>
+<pre><code class="language-text">DAT_CHO = Hết hạn
+GIU_CHO = Hết hạn
+VE = Đã hủy
+THANH_TOAN Pending = Thất bại</code></pre>
+        <div class="note info">Query ghế của dự án đã có điều kiện bỏ qua giữ chỗ hết hạn, nhưng nếu không cleanup thì dữ liệu lịch sử đặt vé/admin vẫn không sạch và dễ bị trừ điểm nghiệp vụ.</div>
+    </section>
+
+    <section id="muc-tieu" class="card">
+        <h2>2. Mục tiêu Giai đoạn 3</h2>
+        <ul class="status-list">
+            <li><span class="badge badge-ok">✓</span> Đơn quá hạn tự chuyển <code>DAT_CHO = Hết hạn</code></li>
+            <li><span class="badge badge-ok">✓</span> Giữ chỗ quá hạn tự chuyển <code>GIU_CHO = Hết hạn</code></li>
+            <li><span class="badge badge-ok">✓</span> Vé chờ thanh toán của đơn quá hạn tự chuyển <code>VE = Đã hủy</code></li>
+            <li><span class="badge badge-ok">✓</span> Thanh toán pending của đơn quá hạn tự chuyển <code>THANH_TOAN = Thất bại</code></li>
+            <li><span class="badge badge-ok">✓</span> Người dùng không thể thanh toán đơn đã hết hạn</li>
+            <li><span class="badge badge-ok">✓</span> Callback thanh toán tới muộn không thể kích hoạt vé đã quá hạn</li>
+            <li><span class="badge badge-ok">✓</span> Cleanup chạy tự động tại các điểm quan trọng</li>
+        </ul>
+    </section>
+
+    <section id="cleanup-service" class="card">
+        <h2>3. Tạo <code>GiuChoCleanupService.java</code></h2>
+        <p><strong>File đang thiếu:</strong></p>
+<pre><code class="language-text">src/java/vetau/service/GiuChoCleanupService.java</code></pre>
+        <p>Service này chịu trách nhiệm dọn đơn quá hạn trong transaction.</p>
+<pre><code class="language-java">package vetau.service;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import vetau.util.DBConnection;
+import vetau.util.TrangThai;
+
+public class GiuChoCleanupService {
+
+    public CleanupResult huyCacDonQuaHan() throws SQLException {
+        return huyDonQuaHanInternal(null);
+    }
+
+    public CleanupResult huyDonQuaHan(int datChoId) throws SQLException {
+        if (datChoId &lt;= 0) {
+            return new CleanupResult(0, 0, 0, 0, 0);
+        }
+        return huyDonQuaHanInternal(datChoId);
+    }
+
+    private CleanupResult huyDonQuaHanInternal(Integer datChoId) throws SQLException {
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+
+            try {
+                List&lt;Integer&gt; expiredIds = findExpiredDatChoIds(conn, datChoId);
+
+                int soThanhToanThatBai = 0;
+                int soGiuChoHetHan = 0;
+                int soVeDaHuy = 0;
+                int soDatChoHetHan = 0;
+
+                for (Integer id : expiredIds) {
+                    soThanhToanThatBai += updateThanhToanPendingSangThatBai(conn, id);
+                    soGiuChoHetHan += updateGiuChoDangGiuSangHetHan(conn, id);
+                    soVeDaHuy += updateVeChoThanhToanSangDaHuy(conn, id);
+                    soDatChoHetHan += updateDatChoChoThanhToanSangHetHan(conn, id);
+                }
+
+                conn.commit();
+
+                return new CleanupResult(
+                        expiredIds.size(),
+                        soDatChoHetHan,
+                        soGiuChoHetHan,
+                        soVeDaHuy,
+                        soThanhToanThatBai
+                );
+
+            } catch (Exception ex) {
+                conn.rollback();
+                if (ex instanceof SQLException) {
+                    throw (SQLException) ex;
+                }
+                throw new SQLException(ex.getMessage(), ex);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
+    private List&lt;Integer&gt; findExpiredDatChoIds(Connection conn, Integer datChoId) throws SQLException {
+        StringBuilder sql = new StringBuilder();
+        sql.append(&quot;&quot;&quot;
+                SELECT id
+                FROM dbo.DAT_CHO WITH (UPDLOCK, HOLDLOCK)
+                WHERE trang_thai = ?
+                  AND thoi_gian_het_han IS NOT NULL
+                  AND thoi_gian_het_han &lt; SYSDATETIME()
+                &quot;&quot;&quot;);
+
+        if (datChoId != null) {
+            sql.append(&quot; AND id = ?&quot;);
+        }
+
+        List&lt;Integer&gt; ids = new ArrayList&lt;&gt;();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setString(1, TrangThai.DAT_CHO_CHO_THANH_TOAN);
+
+            if (datChoId != null) {
+                ps.setInt(2, datChoId);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ids.add(rs.getInt(&quot;id&quot;));
+                }
+            }
+        }
+
+        return ids;
+    }
+
+    private int updateThanhToanPendingSangThatBai(Connection conn, int datChoId) throws SQLException {
+        String sql = &quot;&quot;&quot;
+                UPDATE dbo.THANH_TOAN
+                SET trang_thai = ?
+                WHERE dat_cho_id = ?
+                  AND trang_thai = ?
+                &quot;&quot;&quot;;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, TrangThai.THANH_TOAN_THAT_BAI);
+            ps.setInt(2, datChoId);
+            ps.setString(3, TrangThai.THANH_TOAN_PENDING);
+            return ps.executeUpdate();
+        }
+    }
+
+    private int updateGiuChoDangGiuSangHetHan(Connection conn, int datChoId) throws SQLException {
+        String sql = &quot;&quot;&quot;
+                UPDATE dbo.GIU_CHO
+                SET trang_thai = ?
+                WHERE dat_cho_id = ?
+                  AND trang_thai = ?
+                &quot;&quot;&quot;;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, TrangThai.GIU_CHO_HET_HAN);
+            ps.setInt(2, datChoId);
+            ps.setString(3, TrangThai.GIU_CHO_DANG_GIU);
+            return ps.executeUpdate();
+        }
+    }
+
+    private int updateVeChoThanhToanSangDaHuy(Connection conn, int datChoId) throws SQLException {
+        String sql = &quot;&quot;&quot;
+                UPDATE dbo.VE
+                SET trang_thai = ?
+                WHERE dat_cho_id = ?
+                  AND trang_thai = ?
+                &quot;&quot;&quot;;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, TrangThai.VE_DA_HUY);
+            ps.setInt(2, datChoId);
+            ps.setString(3, TrangThai.VE_CHO_THANH_TOAN);
+            return ps.executeUpdate();
+        }
+    }
+
+    private int updateDatChoChoThanhToanSangHetHan(Connection conn, int datChoId) throws SQLException {
+        String sql = &quot;&quot;&quot;
+                UPDATE dbo.DAT_CHO
+                SET trang_thai = ?
+                WHERE id = ?
+                  AND trang_thai = ?
+                &quot;&quot;&quot;;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, TrangThai.DAT_CHO_HET_HAN);
+            ps.setInt(2, datChoId);
+            ps.setString(3, TrangThai.DAT_CHO_CHO_THANH_TOAN);
+            return ps.executeUpdate();
+        }
+    }
+
+    public static class CleanupResult {
+        private final int soDonQuaHan;
+        private final int soDonDaCapNhat;
+        private final int soGiuChoDaCapNhat;
+        private final int soVeDaCapNhat;
+        private final int soThanhToanDaCapNhat;
+
+        public CleanupResult(int soDonQuaHan,
+                             int soDonDaCapNhat,
+                             int soGiuChoDaCapNhat,
+                             int soVeDaCapNhat,
+                             int soThanhToanDaCapNhat) {
+            this.soDonQuaHan = soDonQuaHan;
+            this.soDonDaCapNhat = soDonDaCapNhat;
+            this.soGiuChoDaCapNhat = soGiuChoDaCapNhat;
+            this.soVeDaCapNhat = soVeDaCapNhat;
+            this.soThanhToanDaCapNhat = soThanhToanDaCapNhat;
+        }
+
+        public int getSoDonQuaHan() {
+            return soDonQuaHan;
+        }
+
+        public int getSoDonDaCapNhat() {
+            return soDonDaCapNhat;
+        }
+
+        public int getSoGiuChoDaCapNhat() {
+            return soGiuChoDaCapNhat;
+        }
+
+        public int getSoVeDaCapNhat() {
+            return soVeDaCapNhat;
+        }
+
+        public int getSoThanhToanDaCapNhat() {
+            return soThanhToanDaCapNhat;
+        }
+
+        public boolean hasChanged() {
+            return soDonQuaHan &gt; 0
+                    || soDonDaCapNhat &gt; 0
+                    || soGiuChoDaCapNhat &gt; 0
+                    || soVeDaCapNhat &gt; 0
+                    || soThanhToanDaCapNhat &gt; 0;
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section id="tim-kiem" class="card">
+        <h2>4. Gọi cleanup trước khi tìm chuyến</h2>
+        <p><strong>File cần sửa:</strong> <code>TimKiemChuyenTauService.java</code></p>
+        <p>Trước khi trả kết quả tìm chuyến, gọi cleanup để dữ liệu giữ chỗ quá hạn được dọn.</p>
+<pre><code class="language-java">package vetau.service;
+
+import vetau.dao.ChuyenTauDAO;
+import vetau.dto.ChuyenTauSearchResultDTO;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+
+public class TimKiemChuyenTauService {
+    private final ChuyenTauDAO chuyenTauDAO = new ChuyenTauDAO();
+    private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+    public List&lt;ChuyenTauSearchResultDTO&gt; timChuyenTau(int gaDiId, int gaDenId, LocalDate ngayDi) throws SQLException {
+        cleanupService.huyCacDonQuaHan();
+
+        validateInput(gaDiId, gaDenId, ngayDi);
+
+        return chuyenTauDAO.searchByRouteAndDate(gaDiId, gaDenId, ngayDi);
+    }
+
+    private void validateInput(int gaDiId, int gaDenId, LocalDate ngayDi) {
+        if (gaDiId &lt;= 0) {
+            throw new IllegalArgumentException(&quot;Vui lòng chọn ga đi hợp lệ.&quot;);
+        }
+
+        if (gaDenId &lt;= 0) {
+            throw new IllegalArgumentException(&quot;Vui lòng chọn ga đến hợp lệ.&quot;);
+        }
+
+        if (gaDiId == gaDenId) {
+            throw new IllegalArgumentException(&quot;Ga đi và ga đến không được trùng nhau.&quot;);
+        }
+
+        if (ngayDi == null) {
+            throw new IllegalArgumentException(&quot;Vui lòng chọn ngày đi.&quot;);
+        }
+
+        if (ngayDi.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(&quot;Ngày đi không được nhỏ hơn ngày hiện tại.&quot;);
+        }
+    }
+}</code></pre>
+    </section>
+
+    <section id="chon-ghe" class="card">
+        <h2>5. Gọi cleanup trước khi load trang chọn ghế</h2>
+        <p><strong>File cần sửa:</strong> <code>ChonGheService.java</code></p>
+        <p>Thêm field:</p>
+<pre><code class="language-java">private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();</code></pre>
+        <p>Gọi cleanup ở đầu method <code>loadSeatSelectionPage(...)</code>:</p>
+<pre><code class="language-java">public SeatSelectionPageDTO loadSeatSelectionPage(int chuyenTauId, int gaDiId, int gaDenId, Integer requestedToaTauId) throws SQLException {
+    cleanupService.huyCacDonQuaHan();
+
+    validateRoute(chuyenTauId, gaDiId, gaDenId);
+
+    ChuyenTauSearchResultDTO trip = chuyenTauDAO.findTripDetailByIdAndRoute(chuyenTauId, gaDiId, gaDenId);
+    // phần còn lại giữ nguyên
+}</code></pre>
+    </section>
+
+    <section id="checkout" class="card">
+        <h2>6. Gọi cleanup trước khi hiển thị checkout</h2>
+        <p><strong>File cần sửa:</strong> <code>CheckoutServlet.java</code></p>
+        <p>Thêm import và field:</p>
+<pre><code class="language-java">import vetau.service.GiuChoCleanupService;
+import vetau.util.TrangThai;
+
+private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();</code></pre>
+        <p>Sau khi parse <code>datChoId</code>, gọi cleanup rồi load lại đơn:</p>
+<pre><code class="language-java">int datChoId = Integer.parseInt(request.getParameter(&quot;datChoId&quot;));
+
+cleanupService.huyDonQuaHan(datChoId);
+
+DatCho datCho = datChoDAO.findById(datChoId);
+
+if (datCho == null || datCho.getKhachHangId() != currentCustomer.getId()) {
+    throw new IllegalArgumentException(&quot;Đơn đặt chỗ không tồn tại hoặc không thuộc quyền sở hữu của bạn.&quot;);
+}
+
+if (TrangThai.DAT_CHO_HET_HAN.equals(datCho.getTrangThai())) {
+    throw new IllegalStateException(&quot;Đơn đặt chỗ đã hết hạn thanh toán. Vui lòng đặt vé lại.&quot;);
+}
+
+if (!TrangThai.DAT_CHO_CHO_THANH_TOAN.equals(datCho.getTrangThai())) {
+    throw new IllegalStateException(&quot;Đơn đặt chỗ này không ở trạng thái chờ thanh toán.&quot;);
+}</code></pre>
+    </section>
+
+    <section id="payment" class="card">
+        <h2>7. Gọi cleanup trước khi tạo thanh toán</h2>
+        <p><strong>File cần sửa:</strong> <code>PaymentServlet.java</code></p>
+        <p>Thêm field:</p>
+<pre><code class="language-java">private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();</code></pre>
+        <p>Trong <code>doPost(...)</code>, sau khi parse <code>datChoId</code>:</p>
+<pre><code class="language-java">int datChoId = Integer.parseInt(request.getParameter(&quot;datChoId&quot;));
+String phuongThuc = request.getParameter(&quot;phuongThuc&quot;);
+
+cleanupService.huyDonQuaHan(datChoId);
+
+DatCho datCho = datChoDAO.findById(datChoId);
+
+if (TrangThai.DAT_CHO_HET_HAN.equals(datCho.getTrangThai())) {
+    throw new IllegalStateException(&quot;Đơn đặt chỗ đã hết hạn thanh toán. Vui lòng đặt vé lại.&quot;);
+}
+
+if (!TrangThai.DAT_CHO_CHO_THANH_TOAN.equals(datCho.getTrangThai())) {
+    throw new IllegalStateException(&quot;Đơn đặt chỗ không ở trạng thái chờ thanh toán.&quot;);
+}</code></pre>
+    </section>
+
+    <section id="my-booking" class="card">
+        <h2>8. Gọi cleanup trước khi xem lịch sử đặt vé</h2>
+        <p><strong>File cần sửa:</strong> <code>MyBookingService.java</code></p>
+<pre><code class="language-java">package vetau.service;
+
+import vetau.dao.MyBookingDAO;
+import vetau.dto.BookingHistoryDTO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public class MyBookingService {
+    private final MyBookingDAO myBookingDAO = new MyBookingDAO();
+    private final GiuChoCleanupService cleanupService = new GiuChoCleanupService();
+
+    public List&lt;BookingHistoryDTO&gt; layLichSuDatVe(int khachHangId) throws SQLException {
+        cleanupService.huyCacDonQuaHan();
+        return myBookingDAO.findByCustomerId(khachHangId);
+    }
+}</code></pre>
+    </section>
+
+    <section id="thanh-toan-service" class="card">
+        <h2>9. Cập nhật <code>ThanhToanService.java</code> để callback tới muộn không kích hoạt vé quá hạn</h2>
+        <p>Ở Giai đoạn 2 đã có transaction/idempotency. Giai đoạn 3 bổ sung kết quả callback <code>EXPIRED</code> và kiểm tra <code>DAT_CHO.thoi_gian_het_han</code> trước khi kích hoạt vé.</p>
+        <p>Thêm enum value:</p>
+<pre><code class="language-java">public enum CallbackResult {
+    NOT_FOUND,
+    ALREADY_SUCCESS,
+    INVALID_STATE,
+    EXPIRED,
+    NEWLY_SUCCESS
+}</code></pre>
+        <p>Logic cần có trong <code>xuLyCallbackThanhCong(...)</code>:</p>
+<pre><code class="language-java">DatChoPaymentRow datCho = findDatChoForUpdate(conn, payment.datChoId);
+
+if (datCho == null) {
+    conn.commit();
+    return CallbackResult.INVALID_STATE;
+}
+
+if (!TrangThai.DAT_CHO_CHO_THANH_TOAN.equals(datCho.trangThai)) {
+    conn.commit();
+    return CallbackResult.INVALID_STATE;
+}
+
+if (datCho.thoiGianHetHan != null &amp;&amp; datCho.thoiGianHetHan.isBefore(LocalDateTime.now())) {
+    expireDatChoTrongTransaction(conn, payment.datChoId);
+    conn.commit();
+    return CallbackResult.EXPIRED;
+}
+
+updateThanhToanThanhCong(conn, payment.id, maGiaoDich);
+updateDatChoDaThanhToan(conn, payment.datChoId);
+updateGiuChoDaChuyenVe(conn, payment.datChoId);
+int soVeCapNhat = updateVeHopLe(conn, payment.datChoId);</code></pre>
+        <div class="note warn">Bạn có thể dùng nguyên bản <code>ThanhToanService.java</code> đã được mô tả ở câu trả lời Giai đoạn 3 trong chat. Phần quan trọng nhất là thêm <code>EXPIRED</code>, <code>findDatChoForUpdate</code> và <code>expireDatChoTrongTransaction</code>.</div>
+    </section>
+
+    <section id="callback-servlet" class="card">
+        <h2>10. Cập nhật <code>PaymentCallbackServlet.java</code></h2>
+        <p>Sau khi <code>CallbackResult</code> có thêm <code>EXPIRED</code>, servlet callback cần xử lý trạng thái này.</p>
+<pre><code class="language-java">case EXPIRED:
+    request.setAttribute(&quot;message&quot;, &quot;Đơn đặt chỗ đã hết hạn thanh toán. Giao dịch không được kích hoạt và vé đã bị hủy.&quot;);
+    request.setAttribute(&quot;success&quot;, false);
+    break;</code></pre>
+        <p>Switch đầy đủ:</p>
+<pre><code class="language-java">switch (result) {
+    case NEWLY_SUCCESS:
+        request.setAttribute(&quot;message&quot;, &quot;Thanh toán thành công! Vé điện tử của bạn đã được kích hoạt.&quot;);
+        request.setAttribute(&quot;success&quot;, true);
+        break;
+
+    case ALREADY_SUCCESS:
+        request.setAttribute(&quot;message&quot;, &quot;Giao dịch này đã được xử lý thành công trước đó. Vé của bạn vẫn hợp lệ.&quot;);
+        request.setAttribute(&quot;success&quot;, true);
+        break;
+
+    case EXPIRED:
+        request.setAttribute(&quot;message&quot;, &quot;Đơn đặt chỗ đã hết hạn thanh toán. Giao dịch không được kích hoạt và vé đã bị hủy.&quot;);
+        request.setAttribute(&quot;success&quot;, false);
+        break;
+
+    case NOT_FOUND:
+        request.setAttribute(&quot;message&quot;, &quot;Không tìm thấy giao dịch thanh toán.&quot;);
+        request.setAttribute(&quot;success&quot;, false);
+        break;
+
+    case INVALID_STATE:
+    default:
+        request.setAttribute(&quot;message&quot;, &quot;Giao dịch không ở trạng thái có thể xác nhận thanh toán.&quot;);
+        request.setAttribute(&quot;success&quot;, false);
+        break;
+}</code></pre>
+    </section>
+
+    <section id="jsp" class="card">
+        <h2>11. Cập nhật JSP hiển thị trạng thái <code>Hết hạn</code></h2>
+        <p><strong>File nên sửa:</strong> <code>my-bookings.jsp</code></p>
+        <p>Đảm bảo logic nút:</p>
+<pre><code class="language-jsp">&lt;c:choose&gt;
+    &lt;c:when test=&quot;${booking.trangThaiDatCho eq &#x27;Chờ thanh toán&#x27;}&quot;&gt;
+        &lt;a class=&quot;button-link&quot;
+           href=&quot;${pageContext.request.contextPath}/checkout?datChoId=${booking.id}&quot;&gt;
+            Tiếp tục thanh toán
+        &lt;/a&gt;
+    &lt;/c:when&gt;
+
+    &lt;c:when test=&quot;${booking.trangThaiDatCho eq &#x27;Đã thanh toán&#x27;}&quot;&gt;
+        &lt;a class=&quot;button-link&quot;
+           href=&quot;${pageContext.request.contextPath}/my-tickets?datChoId=${booking.id}&quot;&gt;
+            Xem vé
+        &lt;/a&gt;
+    &lt;/c:when&gt;
+
+    &lt;c:when test=&quot;${booking.trangThaiDatCho eq &#x27;Hết hạn&#x27;}&quot;&gt;
+        &lt;span class=&quot;muted&quot;&gt;Đơn đã hết hạn&lt;/span&gt;
+    &lt;/c:when&gt;
+&lt;/c:choose&gt;</code></pre>
+    </section>
+
+    <section id="sql" class="card">
+        <h2>12. SQL index tối ưu cleanup</h2>
+        <p>Chạy thêm các index này để cleanup nhanh hơn.</p>
+<pre><code class="language-sql">USE VeTauDB;
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_DAT_CHO_Cleanup&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.DAT_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_DAT_CHO_Cleanup
+    ON dbo.DAT_CHO (trang_thai, thoi_gian_het_han);
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_GIU_CHO_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.GIU_CHO&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_GIU_CHO_DatCho_TrangThai
+    ON dbo.GIU_CHO (dat_cho_id, trang_thai);
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_VE_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.VE&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_VE_DatCho_TrangThai
+    ON dbo.VE (dat_cho_id, trang_thai);
+END
+GO
+
+IF NOT EXISTS (
+    SELECT 1
+    FROM sys.indexes
+    WHERE name = &#x27;IX_THANH_TOAN_DatCho_TrangThai&#x27;
+      AND object_id = OBJECT_ID(&#x27;dbo.THANH_TOAN&#x27;)
+)
+BEGIN
+    CREATE INDEX IX_THANH_TOAN_DatCho_TrangThai
+    ON dbo.THANH_TOAN (dat_cho_id, trang_thai);
+END
+GO</code></pre>
+    </section>
+
+    <section id="thu-tu" class="card">
+        <h2>13. Thứ tự áp dụng an toàn</h2>
+<pre><code class="language-text">1. Tạo GiuChoCleanupService.java
+2. Sửa TimKiemChuyenTauService.java
+3. Sửa ChonGheService.java
+4. Sửa CheckoutServlet.java
+5. Sửa PaymentServlet.java
+6. Sửa MyBookingService.java
+7. Thay ThanhToanService.java bằng bản Giai đoạn 3
+8. Sửa PaymentCallbackServlet.java thêm case EXPIRED
+9. Sửa my-bookings.jsp để xử lý trạng thái Hết hạn
+10. Chạy SQL index tối ưu
+11. Clean and Build project
+12. Test nghiệp vụ quá hạn</code></pre>
+    </section>
+
+    <section id="test" class="card">
+        <h2>14. Test Giai đoạn 3</h2>
+
+        <h3>Test 1: Đơn quá hạn tự chuyển trạng thái</h3>
+        <p>Tạo một đơn đặt chỗ, sau đó chỉnh DB cho đơn hết hạn nhanh:</p>
+<pre><code class="language-sql">DECLARE @datChoId INT = 25;
+
+UPDATE dbo.DAT_CHO
+SET thoi_gian_het_han = DATEADD(MINUTE, -1, SYSDATETIME())
+WHERE id = @datChoId;
+
+UPDATE dbo.GIU_CHO
+SET thoi_gian_het_han = DATEADD(MINUTE, -1, SYSDATETIME())
+WHERE dat_cho_id = @datChoId;</code></pre>
+        <p>Sau đó vào <code>/search-train</code> hoặc <code>/my-bookings</code>, rồi kiểm tra DB:</p>
+<pre><code class="language-sql">DECLARE @datChoId INT = 25;
+
+SELECT id, trang_thai, thoi_gian_het_han
+FROM dbo.DAT_CHO
+WHERE id = @datChoId;
+
+SELECT id, trang_thai, thoi_gian_het_han
+FROM dbo.GIU_CHO
+WHERE dat_cho_id = @datChoId;
+
+SELECT id, ma_ve, trang_thai
+FROM dbo.VE
+WHERE dat_cho_id = @datChoId;
+
+SELECT id, request_id, trang_thai
+FROM dbo.THANH_TOAN
+WHERE dat_cho_id = @datChoId;</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">DAT_CHO = Hết hạn
+GIU_CHO = Hết hạn
+VE = Đã hủy
+THANH_TOAN Pending nếu có = Thất bại</code></pre>
+
+        <h3>Test 2: Không cho checkout đơn hết hạn</h3>
+        <p>Vào:</p>
+<pre><code class="language-text">/checkout?datChoId=25</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">Không cho thanh toán
+Thông báo: Đơn đặt chỗ đã hết hạn thanh toán</code></pre>
+
+        <h3>Test 3: Callback success tới muộn</h3>
+        <p>Tạo thanh toán pending, sau đó chỉnh đơn hết hạn:</p>
+<pre><code class="language-sql">DECLARE @datChoId INT = 25;
+
+UPDATE dbo.DAT_CHO
+SET thoi_gian_het_han = DATEADD(MINUTE, -1, SYSDATETIME())
+WHERE id = @datChoId;
+
+UPDATE dbo.GIU_CHO
+SET thoi_gian_het_han = DATEADD(MINUTE, -1, SYSDATETIME())
+WHERE dat_cho_id = @datChoId;</code></pre>
+        <p>Lấy <code>request_id</code>:</p>
+<pre><code class="language-sql">SELECT TOP 1 request_id
+FROM dbo.THANH_TOAN
+WHERE dat_cho_id = 25
+ORDER BY id DESC;</code></pre>
+        <p>Gọi callback:</p>
+<pre><code class="language-text">http://localhost:8080/WEB_QUANLYVETAU/payment-callback?requestId=REQ...&amp;status=success</code></pre>
+        <p>Kết quả đúng:</p>
+<pre><code class="language-text">Không kích hoạt vé
+VE = Đã hủy
+DAT_CHO = Hết hạn
+THANH_TOAN = Thất bại</code></pre>
+    </section>
+
+    <section class="card">
+        <h2>Kết luận Giai đoạn 3</h2>
+        <ul class="status-list">
+            <li><span class="badge badge-ok">✓</span> Không còn đơn chờ thanh toán quá hạn treo mãi</li>
+            <li><span class="badge badge-ok">✓</span> Không còn vé chờ thanh toán quá hạn treo mãi</li>
+            <li><span class="badge badge-ok">✓</span> Không còn giữ chỗ quá hạn hiển thị sai trạng thái</li>
+            <li><span class="badge badge-ok">✓</span> Không cho khách thanh toán đơn đã hết hạn</li>
+            <li><span class="badge badge-ok">✓</span> Không cho callback tới muộn kích hoạt vé</li>
+            <li><span class="badge badge-ok">✓</span> Dữ liệu lịch sử đặt vé/admin sạch và dễ chấm hơn</li>
+        </ul>
+        <div class="note info">Mốc tiếp theo nên là Giai đoạn 4: hoàn thiện trả vé / hoàn tiền bằng transaction và admin xử lý hoàn tiền chuẩn theo bảng <code>HOAN_TIEN</code>.</div>
+    </section>
+</main>
+
+<footer>
+    File HTML tổng hợp nội dung phân tích và hướng dẫn triển khai Giai đoạn 3.
+</footer>
+</body>
+</html>

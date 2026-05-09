@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Giai đoạn 10 - Chuẩn hóa bản nộp cuối kỳ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+:root {
+    --blue: #1d4ed8;
+    --blue-dark: #1e3a8a;
+    --slate-950: #020617;
+    --slate-900: #0f172a;
+    --slate-800: #1e293b;
+    --slate-700: #334155;
+    --slate-600: #475569;
+    --slate-500: #64748b;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --green-bg: #dcfce7;
+    --green-text: #166534;
+    --yellow-bg: #fef3c7;
+    --yellow-text: #92400e;
+    --red-bg: #fee2e2;
+    --red-text: #991b1b;
+    --code-bg: #0f172a;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1f2937;
+    background: #f8fafc;
+    line-height: 1.7;
+}
+
+header {
+    background: linear-gradient(135deg, #1d4ed8, #0f172a);
+    color: white;
+    padding: 44px 24px;
+}
+
+header .wrap, main {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 34px;
+    letter-spacing: -0.03em;
+}
+
+.subtitle {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 17px;
+}
+
+main { padding: 28px 20px 70px; }
+
+.card {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+h2 {
+    margin-top: 0;
+    color: var(--slate-900);
+    font-size: 24px;
+    border-bottom: 1px solid var(--slate-200);
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: var(--blue-dark);
+    margin-top: 28px;
+    margin-bottom: 10px;
+}
+
+.toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 10px;
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.toc a {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-weight: 800;
+    border: 1px solid #bfdbfe;
+}
+
+.toc a:hover { background: #dbeafe; }
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.summary-item {
+    background: #f8fafc;
+    border: 1px solid var(--slate-200);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.summary-item strong {
+    display: block;
+    color: var(--slate-900);
+    margin-bottom: 4px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.badge-ok { background: var(--green-bg); color: var(--green-text); }
+.badge-warn { background: var(--yellow-bg); color: var(--yellow-text); }
+.badge-info { background: #dbeafe; color: #1e3a8a; }
+
+.note {
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin: 14px 0;
+    font-weight: 650;
+}
+
+.note.info {
+    background: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+}
+
+.note.warn {
+    background: #fffbeb;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.note.good {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+pre {
+    background: var(--code-bg);
+    color: #e5e7eb;
+    border-radius: 14px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+    border: 1px solid #1e293b;
+}
+
+code { font-family: Consolas, "Courier New", monospace; }
+
+p code, li code, td code {
+    background: #e2e8f0;
+    color: #0f172a;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.check-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.check-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.check-list li:last-child { border-bottom: none; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+th {
+    background: #f1f5f9;
+    color: #334155;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+td { background: white; }
+
+footer {
+    text-align: center;
+    color: var(--slate-500);
+    padding: 24px;
+}
+
+@media print {
+    header { background: white; color: black; padding: 20px 0; }
+    header .subtitle { color: #333; }
+    body { background: white; }
+    .card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+    }
+    pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+    .toc a {
+        background: white;
+        border: 1px solid #ccc;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Giai đoạn 10 — Chuẩn hóa bản nộp cuối kỳ</h1>
+        <p class="subtitle">Tạo test case nghiệm thu, changelog, hướng dẫn demo nhanh, checklist nộp bài và đóng băng phiên bản cuối</p>
+    </div>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Mục lục</h2>
+        <ul class="toc">
+            <li><a href="#overview">1. Tổng quan mục tiêu</a></li>
+            <li><a href="#code-change">2. Có cần sửa code không?</a></li>
+            <li><a href="#new-files">3. File nên tạo mới</a></li>
+            <li><a href="#testcase">4. TEST_CASE_NGHIEM_THU.md</a></li>
+            <li><a href="#changelog">5. CHANGELOG_FINAL.md</a></li>
+            <li><a href="#demo-guide">6. HUONG_DAN_DEMO_NHANH.md</a></li>
+            <li><a href="#submit-checklist">7. CHECKLIST_NOP_BAI.md</a></li>
+            <li><a href="#jsp-servlet">8. Có cần sửa JSP/Servlet không?</a></li>
+            <li><a href="#sql">9. Có cần cập nhật SQL không?</a></li>
+            <li><a href="#final-test">10. Test cuối GĐ10</a></li>
+            <li><a href="#conclusion">11. Kết luận GĐ10</a></li>
+        </ul>
+    </section>
+
+    <section id="overview" class="card">
+        <h2>1. Tổng quan mục tiêu</h2>
+        <p>Giai đoạn 10 là giai đoạn chốt cuối, không thêm nghiệp vụ lớn. Trọng tâm là tạo tài liệu nghiệm thu, changelog, hướng dẫn demo và checklist nộp bài.</p>
+<pre><code class="language-text">1. Không thêm nghiệp vụ mới.
+2. Không sửa sâu DB nếu không cần.
+3. Tạo bộ test case nghiệm thu có thể đưa vào báo cáo.
+4. Tạo tài liệu mô tả chức năng, tài khoản demo, luồng demo.
+5. Tạo checklist đóng gói source code trước khi nộp.
+6. Rà soát các rủi ro demo: API QR ngoài, lỗi link menu, lỗi file export, lỗi JSP thiếu include.
+7. Chốt phiên bản cuối cùng của project.</code></pre>
+    </section>
+
+    <section id="code-change" class="card">
+        <h2>2. Giai đoạn 10 có cần sửa code không?</h2>
+        <p>Có, nhưng chỉ sửa nhẹ nếu cần. Các phần nên làm:</p>
+<pre><code class="language-text">1. Tạo tài liệu TEST_CASE_NGHIEM_THU.md.
+2. Tạo tài liệu CHANGELOG_FINAL.md.
+3. Tạo tài liệu HUONG_DAN_DEMO_NHANH.md.
+4. Rà soát menu admin/customer có link đầy đủ.
+5. Rà soát các URL quan trọng không bị 404.
+6. Rà soát QR code đang dùng API ngoài.
+7. Rà soát các trang export CSV.
+8. Chạy system-check và final verify SQL lần cuối.</code></pre>
+        <p>Không nên làm ở GĐ10:</p>
+<pre><code class="language-text">Không đổi PasswordUtil sang SHA-256.
+Không đổi transaction thanh toán.
+Không đổi RefundAdminDTO.
+Không đổi constraint SQL nếu dữ liệu đang ổn.
+Không refactor CSS toàn cục.
+Không thêm thư viện ngoài.</code></pre>
+    </section>
+
+    <section id="new-files" class="card">
+        <h2>3. File nên tạo mới ở Giai đoạn 10</h2>
+<pre><code class="language-text">TEST_CASE_NGHIEM_THU.md
+CHANGELOG_FINAL.md
+HUONG_DAN_DEMO_NHANH.md
+CHECKLIST_NOP_BAI.md</code></pre>
+        <p>Nếu muốn kiểm tra SQL lần cuối, dùng lại:</p>
+<pre><code class="language-text">FINAL_VERIFY_DATABASE_GD8.sql</code></pre>
+    </section>
+
+    <section id="testcase" class="card">
+        <h2>4. Tạo TEST_CASE_NGHIEM_THU.md</h2>
+        <p><strong>File:</strong> <code>TEST_CASE_NGHIEM_THU.md</code></p>
+<pre><code class="language-markdown"># Test Case Nghiệm Thu - Web Quản lý Vé Tàu
+
+## 1. Nhóm chức năng khách hàng
+
+### TC01 - Đăng ký tài khoản
+
+**Mục tiêu:** Kiểm tra khách hàng có thể đăng ký tài khoản.
+
+**Bước thực hiện:**
+1. Truy cập `/register`.
+2. Nhập họ tên, email, mật khẩu, số điện thoại.
+3. Bấm Đăng ký.
+
+**Kết quả mong đợi:**
+- Tài khoản được tạo.
+- Người dùng được đăng nhập hoặc chuyển về trang đăng nhập.
+- Không báo lỗi hệ thống.
+
+---
+
+### TC02 - Đăng nhập khách hàng
+
+**Mục tiêu:** Kiểm tra khách hàng đăng nhập thành công.
+
+**Bước thực hiện:**
+1. Truy cập `/login`.
+2. Nhập email và mật khẩu đúng.
+3. Bấm Đăng nhập.
+
+**Kết quả mong đợi:**
+- Session có `currentCustomer`.
+- Chuyển về `/profile` hoặc URL trước đó.
+- Không redirect ra website ngoài.
+
+---
+
+### TC03 - Tìm chuyến tàu
+
+**Mục tiêu:** Kiểm tra tìm chuyến theo ga đi, ga đến, ngày đi.
+
+**Bước thực hiện:**
+1. Truy cập `/search-train`.
+2. Chọn ga đi, ga đến, ngày đi.
+3. Bấm tìm kiếm.
+
+**Kết quả mong đợi:**
+- Hiển thị danh sách chuyến tàu phù hợp.
+- Không lỗi giao diện.
+
+---
+
+### TC04 - Tạo đặt chỗ
+
+**Mục tiêu:** Kiểm tra tạo đơn đặt chỗ ban đầu.
+
+**Bước thực hiện:**
+1. Chọn chuyến tàu.
+2. Chọn ghế.
+3. Nhập thông tin hành khách.
+4. Xem lại ở `/booking-review`.
+5. Bấm tạo đặt chỗ.
+
+**Kết quả mong đợi:**
+- Tạo dòng trong `DAT_CHO`.
+- Tạo dòng trong `VE`.
+- `DAT_CHO.trang_thai = Chờ thanh toán`.
+- `VE.trang_thai = Chờ thanh toán`.
+
+---
+
+### TC05 - Thanh toán thành công
+
+**Mục tiêu:** Kiểm tra thanh toán thành công cập nhật đúng trạng thái.
+
+**Bước thực hiện:**
+1. Tạo đơn chờ thanh toán.
+2. Vào checkout.
+3. Giả lập thanh toán thành công.
+
+**Kết quả mong đợi:**
+- `THANH_TOAN.trang_thai = Thành công`.
+- `DAT_CHO.trang_thai = Đã thanh toán`.
+- `VE.trang_thai = Hợp lệ`.
+
+---
+
+### TC06 - Callback thanh toán chạy lại không tạo vé trùng
+
+**Mục tiêu:** Kiểm tra idempotency callback.
+
+**Bước thực hiện:**
+1. Thanh toán thành công một đơn.
+2. Gọi lại callback hoặc refresh callback.
+3. Kiểm tra database.
+
+**Kết quả mong đợi:**
+- Không tạo thêm vé trùng.
+- Không tạo thêm dữ liệu sai.
+- Mã vé không bị duplicate.
+
+---
+
+### TC07 - Xem lịch sử đặt vé
+
+**Mục tiêu:** Kiểm tra khách hàng xem lịch sử đơn.
+
+**Bước thực hiện:**
+1. Đăng nhập khách hàng.
+2. Truy cập `/my-bookings`.
+
+**Kết quả mong đợi:**
+- Hiển thị danh sách đơn của đúng khách hàng.
+- Trạng thái đơn hiển thị đúng.
+
+---
+
+### TC08 - Xem vé điện tử
+
+**Mục tiêu:** Kiểm tra danh sách vé của đơn.
+
+**Bước thực hiện:**
+1. Vào `/my-bookings`.
+2. Chọn xem vé.
+
+**Kết quả mong đợi:**
+- Hiển thị danh sách vé.
+- Vé hợp lệ/chờ thanh toán/đã trả hiển thị đúng.
+
+---
+
+### TC09 - Tra cứu vé
+
+**Mục tiêu:** Kiểm tra tra cứu vé công khai.
+
+**Bước thực hiện:**
+1. Truy cập `/ticket-check`.
+2. Nhập mã vé và số giấy tờ nếu có.
+3. Bấm tra cứu.
+
+**Kết quả mong đợi:**
+- Hiển thị thông tin vé nếu hợp lệ.
+- Hiển thị thông báo nếu không tìm thấy.
+- Trạng thái vé hiển thị đúng.
+
+---
+
+### TC10 - Trả vé
+
+**Mục tiêu:** Kiểm tra khách hàng yêu cầu trả vé.
+
+**Bước thực hiện:**
+1. Chọn vé hợp lệ.
+2. Truy cập chức năng trả vé.
+3. Xác nhận trả vé.
+
+**Kết quả mong đợi:**
+- `VE.trang_thai = Đã trả`.
+- Có dòng trong `LICH_SU_DOI_TRA`.
+- Có dòng trong `HOAN_TIEN` với trạng thái `Chờ xử lý`.
+
+---
+
+## 2. Nhóm chức năng admin
+
+### TC11 - Đăng nhập admin
+
+**Bước thực hiện:**
+1. Truy cập `/admin/login`.
+2. Nhập `admin@vetau.vn / admin123`.
+
+**Kết quả mong đợi:**
+- Đăng nhập thành công.
+- Chuyển về `/admin/dashboard`.
+
+---
+
+### TC12 - Dashboard admin
+
+**Bước thực hiện:**
+1. Đăng nhập admin.
+2. Truy cập `/admin/dashboard`.
+
+**Kết quả mong đợi:**
+- Hiển thị doanh thu thật từ database.
+- Hiển thị vé bán, khách hàng mới, hoàn tiền chờ xử lý.
+- Không còn số liệu giả.
+
+---
+
+### TC13 - Báo cáo doanh thu
+
+**Bước thực hiện:**
+1. Truy cập `/admin/reports`.
+
+**Kết quả mong đợi:**
+- Biểu đồ doanh thu 6 tháng hiển thị.
+- Top tuyến hiển thị.
+- Phương thức thanh toán hiển thị.
+
+---
+
+### TC14 - Duyệt hoàn tiền
+
+**Bước thực hiện:**
+1. Truy cập `/admin/refunds`.
+2. Chọn yêu cầu `Chờ xử lý`.
+3. Bấm duyệt.
+
+**Kết quả mong đợi:**
+- `HOAN_TIEN.trang_thai = Hoàn tất`.
+- Có `ma_giao_dich_hoan`.
+- Có `thoi_gian_hoan_tat`.
+
+---
+
+### TC15 - Từ chối hoàn tiền
+
+**Bước thực hiện:**
+1. Truy cập `/admin/refunds`.
+2. Chọn yêu cầu `Chờ xử lý`.
+3. Bấm từ chối.
+
+**Kết quả mong đợi:**
+- `HOAN_TIEN.trang_thai = Từ chối`.
+- Có `thoi_gian_hoan_tat`.
+
+---
+
+### TC16 - Kiểm tra hệ thống
+
+**Bước thực hiện:**
+1. Truy cập `/admin/system-check`.
+
+**Kết quả mong đợi:**
+- Hiển thị số lượng OK, cảnh báo, lỗi.
+- Không có vé trùng mã.
+- Không có hoàn tiền chờ xử lý trùng.
+- Không có trạng thái lạ.
+
+---
+
+### TC17 - Xuất CSV doanh thu
+
+**Bước thực hiện:**
+1. Truy cập `/admin/export?type=revenue`.
+
+**Kết quả mong đợi:**
+- Tải được file CSV.
+- Mở Excel không lỗi tiếng Việt.
+- Có dữ liệu doanh thu.
+
+---
+
+### TC18 - Xuất CSV đơn hàng
+
+**Bước thực hiện:**
+1. Truy cập `/admin/export?type=bookings`.
+
+**Kết quả mong đợi:**
+- Tải được file CSV đơn hàng.
+- Có mã đơn, khách hàng, ngày đặt, tổng tiền, trạng thái.
+
+---
+
+### TC19 - Xuất CSV hoàn tiền
+
+**Bước thực hiện:**
+1. Truy cập `/admin/export?type=refunds`.
+
+**Kết quả mong đợi:**
+- Tải được file CSV hoàn tiền.
+- Có mã vé, mã đơn, khách hàng, số tiền hoàn, trạng thái.
+
+---
+
+### TC20 - Xuất CSV vé
+
+**Bước thực hiện:**
+1. Truy cập `/admin/export?type=tickets`.
+
+**Kết quả mong đợi:**
+- Tải được file CSV vé.
+- Có mã vé, mã đơn, hành khách, ga đi, ga đến, giá vé, trạng thái.
+
+---
+
+## 3. Nhóm bảo mật và lỗi
+
+### TC21 - Chặn truy cập customer khi chưa login
+
+**URL kiểm tra:**
+- `/profile`
+- `/my-bookings`
+- `/my-tickets`
+- `/booking-review`
+- `/checkout`
+- `/return-ticket`
+
+**Kết quả mong đợi:**
+- Redirect về `/login`.
+
+---
+
+### TC22 - Chặn truy cập admin khi chưa login
+
+**URL kiểm tra:**
+- `/admin/dashboard`
+- `/admin/refunds`
+- `/admin/reports`
+- `/admin/system-check`
+- `/admin/export?type=revenue`
+
+**Kết quả mong đợi:**
+- Redirect về `/admin/login`.
+
+---
+
+### TC23 - Chặn returnUrl độc hại
+
+**Bước thực hiện:**
+1. Truy cập `/login?returnUrl=https://evil.com`.
+2. Đăng nhập.
+
+**Kết quả mong đợi:**
+- Không chuyển sang `evil.com`.
+- Chuyển về trang mặc định nội bộ.
+
+---
+
+### TC24 - Trang 404
+
+**Bước thực hiện:**
+1. Truy cập URL không tồn tại.
+
+**Kết quả mong đợi:**
+- Hiển thị trang 404 tự thiết kế.
+- Không hiện lỗi mặc định Tomcat.
+
+---
+
+### TC25 - Logout
+
+**Bước thực hiện:**
+1. Đăng nhập.
+2. Logout.
+3. Bấm Back.
+
+**Kết quả mong đợi:**
+- Không xem lại được trang riêng.
+- Phải đăng nhập lại.</code></pre>
+    </section>
+
+    <section id="changelog" class="card">
+        <h2>5. Tạo CHANGELOG_FINAL.md</h2>
+        <p><strong>File:</strong> <code>CHANGELOG_FINAL.md</code></p>
+<pre><code class="language-markdown"># Changelog Final - Web Quản lý Vé Tàu
+
+## Giai đoạn 1 - Sửa lỗi mất điểm nặng
+
+- Sửa lỗi tạo đặt chỗ.
+- Chuẩn hóa trạng thái ban đầu `Chờ thanh toán`.
+- Không phụ thuộc số tiền client gửi lên.
+- Sửa lỗi CHECK constraint liên quan `VE.trang_thai`.
+
+## Giai đoạn 2 - Thanh toán/callback/idempotency
+
+- Chuẩn hóa luồng thanh toán.
+- Callback thành công cập nhật đồng bộ `THANH_TOAN`, `DAT_CHO`, `VE`.
+- Chống callback chạy lại tạo vé trùng.
+- Đảm bảo transaction khi xử lý thanh toán.
+
+## Giai đoạn 3 - Trạng thái đơn/vé và JSP
+
+- Cập nhật trạng thái `Chờ thanh toán`, `Hợp lệ`, `Hết hạn`, `Đã trả`.
+- Cập nhật `my-bookings.jsp`.
+- Cập nhật `booking-list.jsp`.
+- Cập nhật `my-tickets.jsp`.
+- Cập nhật `ticket-check.jsp`.
+- Bổ sung dữ liệu mẫu 10–15 kịch bản.
+
+## Giai đoạn 4 - Hoàn tiền và RefundAdminDTO
+
+- Tạo và thống nhất `RefundAdminDTO`.
+- Cập nhật DAO/service/servlet admin refund.
+- Cập nhật `refund-list.jsp`.
+- Cập nhật `refund-detail.jsp`.
+- Chuẩn hóa trạng thái `HOAN_TIEN`: `Chờ xử lý`, `Hoàn tất`, `Từ chối`.
+- Tạo SQL clean cho refund admin.
+
+## Giai đoạn 5 - Dashboard và báo cáo
+
+- Tạo DTO báo cáo.
+- Tạo `BaoCaoDAO`.
+- Tạo `BaoCaoService`.
+- Cập nhật `AdminDashboardServlet`.
+- Cập nhật `AdminReportServlet`.
+- Cập nhật `dashboard.jsp`.
+- Cập nhật `report-revenue.jsp`.
+- Dashboard/report dùng dữ liệu thật từ database.
+- Tạo SQL index reporting clean.
+
+## Giai đoạn 6 - Bảo mật session/filter
+
+- Tạo `SecurityUtil`.
+- Chuẩn hóa `LoginServlet`.
+- Chuẩn hóa `RegisterServlet`.
+- Chuẩn hóa `LogoutServlet`.
+- Chuẩn hóa `AdminLoginServlet`.
+- Cập nhật `AuthFilter`.
+- Cập nhật `AdminAuthFilter`.
+- Tạo `SecurityHeadersFilter`.
+- Cập nhật `web.xml`.
+- Không chuyển `PasswordUtil` sang SHA-256 trong phạm vi đề tài.
+
+## Giai đoạn 7 - UX và trang lỗi
+
+- Tạo `FlashMessageUtil`.
+- Tạo `flash-message.jsp`.
+- Bổ sung thông báo thân thiện.
+- Tạo trang lỗi `404.jsp`, `500.jsp`, `403.jsp`.
+- Chuẩn hóa hiển thị trạng thái ở các JSP quan trọng.
+
+## Giai đoạn 8 - System check và tài liệu demo
+
+- Tạo `SystemCheckItemDTO`.
+- Tạo `SystemCheckDAO`.
+- Tạo `AdminSystemCheckServlet`.
+- Tạo `system-check.jsp`.
+- Tạo `FINAL_VERIFY_DATABASE_GD8.sql`.
+- Tạo README chạy dự án.
+- Tạo kịch bản demo cuối kỳ.
+
+## Giai đoạn 9 - Export CSV
+
+- Tạo `CsvUtil`.
+- Tạo `AdminExportDAO`.
+- Tạo `AdminExportServlet`.
+- Bổ sung xuất CSV doanh thu.
+- Bổ sung xuất CSV đơn hàng.
+- Bổ sung xuất CSV hoàn tiền.
+- Bổ sung xuất CSV vé.
+
+## Giai đoạn 10 - Chốt bản nộp
+
+- Tạo bộ test case nghiệm thu.
+- Tạo changelog final.
+- Tạo hướng dẫn demo nhanh.
+- Tạo checklist nộp bài.
+- Rà soát rủi ro demo cuối.</code></pre>
+    </section>
+
+    <section id="demo-guide" class="card">
+        <h2>6. Tạo HUONG_DAN_DEMO_NHANH.md</h2>
+        <p><strong>File:</strong> <code>HUONG_DAN_DEMO_NHANH.md</code></p>
+<pre><code class="language-markdown"># Hướng dẫn Demo Nhanh
+
+## 1. Chuẩn bị trước khi demo
+
+1. Mở SQL Server.
+2. Kiểm tra database `VeTauDB`.
+3. Chạy `FINAL_VERIFY_DATABASE_GD8.sql`.
+4. Mở NetBeans.
+5. Clean and Build project.
+6. Run project trên Tomcat.
+
+## 2. URL chính
+
+- Trang chủ: `/home`
+- Tìm chuyến: `/search-train`
+- Tra cứu vé: `/ticket-check`
+- Đăng nhập customer: `/login`
+- Đăng nhập admin: `/admin/login`
+- Dashboard admin: `/admin/dashboard`
+- Báo cáo: `/admin/reports`
+- Hoàn tiền: `/admin/refunds`
+- Kiểm tra hệ thống: `/admin/system-check`
+
+## 3. Tài khoản admin
+
+- Email: `admin@vetau.vn`
+- Password: `admin123`
+
+## 4. Thứ tự demo đề xuất
+
+### Bước 1 - Trang chủ và tìm chuyến
+
+- Mở `/home`.
+- Giới thiệu chức năng tìm chuyến.
+- Chọn ga đi, ga đến, ngày đi.
+- Bấm tìm kiếm.
+
+### Bước 2 - Đặt vé
+
+- Chọn chuyến tàu.
+- Chọn ghế.
+- Nhập hành khách.
+- Tạo đặt chỗ.
+
+Nhấn mạnh:
+- Đơn ban đầu là `Chờ thanh toán`.
+- Vé ban đầu là `Chờ thanh toán`.
+
+### Bước 3 - Thanh toán
+
+- Vào checkout.
+- Thanh toán thành công.
+
+Nhấn mạnh:
+- Đơn chuyển `Đã thanh toán`.
+- Vé chuyển `Hợp lệ`.
+- Callback có chống tạo vé trùng.
+
+### Bước 4 - Tra cứu vé
+
+- Vào `/ticket-check`.
+- Nhập mã vé.
+- Hiển thị vé điện tử.
+
+### Bước 5 - Trả vé
+
+- Vào danh sách vé.
+- Chọn trả vé.
+- Xác nhận trả vé.
+
+Nhấn mạnh:
+- Vé chuyển `Đã trả`.
+- Tạo yêu cầu hoàn tiền `Chờ xử lý`.
+
+### Bước 6 - Admin hoàn tiền
+
+- Đăng nhập admin.
+- Vào `/admin/refunds`.
+- Xem chi tiết yêu cầu.
+- Duyệt hoặc từ chối.
+
+Nhấn mạnh:
+- Trạng thái hoàn tiền được cập nhật đúng.
+- Dùng `RefundAdminDTO` thống nhất.
+
+### Bước 7 - Dashboard và báo cáo
+
+- Vào `/admin/dashboard`.
+- Vào `/admin/reports`.
+
+Nhấn mạnh:
+- Số liệu lấy từ database thật.
+- Có biểu đồ doanh thu, tuyến bán chạy, phương thức thanh toán.
+
+### Bước 8 - Kiểm tra hệ thống
+
+- Vào `/admin/system-check`.
+
+Nhấn mạnh:
+- Có kiểm tra mã vé trùng.
+- Có kiểm tra hoàn tiền trùng.
+- Có kiểm tra trạng thái lạ.
+- Có kiểm tra dữ liệu báo cáo.
+
+### Bước 9 - Xuất CSV
+
+- Vào `/admin/export?type=revenue`.
+- Vào `/admin/export?type=bookings`.
+- Vào `/admin/export?type=refunds`.
+- Vào `/admin/export?type=tickets`.
+
+Nhấn mạnh:
+- Admin có thể xuất dữ liệu mở bằng Excel.
+
+## 5. Nếu có lỗi khi demo
+
+### Lỗi không vào được database
+
+Kiểm tra:
+- SQL Server đang chạy chưa.
+- DBConnection.java đúng username/password chưa.
+- Database có tên đúng `VeTauDB` chưa.
+
+### Lỗi 404
+
+Kiểm tra:
+- Servlet mapping.
+- Tên URL.
+- Project context path.
+
+### Lỗi dữ liệu ít
+
+Chạy lại file seed dữ liệu mẫu.
+
+### Lỗi CSV tiếng Việt
+
+Đảm bảo `CsvUtil` có BOM UTF-8.</code></pre>
+    </section>
+
+    <section id="submit-checklist" class="card">
+        <h2>7. Tạo CHECKLIST_NOP_BAI.md</h2>
+        <p><strong>File:</strong> <code>CHECKLIST_NOP_BAI.md</code></p>
+<pre><code class="language-markdown"># Checklist Nộp Bài Cuối Kỳ
+
+## 1. Source code
+
+- [ ] Project Clean and Build thành công.
+- [ ] Không còn file code thừa gây lỗi.
+- [ ] Không còn import lỗi.
+- [ ] Không còn servlet trùng mapping.
+- [ ] Không còn JSP gọi property sai.
+- [ ] Không còn SQL hard-code sai database.
+
+## 2. Database
+
+- [ ] Có file database gốc.
+- [ ] Có file SQL cập nhật GĐ1–GĐ2.
+- [ ] Có file SQL cleanup GĐ3.
+- [ ] Có file seed dữ liệu mẫu.
+- [ ] Có file SQL GĐ4 clean.
+- [ ] Có file SQL GĐ5 reporting clean.
+- [ ] Có file final verify GĐ8.
+- [ ] Chạy SQL theo đúng thứ tự không lỗi nghiêm trọng.
+
+## 3. Chức năng customer
+
+- [ ] Đăng ký.
+- [ ] Đăng nhập.
+- [ ] Tìm chuyến.
+- [ ] Đặt vé.
+- [ ] Thanh toán.
+- [ ] Lịch sử đặt vé.
+- [ ] Vé điện tử.
+- [ ] Tra cứu vé.
+- [ ] Trả vé.
+- [ ] Logout.
+
+## 4. Chức năng admin
+
+- [ ] Đăng nhập admin.
+- [ ] Dashboard.
+- [ ] Quản lý đơn.
+- [ ] Duyệt hoàn tiền.
+- [ ] Báo cáo doanh thu.
+- [ ] Kiểm tra hệ thống.
+- [ ] Xuất CSV.
+- [ ] Logout.
+
+## 5. Bảo mật cơ bản
+
+- [ ] Customer URL bị chặn khi chưa login.
+- [ ] Admin URL bị chặn khi chưa login.
+- [ ] returnUrl độc hại không redirect ra ngoài.
+- [ ] Logout invalidate session.
+- [ ] Có trang lỗi 404/500/403.
+
+## 6. Tài liệu
+
+- [ ] README chạy dự án.
+- [ ] Kịch bản demo cuối kỳ.
+- [ ] Test case nghiệm thu.
+- [ ] Changelog final.
+- [ ] Hướng dẫn demo nhanh.
+- [ ] Danh sách tài khoản demo.
+- [ ] Sơ đồ ERD hoặc mô tả database.
+- [ ] Sơ đồ use case nếu báo cáo yêu cầu.
+
+## 7. File nộp
+
+- [ ] Source project `.zip`.
+- [ ] File SQL database.
+- [ ] Báo cáo `.docx` hoặc `.pdf`.
+- [ ] Slide thuyết trình nếu có.
+- [ ] Video demo nếu giảng viên yêu cầu.</code></pre>
+    </section>
+
+    <section id="jsp-servlet" class="card">
+        <h2>8. Có cần sửa JSP/Servlet ở GĐ10 không?</h2>
+        <p>Chỉ sửa nếu trong lúc rà soát còn thiếu menu hoặc thiếu link.</p>
+        <p>Nên kiểm tra các link quan trọng:</p>
+<pre><code class="language-text">/admin/dashboard
+/admin/reports
+/admin/refunds
+/admin/system-check
+/admin/export?type=revenue
+/admin/logout</code></pre>
+        <p>Nếu trong sidebar admin chưa có <code>/admin/system-check</code>, thêm vào. Nếu trong report chưa có nút export CSV, thêm theo GĐ9. Nếu trong dashboard chưa có nút export nhanh CSV, thêm theo GĐ9. Ngoài ra không nên sửa sâu nữa.</p>
+    </section>
+
+    <section id="sql" class="card">
+        <h2>9. Có cần cập nhật SQL ở GĐ10 không?</h2>
+        <p><strong>Không cần.</strong> GĐ10 chỉ là chốt bản nộp, không nên đổi DB nữa.</p>
+        <p>SQL cuối cùng vẫn là:</p>
+<pre><code class="language-text">1. VeTauDB_trang_thai_UPDATED_GD1_GD2.sql
+2. UPDATE_DB_GD3_CLEANUP.sql
+3. SEED_15_KICH_BAN_MAU_GD1_GD2_GD3.sql
+4. UPDATE_DB_GD4_REFUND_ADMIN_DTO_CLEAN.sql
+5. UPDATE_DB_GD5_REPORTING_CLEAN.sql
+6. FINAL_VERIFY_DATABASE_GD8.sql</code></pre>
+    </section>
+
+    <section id="final-test" class="card">
+        <h2>10. Test cuối GĐ10</h2>
+        <p>Chạy 10 test nhanh nhất:</p>
+<pre><code class="language-text">1. /home mở được.
+2. /search-train tìm chuyến được.
+3. Tạo đặt chỗ được.
+4. Thanh toán thành công được.
+5. /ticket-check tra cứu được.
+6. Trả vé tạo hoàn tiền được.
+7. /admin/refunds duyệt hoàn tiền được.
+8. /admin/dashboard có số liệu thật.
+9. /admin/system-check chạy được.
+10. /admin/export?type=revenue tải CSV được.</code></pre>
+        <div class="note good">Nếu 10 test này pass, bản nộp đã khá chắc.</div>
+    </section>
+
+    <section id="conclusion" class="card">
+        <h2>11. Kết luận Giai đoạn 10</h2>
+        <p>Giai đoạn 10 là giai đoạn đóng băng phiên bản nộp bài.</p>
+        <p>Sau GĐ10, bạn sẽ có:</p>
+<pre><code class="language-text">- Source code đã ổn định.
+- Database có thứ tự chạy rõ ràng.
+- Test case nghiệm thu đầy đủ.
+- Changelog theo 10 giai đoạn.
+- Hướng dẫn demo nhanh.
+- Checklist nộp bài.
+- Kịch bản demo rõ ràng.</code></pre>
+        <div class="note warn">Sau GĐ10, chỉ nên sửa lỗi phát sinh khi test, không nên thêm chức năng mới nữa.</div>
+    </section>
+</main>
+
+<footer>Giai đoạn 10 — Chuẩn hóa bản nộp cuối kỳ.</footer>
+</body>
+</html>
