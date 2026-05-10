@@ -20,7 +20,7 @@ public class GheTrongService {
               + "    FROM dbo.VE v "
               + "    JOIN dbo.LICH_DUNG ld_di ON ld_di.chuyen_tau_id = v.chuyen_tau_id AND ld_di.ga_id = v.ga_di_id "
               + "    JOIN dbo.LICH_DUNG ld_den ON ld_den.chuyen_tau_id = v.chuyen_tau_id AND ld_den.ga_id = v.ga_den_id "
-              + "    WHERE v.chuyen_tau_id = ? AND v.ghe_id = ? AND v.trang_thai IN (N'Hợp lệ', N'Đã đổi') "
+              + "    WHERE v.chuyen_tau_id = ? AND v.ghe_id = ? AND v.trang_thai IN (N'Hợp lệ', N'Đã sử dụng') "
               + "), ChangGiu AS ( "
               + "    SELECT ld_di.thu_tu_dung AS tu, ld_den.thu_tu_dung AS den "
               + "    FROM dbo.GIU_CHO gc "

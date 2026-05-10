@@ -6,16 +6,18 @@ public class ToaTau {
     private int soToa;
     private String loaiToa;
     private int sucChua;
-
+    private String trangThai;
+    
     public ToaTau() {
     }
 
-    public ToaTau(int id, int tauId, int soToa, String loaiToa, int sucChua) {
+    public ToaTau(int id, int tauId, int soToa, String loaiToa, int sucChua, String trangThai) {
         this.id = id;
         this.tauId = tauId;
         this.soToa = soToa;
         this.loaiToa = loaiToa;
         this.sucChua = sucChua;
+        this.trangThai = trangThai ;
     }
 
     public int getId() {
@@ -56,5 +58,12 @@ public class ToaTau {
 
     public void setSucChua(int sucChua) {
         this.sucChua = sucChua;
+    }
+    public String getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(String trangThai) {
+        this.trangThai = trangThai;
     }
 }

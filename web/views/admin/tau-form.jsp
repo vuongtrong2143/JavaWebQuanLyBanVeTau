@@ -89,11 +89,14 @@
 
                     <div class="form-group">
                         <label>Trạng thái</label>
-                        <select name="trangThai" class="form-control">
-                            <option value="Hoạt động" ${tau.trangThai == 'Hoạt động' ? 'selected' : ''}>🟢 Đang hoạt động</option>
-                            <option value="Bảo trì" ${tau.trangThai == 'Bảo trì' ? 'selected' : ''}>🟡 Đang bảo trì</option>
-                            <option value="Ngưng hoạt động" ${tau.trangThai == 'Ngưng hoạt động' ? 'selected' : ''}>🔴 Ngưng hoạt động</option>
-                        </select>
+                            <select name="trangThai" class="form-control">
+                                <option value="Hoạt động" ${tau.trangThai == 'Hoạt động' ? 'selected' : ''}>
+                                    🟢 Đang hoạt động
+                                </option>
+                                <option value="Tạm dừng" ${tau.trangThai == 'Tạm dừng' ? 'selected' : ''}>
+                                    🔴 Tạm dừng
+                                </option>
+                            </select>
                     </div>
 
                     <div class="form-group full-width">

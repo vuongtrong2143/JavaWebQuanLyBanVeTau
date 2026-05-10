@@ -18,6 +18,9 @@ public final class TrangThai {
     public static final String DAT_CHO_DA_THANH_TOAN = "Đã thanh toán";
     public static final String DAT_CHO_DA_HUY = "Đã hủy";
     public static final String DAT_CHO_HET_HAN = "Hết hạn";
+    public static final String DAT_CHO_DANG_THANH_TOAN = "Đang thanh toán";
+    public static final String DAT_CHO_HOAN_TIEN_MOT_PHAN = "Hoàn tiền một phần";
+    public static final String DAT_CHO_HOAN_TIEN_TOAN_BO = "Hoàn tiền toàn bộ";
 
     // GIU_CHO
     public static final String GIU_CHO_DANG_GIU = "Đang giữ";
@@ -29,6 +32,9 @@ public final class TrangThai {
     public static final String THANH_TOAN_PENDING = "Pending";
     public static final String THANH_TOAN_THANH_CONG = "Thành công";
     public static final String THANH_TOAN_THAT_BAI = "Thất bại";
+    public static final String THANH_TOAN_HUY = "Hủy";
+    public static final String THANH_TOAN_DANG_HOAN_TIEN = "Đang hoàn tiền";
+    public static final String THANH_TOAN_DA_HOAN_TIEN = "Đã hoàn tiền";
 
     // VE
     public static final String VE_CHO_THANH_TOAN = "Chờ thanh toán";
